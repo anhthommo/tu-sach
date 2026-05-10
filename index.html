@@ -917,6 +917,130 @@ body {
   .quotes-search { width: 100%; }
   .quote-page-footer { align-items: flex-start; flex-direction: column; }
 }
+
+/* ── AUTH ── */
+.auth-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 800;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+  backdrop-filter: blur(12px);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+.auth-overlay.on { opacity: 1; pointer-events: all; }
+.auth-modal {
+  background: linear-gradient(145deg, #1c0e06, #130906);
+  border: 1px solid rgba(212,168,85,0.35);
+  border-radius: 18px;
+  width: 100%; max-width: 420px;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.9), 0 0 0 1px rgba(212,168,85,0.1);
+  overflow: hidden;
+  transform: scale(0.92) translateY(20px);
+  transition: transform 0.35s cubic-bezier(0.34,1.3,0.64,1);
+}
+.auth-overlay.on .auth-modal { transform: scale(1) translateY(0); }
+.auth-header {
+  padding: 1.5rem 1.75rem 1rem;
+  border-bottom: 1px solid rgba(212,168,85,0.1);
+  text-align: center;
+}
+.auth-logo { font-size: 2rem; margin-bottom: 0.4rem; }
+.auth-title { font-family: 'Playfair Display', serif; color: #d4a855; font-size: 1.2rem; margin-bottom: 0.2rem; }
+.auth-subtitle { font-size: 0.78rem; color: #907050; }
+.auth-tabs { display: flex; border-bottom: 1px solid rgba(212,168,85,0.1); }
+.auth-tab {
+  flex: 1; padding: 0.65rem; text-align: center;
+  font-family: 'Lora', serif; font-size: 0.82rem; color: #6b5030;
+  cursor: pointer; border: none; background: none;
+  transition: color 0.2s, border-bottom 0.2s;
+  border-bottom: 2px solid transparent;
+}
+.auth-tab.active { color: #d4a855; border-bottom-color: #d4a855; }
+.auth-body { padding: 1.4rem 1.75rem 1.75rem; display: flex; flex-direction: column; gap: 0.85rem; }
+.auth-input {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(212,168,85,0.25);
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  color: #e8d5a0; font-family: 'Lora', serif; font-size: 0.88rem;
+  outline: none; width: 100%; transition: border-color 0.2s;
+}
+.auth-input:focus { border-color: #d4a855; }
+.auth-input::placeholder { color: #4a3020; }
+.auth-btn {
+  background: linear-gradient(135deg, #d4a855, #a07838);
+  border: none; border-radius: 10px;
+  padding: 0.75rem; color: #1a0d05;
+  font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700;
+  cursor: pointer; transition: opacity 0.2s, transform 0.15s;
+  width: 100%;
+}
+.auth-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.auth-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.auth-divider { text-align: center; font-size: 0.72rem; color: #4a3020; position: relative; }
+.auth-divider::before, .auth-divider::after {
+  content: ''; position: absolute; top: 50%; width: 38%; height: 1px;
+  background: rgba(212,168,85,0.15);
+}
+.auth-divider::before { left: 0; } .auth-divider::after { right: 0; }
+.auth-err { font-size: 0.78rem; color: #f08060; text-align: center; min-height: 1rem; }
+.auth-ok  { font-size: 0.78rem; color: #6dd89a; text-align: center; min-height: 1rem; }
+.auth-guest-btn {
+  background: none; border: 1px solid rgba(212,168,85,0.2);
+  border-radius: 10px; padding: 0.55rem;
+  color: #907050; font-family: 'Lora', serif; font-size: 0.8rem;
+  cursor: pointer; width: 100%; transition: all 0.2s;
+}
+.auth-guest-btn:hover { border-color: rgba(212,168,85,0.45); color: #d4a855; }
+
+/* ── USER INFO CHIP in header ── */
+.user-chip {
+  display: flex; align-items: center; gap: 0.5rem;
+  background: rgba(212,168,85,0.08);
+  border: 1px solid rgba(212,168,85,0.25);
+  border-radius: 20px; padding: 0.3rem 0.8rem 0.3rem 0.5rem;
+  font-size: 0.75rem; color: #d4a855;
+}
+.user-avatar {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: linear-gradient(135deg, #d4a855, #a07838);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: #1a0d05; font-weight: 700;
+}
+.user-name { max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ── VIEW SWITCHER ── */
+.view-switcher {
+  display: flex; align-items: center; gap: 0.5rem;
+  background: rgba(212,168,85,0.06);
+  border: 1px solid rgba(212,168,85,0.2);
+  border-radius: 20px; padding: 0.25rem 0.5rem;
+  font-size: 0.72rem;
+}
+.view-switcher span { color: #6b5030; }
+.view-switch-btn {
+  background: none; border: none; color: #907050;
+  font-family: 'Lora', serif; font-size: 0.72rem;
+  cursor: pointer; padding: 0.15rem 0.6rem; border-radius: 12px;
+  transition: all 0.18s;
+}
+.view-switch-btn.active { background: rgba(212,168,85,0.2); color: #d4a855; }
+
+/* ── READONLY BANNER ── */
+.readonly-banner {
+  background: rgba(100,70,20,0.15);
+  border: 1px solid rgba(212,168,85,0.2);
+  border-radius: 10px;
+  padding: 0.6rem 1.4rem;
+  margin: 0.5rem 2.5rem;
+  display: flex; align-items: center; gap: 0.8rem;
+  font-size: 0.8rem; color: #907050;
+  position: relative; z-index: 10;
+}
+.readonly-banner.hidden { display: none; }
+.readonly-banner b { color: #d4a855; }
 </style>
 </head>
 <body>
@@ -925,7 +1049,30 @@ body {
 <!-- LOADING -->
 <div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>
-  <div id="loadingText">Đang kết nối Supabase...</div>
+  <div id="loadingText">Đang kết nối...</div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-modal">
+    <div class="auth-header">
+      <div class="auth-logo">📚</div>
+      <div class="auth-title">Tủ Sách Thơ Nụ</div>
+      <div class="auth-subtitle">Đăng nhập để tạo tủ sách riêng của bạn</div>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Đăng nhập</button>
+      <button class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Đăng ký</button>
+    </div>
+    <div class="auth-body">
+      <input class="auth-input" id="authEmail" type="email" placeholder="Email của bạn" autocomplete="email">
+      <input class="auth-input" id="authPassword" type="password" placeholder="Mật khẩu (tối thiểu 6 ký tự)" autocomplete="current-password">
+      <div class="auth-err" id="authErr"></div>
+      <button class="auth-btn" id="authSubmitBtn" onclick="submitAuth()">Đăng nhập</button>
+      <div class="auth-divider">hoặc</div>
+      <button class="auth-guest-btn" onclick="continueAsGuest()">👁 Xem tủ sách của Thơ Nụ (không cần đăng nhập)</button>
+    </div>
+  </div>
 </div>
 
 <!-- HEADER -->
@@ -940,24 +1087,26 @@ body {
     <button class="pill-btn filter-status" onclick="setFilter('read',this)">Đã đọc</button>
     <button class="pill-btn filter-status" onclick="setFilter('unread',this)">Sắp đọc</button>
     <button class="pill-btn" id="quotesNavBtn" onclick="showQuotesPage()">Trích dẫn</button>
-    <button class="pill-btn" onclick="openAddForm()" style="background:rgba(212,168,85,0.18);border-color:#d4a855">➕ Thêm sách</button>
+    <!-- View switcher: chỉ hiện khi đã đăng nhập -->
+    <div class="view-switcher view-hidden" id="viewSwitcher">
+      <span>Xem:</span>
+      <button class="view-switch-btn active" id="btnMyShelf" onclick="switchShelfView('my')">Của tôi</button>
+      <button class="view-switch-btn" id="btnAdminShelf" onclick="switchShelfView('admin')">Thơ Nụ</button>
+    </div>
+    <button class="pill-btn view-hidden" id="addBookBtn" onclick="openAddForm()" style="background:rgba(212,168,85,0.18);border-color:#d4a855">➕ Thêm sách</button>
+    <!-- User chip / login button -->
+    <div class="user-chip view-hidden" id="userChip">
+      <div class="user-avatar" id="userAvatar">?</div>
+      <span class="user-name" id="userName">...</span>
+      <button class="pill-btn danger" style="padding:0.2rem 0.7rem;font-size:0.7rem;margin-left:0.2rem" onclick="signOut()">Đăng xuất</button>
+    </div>
+    <button class="pill-btn view-hidden" id="loginBtn" onclick="showAuthModal()" style="background:rgba(212,168,85,0.18);border-color:#d4a855">🔑 Đăng nhập</button>
   </div>
 </div>
 
-<!-- SUPABASE CONFIG BANNER -->
-<div class="config-banner" id="configBanner">
-  <div class="config-inner">
-    <div>⚙️ <strong>Cài đặt Supabase</strong> — Nhập thông tin để kết nối database thật. <a onclick="showSetupGuide()">Hướng dẫn tạo project</a></div>
-    <div class="config-inputs">
-      <input class="config-input" id="cfgUrl" placeholder="Supabase URL: https://xxx.supabase.co" />
-      <input class="config-input" id="cfgKey" placeholder="Anon Key: eyJhbGci..." />
-    </div>
-    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center">
-      <button class="pill-btn" onclick="saveConfig()">💾 Lưu & Kết nối</button>
-      <button class="pill-btn danger" onclick="resetConfig()">🔁 Reset</button>
-      <span id="configStatus" style="font-size:0.75rem;color:#907050"></span>
-    </div>
-  </div>
+<!-- READONLY BANNER (khách xem tủ admin) -->
+<div class="readonly-banner hidden" id="readonlyBanner">
+  👁 Bạn đang xem <b>tủ sách của Thơ Nụ</b> — chỉ đọc. <a onclick="showAuthModal()" style="color:#d4a855;cursor:pointer;text-decoration:underline">Đăng nhập</a> để tạo tủ sách riêng.
 </div>
 
 <!-- STATS -->
@@ -1133,43 +1282,61 @@ body {
   </div>
 </div>
 
-<!-- SETUP GUIDE MODAL -->
+<!-- SETUP GUIDE MODAL (dành cho admin khi cần) -->
 <div class="overlay" id="guideOverlay" onclick="if(event.target===this)this.classList.remove('on')" style="z-index:700">
-  <div class="modal" style="background:linear-gradient(145deg,#1a0e06,#120906);max-width:640px">
+  <div class="modal" style="background:linear-gradient(145deg,#1a0e06,#120906);max-width:680px">
     <button class="modal-close" onclick="document.getElementById('guideOverlay').classList.remove('on')" style="color:#d4a855">✕</button>
     <div class="modal-body" style="color:#e8d5a0">
-      <div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:#d4a855;margin-bottom:1rem">📋 Hướng dẫn tạo Supabase</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:#d4a855;margin-bottom:1rem">📋 Hướng dẫn cài đặt cho Admin</div>
       <div style="display:flex;flex-direction:column;gap:0.8rem;font-size:0.85rem;line-height:1.7;color:#c0a070">
-        <div><b style="color:#d4a855">Bước 1:</b> Truy cập <a href="https://supabase.com" target="_blank" style="color:#d4a855">supabase.com</a> → Đăng ký miễn phí</div>
-        <div><b style="color:#d4a855">Bước 2:</b> Tạo New Project → đặt tên, chọn region (Singapore gần nhất)</div>
-        <div><b style="color:#d4a855">Bước 3:</b> Vào <b>SQL Editor</b> → chạy đoạn SQL sau:</div>
-        <pre style="background:rgba(0,0,0,0.4);padding:1rem;border-radius:8px;font-size:0.78rem;overflow-x:auto;border:1px solid rgba(212,168,85,0.2);color:#c8e8a0;white-space:pre-wrap">-- Tạo bảng books
+        <div><b style="color:#d4a855">Bước 1:</b> Mở file HTML, tìm phần CONFIG ở đầu JS và điền 3 giá trị:</div>
+        <pre style="background:rgba(0,0,0,0.4);padding:1rem;border-radius:8px;font-size:0.78rem;overflow-x:auto;border:1px solid rgba(212,168,85,0.2);color:#c8e8a0;white-space:pre-wrap">const SUPABASE_URL  = 'https://xxx.supabase.co';  // URL project của bạn
+const SUPABASE_ANON = 'eyJhbGci...';               // Anon/public key
+const ADMIN_EMAIL   = 'your@email.com';            // Email của bạn (admin)</pre>
+        <div><b style="color:#d4a855">Bước 2:</b> Trong Supabase SQL Editor, chạy SQL này để tạo bảng và RLS:</div>
+        <pre style="background:rgba(0,0,0,0.4);padding:1rem;border-radius:8px;font-size:0.78rem;overflow-x:auto;border:1px solid rgba(212,168,85,0.2);color:#c8e8a0;white-space:pre-wrap">-- 1. Tạo bảng books với user_id
 CREATE TABLE books (
-  id BIGSERIAL PRIMARY KEY,
-  title TEXT NOT NULL,
-  author TEXT NOT NULL,
-  year INTEGER,
-  genre TEXT,
-  status TEXT DEFAULT 'unread',
-  rating INTEGER DEFAULT 0,
-  cover TEXT,
-  color TEXT DEFAULT '#1a1008',
-  text_color TEXT DEFAULT '#e8d5a0',
-  note TEXT,
-  quotes JSONB DEFAULT '[]',
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  id          BIGSERIAL PRIMARY KEY,
+  user_id     UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  title       TEXT NOT NULL,
+  author      TEXT NOT NULL,
+  year        INTEGER,
+  genre       TEXT,
+  status      TEXT DEFAULT 'unread',
+  rating      INTEGER DEFAULT 0,
+  cover       TEXT,
+  color       TEXT DEFAULT '#1a1008',
+  text_color  TEXT DEFAULT '#e8d5a0',
+  note        TEXT,
+  quotes      JSONB DEFAULT '[]',
+  created_at  TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Cho phép đọc/ghi không cần đăng nhập (chỉ dùng cá nhân)
+-- 2. Bật Row Level Security
 ALTER TABLE books ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Allow all" ON books FOR ALL USING (true) WITH CHECK (true);</pre>
-        <div><b style="color:#d4a855">Bước 4:</b> Vào <b>Project Settings → API</b> → copy:</div>
-        <div style="padding:0.5rem 0.8rem;background:rgba(212,168,85,0.08);border-radius:8px;border:1px solid rgba(212,168,85,0.2)">
-          • <b>Project URL</b>: dán vào ô Supabase URL<br>
-          • <b>anon key</b> (public): dán vào ô Anon Key
-        </div>
-        <div><b style="color:#d4a855">Bước 5:</b> Nhấn <b>"Lưu & Kết nối"</b> — xong! 🎉</div>
-        <div style="color:#706050;font-size:0.78rem;font-style:italic">* Thông tin được lưu trong localStorage của trình duyệt, chỉ bạn truy cập được.</div>
+
+-- 3. Mọi người đều đọc được (để hiển thị tủ admin công khai)
+CREATE POLICY "public_read" ON books
+  FOR SELECT USING (true);
+
+-- 4. Chỉ owner mới insert/update/delete sách của mình
+CREATE POLICY "owner_write" ON books
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "owner_update" ON books
+  FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY "owner_delete" ON books
+  FOR DELETE USING (auth.uid() = user_id);
+
+-- 5. RPC để app lấy admin_uid mà không cần service key
+--    Thay 'your@email.com' bằng email admin của bạn
+CREATE OR REPLACE FUNCTION get_admin_uid()
+RETURNS UUID LANGUAGE sql SECURITY DEFINER AS $$
+  SELECT id FROM auth.users
+  WHERE email = 'anhthommo@gmail.com'
+  LIMIT 1;
+$$;</pre>
+        <div><b style="color:#d4a855">Bước 3:</b> Đăng nhập bằng ADMIN_EMAIL → hệ thống tự lưu admin_uid vào localStorage → các user khác vào trang sẽ xem được tủ sách của bạn.</div>
+        <div><b style="color:#d4a855">Bước 4:</b> Deploy file HTML lên <a href="https://pages.github.com" target="_blank" style="color:#d4a855">GitHub Pages</a>, <a href="https://netlify.com" target="_blank" style="color:#d4a855">Netlify</a> hoặc <a href="https://vercel.com" target="_blank" style="color:#d4a855">Vercel</a> — miễn phí 🎉</div>
       </div>
     </div>
   </div>
@@ -1179,6 +1346,13 @@ CREATE POLICY "Allow all" ON books FOR ALL USING (true) WITH CHECK (true);</pre>
 
 <script>
 // ═══════════════════════════════════════════
+//  CONFIG — chỉ cần điền 3 dòng này
+// ═══════════════════════════════════════════
+const SUPABASE_URL  = 'https://dsyhivqkrqzaqlzwfytf.supabase.co';   // ← thay bằng URL của bạn
+const SUPABASE_ANON = 'sb_publishable_aD0VZgUXNgn2-b993JKK0A_93wBqXwi';                       // ← thay bằng anon key
+const ADMIN_EMAIL   = 'anhthommo@gmail.com';                      // ← email admin (Thơ Nụ)
+
+// ═══════════════════════════════════════════
 //  GENRE ICONS
 // ═══════════════════════════════════════════
 const GENRE_ICONS = {
@@ -1187,143 +1361,308 @@ const GENRE_ICONS = {
   'Tài chính':'💰','Tâm linh':'✨','Triết học':'🦉','Văn học Nhật':'🌊','Khác':'📚'
 };
 
-const BOOK_W = 96;   // px — chiều rộng cố định
-const BOOK_H = 168;  // px — chiều cao cố định
+const BOOK_W = 128, BOOK_H = 195;
 
 // ═══════════════════════════════════════════
-//  SUPABASE CONFIG
+//  STATE
 // ═══════════════════════════════════════════
-let SUPABASE_URL = '';
-let SUPABASE_KEY = '';
-let BOOKS = [];
-let currentFilter = 'all';
-let currentGenreFilter = 'all';
-let searchQ = '';
-let currentView = 'library';
-let editingId = null;
-
-function loadConfig() {
-  SUPABASE_URL = localStorage.getItem('sb_url') || '';
-  SUPABASE_KEY = localStorage.getItem('sb_key') || '';
-  if (SUPABASE_URL && SUPABASE_KEY) {
-    document.getElementById('cfgUrl').value = SUPABASE_URL;
-    document.getElementById('cfgKey').value = SUPABASE_KEY;
-  }
-}
-
-function saveConfig() {
-  const url = document.getElementById('cfgUrl').value.trim().replace(/\/$/, '');
-  const key = document.getElementById('cfgKey').value.trim();
-  if (!url || !key) { showToast('Vui lòng nhập đủ URL và Key'); return; }
-  SUPABASE_URL = url;
-  SUPABASE_KEY = key;
-  localStorage.setItem('sb_url', url);
-  localStorage.setItem('sb_key', key);
-  document.getElementById('configBanner').classList.add('hidden');
-  showToast('✅ Đã lưu cấu hình Supabase!');
-  loadBooks();
-}
-
-function resetConfig() {
-  localStorage.removeItem('sb_url');
-  localStorage.removeItem('sb_key');
-  SUPABASE_URL = ''; SUPABASE_KEY = '';
-  document.getElementById('cfgUrl').value = '';
-  document.getElementById('cfgKey').value = '';
-  document.getElementById('configStatus').textContent = '';
-  BOOKS = [];
-  render();
-}
-
-function showSetupGuide() {
-  document.getElementById('guideOverlay').classList.add('on');
-}
+let currentUser   = null;   // Supabase user object
+let isAdmin       = false;  // là Thơ Nụ?
+let adminUserId   = null;   // UUID của admin trong DB
+let shelfMode     = 'guest';// 'guest' | 'my' | 'admin'
+let BOOKS         = [];
+let currentFilter = 'all', currentGenreFilter = 'all', searchQ = '';
+let currentView   = 'library', editingId = null;
+let authTab       = 'login';
+let formRating    = 0, formQuotes = [];
 
 // ═══════════════════════════════════════════
-//  SUPABASE FETCH HELPERS
+//  SUPABASE CLIENT (vanilla fetch, no SDK)
 // ═══════════════════════════════════════════
-async function sbFetch(path, options = {}) {
+async function sbFetch(path, options = {}, token = null) {
+  const tk = token || currentUser?.access_token || SUPABASE_ANON;
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
     ...options,
     headers: {
-      'apikey': SUPABASE_KEY,
-      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'apikey': SUPABASE_ANON,
+      'Authorization': `Bearer ${tk}`,
       'Content-Type': 'application/json',
       'Prefer': 'return=representation',
       ...(options.headers || {})
     }
   });
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(err);
-  }
+  if (!res.ok) { const e = await res.text(); throw new Error(e); }
   return res.status === 204 ? null : res.json();
 }
 
-async function loadBooks() {
-  if (!SUPABASE_URL || !SUPABASE_KEY) {
-    hideLoading();
-    document.getElementById('configBanner').classList.remove('hidden');
-    document.getElementById('bookcase').innerHTML = '<div style="padding:3rem;text-align:center;color:rgba(212,168,85,0.3);font-style:italic">⚙️ Chưa cấu hình Supabase — nhập thông tin phía trên để bắt đầu.</div>';
+async function sbAuth(endpoint, body) {
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/${endpoint}`, {
+    method: 'POST',
+    headers: { 'apikey': SUPABASE_ANON, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  return res.json();
+}
+
+async function sbSignOut(token) {
+  await fetch(`${SUPABASE_URL}/auth/v1/logout`, {
+    method: 'POST',
+    headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${token}` }
+  });
+}
+
+// ═══════════════════════════════════════════
+//  AUTH MODAL
+// ═══════════════════════════════════════════
+function showAuthModal() {
+  document.getElementById('authOverlay').classList.add('on');
+  document.getElementById('authErr').textContent = '';
+  document.getElementById('authEmail').value = '';
+  document.getElementById('authPassword').value = '';
+}
+function hideAuthModal() { document.getElementById('authOverlay').classList.remove('on'); }
+
+function switchAuthTab(tab) {
+  authTab = tab;
+  document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+  document.getElementById('authSubmitBtn').textContent = tab === 'login' ? 'Đăng nhập' : 'Đăng ký';
+  document.getElementById('authErr').textContent = '';
+}
+
+async function submitAuth() {
+  const email = document.getElementById('authEmail').value.trim();
+  const pass  = document.getElementById('authPassword').value;
+  const errEl = document.getElementById('authErr');
+  const btn   = document.getElementById('authSubmitBtn');
+  if (!email || !pass) { errEl.textContent = 'Vui lòng nhập đủ email và mật khẩu'; return; }
+  if (pass.length < 6)  { errEl.textContent = 'Mật khẩu tối thiểu 6 ký tự'; return; }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Đang xử lý...';
+  errEl.textContent = '';
+
+  const endpoint = authTab === 'login' ? 'token?grant_type=password' : 'signup';
+  const data = await sbAuth(endpoint, { email, password: pass });
+
+  btn.disabled = false;
+  btn.textContent = authTab === 'login' ? 'Đăng nhập' : 'Đăng ký';
+
+  if (data.error || data.error_description) {
+    const msg = data.error_description || data.error || 'Lỗi không xác định';
+    errEl.textContent = msg.includes('Invalid login') ? '❌ Email hoặc mật khẩu không đúng'
+      : msg.includes('already registered') ? '❌ Email đã được đăng ký'
+      : '❌ ' + msg;
     return;
   }
+
+  if (authTab === 'register' && !data.access_token) {
+    errEl.style.color = '#6dd89a';
+    errEl.textContent = '✅ Đã gửi email xác nhận! Kiểm tra hộp thư và nhấn link để kích hoạt.';
+    return;
+  }
+
+  // Đăng nhập thành công
+  currentUser = data.user;
+  currentUser.access_token = data.access_token;
+  localStorage.setItem('sb_session', JSON.stringify({ user: data.user, access_token: data.access_token }));
+  hideAuthModal();
+  await onLogin();
+}
+
+function continueAsGuest() {
+  hideAuthModal();
+  shelfMode = 'guest';
+  onGuest();
+}
+
+async function signOut() {
+  if (currentUser?.access_token) await sbSignOut(currentUser.access_token);
+  currentUser = null; isAdmin = false;
+  localStorage.removeItem('sb_session');
+  onGuest();
+}
+
+// ═══════════════════════════════════════════
+//  SESSION RESTORE
+// ═══════════════════════════════════════════
+async function restoreSession() {
+  const saved = localStorage.getItem('sb_session');
+  if (!saved) return false;
+  try {
+    const { user, access_token } = JSON.parse(saved);
+    if (!user || !access_token) return false;
+    // Verify token still valid
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${access_token}` }
+    });
+    if (!res.ok) { localStorage.removeItem('sb_session'); return false; }
+    currentUser = user;
+    currentUser.access_token = access_token;
+    return true;
+  } catch { return false; }
+}
+
+// ═══════════════════════════════════════════
+//  ON LOGIN / GUEST
+// ═══════════════════════════════════════════
+async function onLogin() {
+  isAdmin = currentUser.email === ADMIN_EMAIL;
+  shelfMode = 'my';
+
+  // Show user chip
+  const emailShort = currentUser.email.split('@')[0];
+  document.getElementById('userAvatar').textContent = emailShort[0].toUpperCase();
+  document.getElementById('userName').textContent = emailShort;
+  show('userChip'); hide('loginBtn');
+  show('addBookBtn'); show('viewSwitcher');
+  hide('readonlyBanner');
+
+  // Admin không cần switcher nếu đang ở tủ của mình
+  document.getElementById('btnMyShelf').classList.add('active');
+  document.getElementById('btnAdminShelf').classList.remove('active');
+
+  // Resolve admin user id
+  await resolveAdminId();
+  await loadBooks();
+}
+
+async function onGuest() {
+  currentUser = null; isAdmin = false; shelfMode = 'guest';
+  hide('userChip'); show('loginBtn');
+  hide('addBookBtn'); hide('viewSwitcher');
+  show('readonlyBanner');
+  await resolveAdminId();
+  await loadBooks();
+}
+
+async function resolveAdminId() {
+  if (adminUserId) return;
+  try {
+    if (isAdmin && currentUser) {
+      // Admin đang login — lưu ID của mình
+      adminUserId = currentUser.id;
+      localStorage.setItem('admin_uid', adminUserId);
+    } else {
+      // Thử lấy từ localStorage (đã lưu từ lần admin login trước)
+      adminUserId = localStorage.getItem('admin_uid') || null;
+
+      // Nếu chưa có, thử query RPC get_admin_uid (cần tạo function trong Supabase)
+      if (!adminUserId) {
+        try {
+          const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_admin_uid`, {
+            method: 'POST',
+            headers: { 'apikey': SUPABASE_ANON, 'Content-Type': 'application/json' },
+            body: '{}'
+          });
+          if (res.ok) {
+            const uid = await res.json();
+            if (uid) { adminUserId = uid; localStorage.setItem('admin_uid', uid); }
+          }
+        } catch {}
+      }
+    }
+  } catch {}
+}
+
+// ═══════════════════════════════════════════
+//  SHELF VIEW SWITCHER
+// ═══════════════════════════════════════════
+function switchShelfView(mode) {
+  shelfMode = mode;
+  document.getElementById('btnMyShelf').classList.toggle('active', mode === 'my');
+  document.getElementById('btnAdminShelf').classList.toggle('active', mode === 'admin');
+  // Ẩn nút thêm khi đang xem tủ admin (trừ khi là admin)
+  if (mode === 'admin' && !isAdmin) {
+    hide('addBookBtn');
+    show('readonlyBanner');
+  } else {
+    show('addBookBtn');
+    hide('readonlyBanner');
+  }
+  loadBooks();
+}
+
+// ═══════════════════════════════════════════
+//  LOAD BOOKS
+// ═══════════════════════════════════════════
+async function loadBooks() {
   showLoading('Đang tải tủ sách...');
   try {
-    const data = await sbFetch('books?select=*&order=created_at.asc');
+    let data;
+    if (shelfMode === 'my' && currentUser) {
+      // Tủ của user đang login
+      data = await sbFetch(`books?user_id=eq.${currentUser.id}&select=*&order=created_at.asc`, {}, currentUser.access_token);
+    } else {
+      // Guest hoặc xem tủ admin — dùng anon key
+      if (!adminUserId) {
+        hideLoading();
+        document.getElementById('bookcase').innerHTML = '<div style="padding:3rem;text-align:center;color:rgba(212,168,85,0.3);font-style:italic">📚 Thơ Nụ chưa thêm sách nào hoặc chưa cấu hình admin ID.</div>';
+        return;
+      }
+      data = await sbFetch(`books?user_id=eq.${adminUserId}&select=*&order=created_at.asc`);
+    }
     BOOKS = (data || []).map(b => ({
       ...b,
       quotes: Array.isArray(b.quotes) ? b.quotes : JSON.parse(b.quotes || '[]')
     }));
-    document.getElementById('configBanner').classList.add('hidden');
     render();
     showToast(`✅ Đã tải ${BOOKS.length} cuốn sách`);
   } catch(e) {
     console.error(e);
-    document.getElementById('bookcase').innerHTML = `<div style="padding:3rem;text-align:center;color:#f08060;font-style:italic">❌ Lỗi kết nối: ${e.message}<br><span style="font-size:0.8rem;color:rgba(212,168,85,0.4)">Kiểm tra lại URL và Key trong cài đặt.</span></div>`;
-    document.getElementById('configBanner').classList.remove('hidden');
+    document.getElementById('bookcase').innerHTML = `<div style="padding:3rem;text-align:center;color:#f08060;font-style:italic">❌ Lỗi: ${escapeHtml(e.message)}</div>`;
   } finally {
     hideLoading();
   }
 }
 
+// ═══════════════════════════════════════════
+//  CRUD — gắn user_id
+// ═══════════════════════════════════════════
+function canEdit() {
+  if (shelfMode === 'my' && currentUser) return true;
+  if (shelfMode === 'admin' && isAdmin) return true;
+  return false;
+}
+
 async function addBook(bookData) {
   return sbFetch('books', {
     method: 'POST',
-    body: JSON.stringify(bookData),
+    body: JSON.stringify({ ...bookData, user_id: currentUser.id }),
     headers: { 'Prefer': 'return=representation' }
-  });
+  }, currentUser.access_token);
 }
 
 async function updateBook(id, bookData) {
-  return sbFetch(`books?id=eq.${id}`, {
+  return sbFetch(`books?id=eq.${id}&user_id=eq.${currentUser.id}`, {
     method: 'PATCH',
     body: JSON.stringify(bookData)
-  });
+  }, currentUser.access_token);
 }
 
 async function deleteBook(id) {
-  return sbFetch(`books?id=eq.${id}`, { method: 'DELETE' });
+  return sbFetch(`books?id=eq.${id}&user_id=eq.${currentUser.id}`, {
+    method: 'DELETE'
+  }, currentUser.access_token);
 }
 
 // ═══════════════════════════════════════════
 //  LOADING
 // ═══════════════════════════════════════════
-function showLoading(msg = 'Đang xử lý...') {
+function showLoading(msg='Đang xử lý...') {
   document.getElementById('loadingText').textContent = msg;
   document.getElementById('loadingOverlay').classList.remove('hidden');
 }
-function hideLoading() {
-  document.getElementById('loadingOverlay').classList.add('hidden');
-}
+function hideLoading() { document.getElementById('loadingOverlay').classList.add('hidden'); }
+function show(id) { document.getElementById(id)?.classList.remove('view-hidden'); }
+function hide(id) { document.getElementById(id)?.classList.add('view-hidden'); }
 
 // ═══════════════════════════════════════════
 //  RENDER
 // ═══════════════════════════════════════════
 function showLibraryView() {
   currentView = 'library';
-  document.getElementById('libraryView').classList.remove('view-hidden');
-  document.getElementById('filterRow').classList.remove('view-hidden');
-  document.getElementById('quotesView').classList.add('view-hidden');
+  show('libraryView'); show('filterRow'); hide('quotesView');
   document.getElementById('quotesNavBtn').classList.remove('active');
   document.querySelectorAll('.filter-status').forEach(btn => {
     btn.classList.toggle('active', btn.getAttribute('onclick')?.includes(`'${currentFilter}'`));
@@ -1332,9 +1671,7 @@ function showLibraryView() {
 
 function showQuotesPage() {
   currentView = 'quotes';
-  document.getElementById('libraryView').classList.add('view-hidden');
-  document.getElementById('filterRow').classList.add('view-hidden');
-  document.getElementById('quotesView').classList.remove('view-hidden');
+  hide('libraryView'); hide('filterRow'); show('quotesView');
   document.querySelectorAll('.filter-status').forEach(b => b.classList.remove('active'));
   document.getElementById('quotesNavBtn').classList.add('active');
   renderQuotesPage();
@@ -1349,7 +1686,6 @@ function render() {
     return matchF && matchG && matchS;
   });
 
-  // Genre filter chips
   const allGenres = [...new Set(BOOKS.map(b => b.genre).filter(Boolean))];
   const fr = document.getElementById('filterRow');
   fr.innerHTML = '<span style="font-size:0.72rem;color:#6b5030;align-self:center">Thể loại:</span>';
@@ -1367,99 +1703,74 @@ function render() {
   });
 
   const groups = {};
-  visible.forEach(b => {
-    if (!groups[b.genre]) groups[b.genre] = [];
-    groups[b.genre].push(b);
-  });
+  visible.forEach(b => { if (!groups[b.genre]) groups[b.genre] = []; groups[b.genre].push(b); });
 
   const bc = document.getElementById('bookcase');
-  if (visible.length === 0) {
-    bc.innerHTML = '<div style="padding:3rem;text-align:center;color:rgba(212,168,85,0.3);font-style:italic">Không tìm thấy sách nào...</div>';
-    updateStats(visible);
-    if (currentView === 'quotes') renderQuotesPage();
-    return;
+  if (!visible.length) {
+    const isEmpty = BOOKS.length === 0;
+    bc.innerHTML = `<div style="padding:3rem;text-align:center;color:rgba(212,168,85,0.3);font-style:italic">
+      ${isEmpty && shelfMode === 'my' ? '📚 Tủ sách của bạn trống — hãy thêm cuốn đầu tiên!' : 'Không tìm thấy sách nào...'}
+    </div>`;
+    updateStats(visible); if (currentView === 'quotes') renderQuotesPage(); return;
   }
 
+  const editable = canEdit();
   let html = '';
   Object.entries(groups).forEach(([genre, gBooks]) => {
     const icon = GENRE_ICONS[genre] || '📚';
     html += `<div class="shelf-row">
       <div class="shelf-label"><span class="genre-icon">${icon}</span>${genre}</div>
-      <div class="shelf-scroll-wrap" data-shelf="${genre.replace(/\s/g,'_')}">
-        <button class="shelf-arrow left hidden" onclick="shelfScroll(this,-1)" title="Cuộn trái">&#8249;</button>
-        <button class="shelf-arrow right hidden" onclick="shelfScroll(this,1)" title="Cuộn phải">&#8250;</button>
+      <div class="shelf-scroll-wrap">
+        <button class="shelf-arrow left hidden" onclick="shelfScroll(this,-1)">&#8249;</button>
+        <button class="shelf-arrow right hidden" onclick="shelfScroll(this,1)">&#8250;</button>
         <div class="books-container-outer" onscroll="updateShelfScroll(this)">
           <div class="books-container">`;
 
-    gBooks.forEach((b, idx) => {
-      const h = BOOK_H;
-      const w = BOOK_W;
+    gBooks.forEach(b => {
       const stars = b.rating ? '★'.repeat(b.rating) + '☆'.repeat(5-b.rating) : '';
       const quotes = Array.isArray(b.quotes) ? b.quotes : [];
-
-      // Status config
       const statusMap = {
-        read:    { cls:'status-read',    pillCls:'pill-read',    icon:'✓', pillLabel:'✓ Đã đọc' },
-        reading: { cls:'status-reading', pillCls:'pill-reading', icon:'▶', pillLabel:'▶ Đang đọc' },
-        unread:  { cls:'status-unread',  pillCls:'pill-unread',  icon:'○', pillLabel:'○ Chưa đọc' },
-        want:    { cls:'status-want',    pillCls:'pill-want',    icon:'✨', pillLabel:'✨ Sắp đọc' },
+        read:    { cls:'status-read',    pillLabel:'✓ Đã đọc' },
+        reading: { cls:'status-reading', pillLabel:'▶ Đang đọc' },
+        unread:  { cls:'status-unread',  pillLabel:'○ Chưa đọc' },
+        want:    { cls:'status-want',    pillLabel:'✨ Sắp đọc' },
       };
       const st = statusMap[b.status] || statusMap['unread'];
-
-      // Bookmark SVG — only for "reading" (đang đọc dở)
       const bookmarkSVG = b.status === 'reading' ? `<div class="book-bookmark">
-        <svg viewBox="0 0 15 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M1 0 H14 V29 L7.5 24.5 L1 29 Z" fill="#b82810" stroke="#7a1804" stroke-width="0.8"/>
-          <line x1="4.5" y1="10" x2="10.5" y2="10" stroke="rgba(255,190,170,0.55)" stroke-width="1"/>
-          <line x1="4.5" y1="13.5" x2="10.5" y2="13.5" stroke="rgba(255,190,170,0.35)" stroke-width="0.8"/>
-        </svg>
+        <svg viewBox="0 0 15 32" fill="none"><path d="M1 0 H14 V29 L7.5 24.5 L1 29 Z" fill="#b82810" stroke="#7a1804" stroke-width="0.8"/>
+        <line x1="4.5" y1="10" x2="10.5" y2="10" stroke="rgba(255,190,170,0.55)" stroke-width="1"/>
+        <line x1="4.5" y1="13.5" x2="10.5" y2="13.5" stroke="rgba(255,190,170,0.35)" stroke-width="0.8"/></svg>
       </div>` : '';
-
       const coverHTML = b.cover
-        ? `<img src="${b.cover}" alt="${b.title}"
-            style="display:block;border-radius:2px 4px 4px 2px;"
+        ? `<img src="${b.cover}" alt="${escapeHtml(b.title)}" style="width:${BOOK_W}px;height:${BOOK_H}px;display:block;border-radius:2px 4px 4px 2px;object-fit:cover;object-position:center top"
             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-          <div class="book-cover-fallback" style="background:${b.color||'#2a1a08'};color:${b.text_color||'#e8d5a0'};display:none">
+          <div class="book-cover-fallback" style="background:${b.color||'#1a1008'};color:${b.text_color||'#e8d5a0'};display:none">
             <div class="book-spine"></div><div class="cover-deco"></div>
-            <div class="cover-title">${b.title}</div><div class="cover-deco"></div>
-            <div class="cover-author">${b.author}</div>
+            <div class="cover-title">${escapeHtml(b.title)}</div><div class="cover-deco"></div>
+            <div class="cover-author">${escapeHtml(b.author)}</div>
           </div>`
-        : `<div class="book-cover-fallback" style="background:${b.color||'#2a1a08'};color:${b.text_color||'#e8d5a0'};display:flex">
+        : `<div class="book-cover-fallback" style="height:${BOOK_H}px;background:${b.color||'#1a1008'};color:${b.text_color||'#e8d5a0'};display:flex">
             <div class="book-spine"></div><div class="cover-deco"></div>
-            <div class="cover-title">${b.title}</div><div class="cover-deco"></div>
-            <div class="cover-author">${b.author}</div>
+            <div class="cover-title">${escapeHtml(b.title)}</div><div class="cover-deco"></div>
+            <div class="cover-author">${escapeHtml(b.author)}</div>
           </div>`;
 
-      html += `<div class="book-item ${st.cls}" onclick="openBook(${b.id})" onmouseenter="positionTooltip(this)">
+      html += `<div class="book-item ${st.cls}" onclick="openBook(${b.id})">
         <div class="book-cover-wrap">
-          <div class="book-cover">${coverHTML}</div>
-          <div class="book-pages"></div>
+          <div class="book-cover" style="width:${BOOK_W}px;height:${BOOK_H}px">${coverHTML}</div>
+          <div class="book-pages" style="height:${BOOK_H-8}px"></div>
           ${bookmarkSVG}
           ${stars ? `<div class="mini-stars" style="color:#f0d060">${stars}</div>` : ''}
           <div class="book-floor-shadow"></div>
         </div>
-        <div class="book-tooltip">
-          <div class="tt-title">${b.title}</div>
-          <div class="tt-author">${b.author}</div>
-          <div class="tt-divider"></div>
-          <div class="tt-meta">${[b.year, b.genre].filter(Boolean).join(' · ')}</div>
-          <div class="tt-status-pill ${st.pillCls}">${st.pillLabel}</div>
-          ${quotes.length ? `<div class="tt-meta" style="margin-top:5px">💬 ${quotes.length} trích dẫn</div>` : ''}
-          ${stars ? `<div class="tt-meta" style="margin-top:3px;color:#d4a855">${stars}</div>` : ''}
-        </div>
       </div>`;
     });
 
-    html += `</div><!-- .books-container -->
-        </div><!-- .books-container-outer -->
+    html += `</div></div>
         <div class="more-books-indicator"><span class="more-books-chevron">›</span></div>
-      </div><!-- .shelf-scroll-wrap -->
-      <div class="shelf-plank"></div>
-      <div class="shelf-scrollbar-wrap">
-        <div class="shelf-scrollbar-track">
-          <div class="shelf-scrollbar-thumb"></div>
-        </div>
       </div>
+      <div class="shelf-plank"></div>
+      <div class="shelf-scrollbar-wrap"><div class="shelf-scrollbar-track"><div class="shelf-scrollbar-thumb"></div></div></div>
       <div class="shelf-dots"></div>
     </div>`;
   });
@@ -1472,49 +1783,39 @@ function render() {
 
 function updateStats(visible) {
   const all = visible || BOOKS;
-  const r = all.filter(b=>b.status==='read').length;
+  const r   = all.filter(b=>b.status==='read').length;
   const ing = all.filter(b=>b.status==='reading').length;
-  const q = all.reduce((s,b)=> s + (Array.isArray(b.quotes) ? b.quotes.length : 0), 0);
+  const q   = all.reduce((s,b)=>s+(Array.isArray(b.quotes)?b.quotes.length:0),0);
   document.getElementById('statsRow').innerHTML = `
     <div class="stat-chip"><b>${all.length}</b> cuốn sách</div>
     <div class="stat-chip"><b>${r}</b> đã đọc</div>
     <div class="stat-chip"><b>${ing}</b> đang đọc</div>
-    <div class="stat-chip"><b>${q}</b> trích dẫn</div>
-  `;
+    <div class="stat-chip"><b>${q}</b> trích dẫn</div>`;
 }
 
 // ═══════════════════════════════════════════
-//  FILTER
+//  FILTER / SEARCH
 // ═══════════════════════════════════════════
 function setFilter(f, el) {
-  showLibraryView();
-  currentFilter = f;
+  showLibraryView(); currentFilter = f;
   document.querySelectorAll('.filter-status').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  render();
+  el.classList.add('active'); render();
 }
-
 document.getElementById('searchInput').addEventListener('input', e => {
-  showLibraryView();
-  searchQ = e.target.value;
-  render();
+  showLibraryView(); searchQ = e.target.value; render();
 });
 
+// ═══════════════════════════════════════════
+//  QUOTES PAGE
+// ═══════════════════════════════════════════
 function getAllQuotes() {
   return BOOKS.flatMap(book => {
     const quotes = Array.isArray(book.quotes) ? book.quotes : [];
-    return quotes
-      .filter(q => q && String(q.text || '').trim())
-      .map((q, idx) => ({
-        text: String(q.text || '').trim(),
-        page: q.page || '',
-        ch: q.ch || '',
-        index: idx + 1,
-        bookId: book.id,
-        bookTitle: book.title || '',
-        author: book.author || '',
-        genre: book.genre || ''
-      }));
+    return quotes.filter(q=>q&&String(q.text||'').trim()).map((q,idx)=>({
+      text: String(q.text||'').trim(), page: q.page||'', ch: q.ch||'',
+      index: idx+1, bookId: book.id, bookTitle: book.title||'',
+      author: book.author||'', genre: book.genre||''
+    }));
   });
 }
 
@@ -1522,792 +1823,502 @@ function renderQuotesPage() {
   const grid = document.getElementById('quotesGrid');
   const count = document.getElementById('quotesPageCount');
   if (!grid || !count) return;
-
-  const rawQ = document.getElementById('quotesSearchInput')?.value || '';
+  const rawQ = document.getElementById('quotesSearchInput')?.value||'';
   const q = rawQ.toLowerCase().trim();
   const allQuotes = getAllQuotes();
   const visible = allQuotes.filter(item => {
     if (!q) return true;
-    const text = `${item.text} ${item.bookTitle} ${item.author} ${item.genre}`.toLowerCase();
-    return text.includes(q);
+    return `${item.text} ${item.bookTitle} ${item.author} ${item.genre}`.toLowerCase().includes(q);
   });
-
   count.textContent = `${visible.length}/${allQuotes.length} trích dẫn trong ${BOOKS.length} cuốn sách.`;
-
   if (!visible.length) {
-    grid.innerHTML = `<div class="quotes-empty">Chưa có trích dẫn phù hợp. Khi bạn thêm trích dẫn trong form sách, chúng sẽ xuất hiện tại đây.</div>`;
-    return;
+    grid.innerHTML = `<div class="quotes-empty">Chưa có trích dẫn. Thêm trích dẫn trong form sách.</div>`; return;
   }
-
-  grid.innerHTML = visible.map((item, idx) => {
-    const meta = [item.page ? `Trang ${item.page}` : '', item.ch ? `Chương ${item.ch}` : ''].filter(Boolean).join(' · ');
-    return `
-      <article class="quote-page-card">
-        <div class="quote-page-text">“${escapeHtml(item.text)}”</div>
-        <div class="quote-page-footer">
-          <div class="quote-page-book">
-            <b>${escapeHtml(item.bookTitle)}</b>
-            ${escapeHtml(item.author || 'Không rõ tác giả')}
-            ${meta ? `<div>${escapeHtml(meta)}</div>` : ''}
-          </div>
-          <button class="quote-copy" onclick="copyQuote(${idx})">Copy</button>
+  grid.innerHTML = visible.map((item,idx) => {
+    const meta = [item.page?`Trang ${item.page}`:'', item.ch?`Chương ${item.ch}`:''].filter(Boolean).join(' · ');
+    return `<article class="quote-page-card">
+      <div class="quote-page-text">"${escapeHtml(item.text)}"</div>
+      <div class="quote-page-footer">
+        <div class="quote-page-book">
+          <b>${escapeHtml(item.bookTitle)}</b>
+          ${escapeHtml(item.author||'Không rõ tác giả')}
+          ${meta?`<div>${escapeHtml(meta)}</div>`:''}
         </div>
-      </article>`;
+        <button class="quote-copy" onclick="copyQuote(${idx})">Copy</button>
+      </div></article>`;
   }).join('');
-
-  grid.querySelectorAll('.quote-copy').forEach((btn, idx) => {
+  grid.querySelectorAll('.quote-copy').forEach((btn,idx) => {
     btn._quoteText = formatQuoteForCopy(visible[idx]);
   });
 }
 
 function formatQuoteForCopy(item) {
-  const place = [item.page ? `trang ${item.page}` : '', item.ch ? `chương ${item.ch}` : ''].filter(Boolean).join(', ');
+  const place = [item.page?`trang ${item.page}`:'',item.ch?`chương ${item.ch}`:''].filter(Boolean).join(', ');
   const suffix = [item.bookTitle, item.author].filter(Boolean).join(' - ');
-  return `"${item.text}"${suffix ? `\n${suffix}` : ''}${place ? ` (${place})` : ''}`;
+  return `"${item.text}"${suffix?`\n${suffix}`:''}${place?` (${place})`:''}`;
 }
 
 async function copyQuote(idx) {
   const btn = document.querySelectorAll('#quotesGrid .quote-copy')[idx];
-  const text = btn?._quoteText;
-  await copyTextToClipboard(text);
+  await copyTextToClipboard(btn?._quoteText);
 }
-
+async function copyBookQuote(bookId, idx) {
+  const book = BOOKS.find(x=>x.id===bookId);
+  const quote = Array.isArray(book?.quotes)?book.quotes[idx]:null;
+  if (!quote) return;
+  await copyTextToClipboard(formatQuoteForCopy({ text:quote.text||'', page:quote.page||'', ch:quote.ch||'', bookTitle:book.title||'', author:book.author||'' }));
+}
 async function copyTextToClipboard(text) {
   if (!text) return;
-
   try {
-    if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(text);
-    } else {
-      const area = document.createElement('textarea');
-      area.value = text;
-      area.style.position = 'fixed';
-      area.style.opacity = '0';
-      document.body.appendChild(area);
-      area.select();
-      document.execCommand('copy');
-      area.remove();
+    if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(text);
+    else {
+      const a = document.createElement('textarea');
+      a.value=text; a.style.position='fixed'; a.style.opacity='0';
+      document.body.appendChild(a); a.select(); document.execCommand('copy'); a.remove();
     }
     showToast('✅ Đã copy trích dẫn');
-  } catch(e) {
-    showToast('Không copy được, hãy thử lại');
-  }
-}
-
-async function copyBookQuote(bookId, idx) {
-  const book = BOOKS.find(x => x.id === bookId);
-  const quote = Array.isArray(book?.quotes) ? book.quotes[idx] : null;
-  if (!quote) return;
-  await copyTextToClipboard(formatQuoteForCopy({
-    text: quote.text || '',
-    page: quote.page || '',
-    ch: quote.ch || '',
-    bookTitle: book.title || '',
-    author: book.author || ''
-  }));
+  } catch { showToast('Không copy được'); }
 }
 
 // ═══════════════════════════════════════════
 //  VIEW MODAL
 // ═══════════════════════════════════════════
 function openBook(id) {
-  const b = BOOKS.find(x=>x.id===id);
-  if (!b) return;
-  const statusLabel = {read:'Đã đọc', reading:'Đang đọc', unread:'Sắp đọc'}[b.status];
-  const statusCls = {read:'tt-read', reading:'tt-reading', unread:'tt-unread'}[b.status];
+  const b = BOOKS.find(x=>x.id===id); if (!b) return;
+  const statusLabel = {read:'Đã đọc',reading:'Đang đọc',unread:'Sắp đọc',want:'Muốn đọc'}[b.status]||'';
+  const statusCls   = {read:'tt-read',reading:'tt-reading',unread:'tt-unread',want:'tt-unread'}[b.status]||'';
   const stars = b.rating ? '★'.repeat(b.rating)+'☆'.repeat(5-b.rating) : 'Chưa đánh giá';
-  const quotes = Array.isArray(b.quotes) ? b.quotes : [];
+  const quotes = Array.isArray(b.quotes)?b.quotes:[];
+  const editable = canEdit();
 
-  let quotesHTML = quotes.length
-    ? quotes.map((q, idx)=>{
-      const meta = [q.page ? `Trang ${q.page}` : '', q.ch || ''].filter(Boolean).join(' · ');
-      return `<div class="quote-card">
-        <div class="quote-card-head">
-          <div class="quote-card-text">"${escapeHtml(q.text || '')}"</div>
-          <button class="quote-copy" onclick="event.stopPropagation();copyBookQuote(${b.id},${idx})">Copy</button>
-        </div>
-        ${meta ? `<div class="quote-meta">${escapeHtml(meta)}</div>` : ''}
-      </div>`;
-    }).join('')
+  const quotesHTML = quotes.length
+    ? quotes.map((q,idx)=>{
+        const meta = [q.page?`Trang ${q.page}`:'',q.ch||''].filter(Boolean).join(' · ');
+        return `<div class="quote-card">
+          <div class="quote-card-head">
+            <div class="quote-card-text">"${escapeHtml(q.text||'')}"</div>
+            <button class="quote-copy" onclick="event.stopPropagation();copyBookQuote(${b.id},${idx})">Copy</button>
+          </div>
+          ${meta?`<div class="quote-meta">${escapeHtml(meta)}</div>`:''}
+        </div>`;
+      }).join('')
     : '<p style="color:#9a7050;font-style:italic;font-size:0.82rem">Chưa có trích dẫn.</p>';
 
   document.getElementById('modalBody').innerHTML = `
     <div class="modal-cover-row">
       ${b.cover
-        ? `<img class="modal-book-cover" src="${b.cover}" alt="${b.title}" onerror="this.style.background='${b.color||'#1a1008'}'">`
+        ? `<img class="modal-book-cover" src="${b.cover}" alt="${escapeHtml(b.title)}" onerror="this.style.background='${b.color||'#1a1008'}'">`
         : `<div class="modal-book-cover" style="background:${b.color||'#1a1008'};display:flex;align-items:center;justify-content:center;color:${b.text_color||'#e8d5a0'};font-size:2rem">📖</div>`}
       <div>
-        <div class="modal-title">${b.title}</div>
-        <div class="modal-author">bởi ${b.author}</div>
+        <div class="modal-title">${escapeHtml(b.title)}</div>
+        <div class="modal-author">bởi ${escapeHtml(b.author)}</div>
         <div class="modal-tags">
-          <span class="tag">${GENRE_ICONS[b.genre]||''} ${b.genre||''}</span>
-          ${b.year ? `<span class="tag">${b.year}</span>` : ''}
+          <span class="tag">${GENRE_ICONS[b.genre]||''} ${escapeHtml(b.genre||'')}</span>
+          ${b.year?`<span class="tag">${b.year}</span>`:''}
           <span class="tt-status ${statusCls}" style="padding:2px 8px;border-radius:10px;font-size:0.72rem">${statusLabel}</span>
         </div>
         <div class="stars">${stars}</div>
-        ${b.note ? `<div class="modal-note" style="margin-top:0.6rem">${b.note}</div>` : ''}
-        <div class="modal-actions">
+        ${b.note?`<div class="modal-note" style="margin-top:0.6rem">${escapeHtml(b.note)}</div>`:''}
+        ${editable ? `<div class="modal-actions">
           <button class="modal-btn btn-edit" onclick="openEditForm(${b.id})">✏️ Sửa</button>
           <button class="modal-btn btn-delete" onclick="confirmDelete(${b.id})">🗑️ Xóa</button>
-        </div>
+        </div>` : ''}
       </div>
     </div>
     <div class="section-hd">💬 Trích dẫn hay</div>
-    <div class="quotes-list">${quotesHTML}</div>
-  `;
+    <div class="quotes-list">${quotesHTML}</div>`;
   document.getElementById('overlay').classList.add('on');
 }
 
 function closeModal() { document.getElementById('overlay').classList.remove('on'); }
 
 async function confirmDelete(id) {
-  const b = BOOKS.find(x=>x.id===id);
-  if (!b) return;
+  if (!canEdit()) { showToast('⛔ Bạn không có quyền xóa sách này'); return; }
+  const b = BOOKS.find(x=>x.id===id); if (!b) return;
   if (!confirm(`Xóa "${b.title}"? Hành động này không thể hoàn tác.`)) return;
-  closeModal();
-  showLoading('Đang xóa...');
+  closeModal(); showLoading('Đang xóa...');
   try {
     await deleteBook(id);
     BOOKS = BOOKS.filter(x=>x.id!==id);
-    render();
-    showToast('🗑️ Đã xóa sách');
-  } catch(e) {
-    showToast('❌ Lỗi: ' + e.message);
-  } finally {
-    hideLoading();
-  }
+    render(); showToast('🗑️ Đã xóa sách');
+  } catch(e) { showToast('❌ Lỗi: '+e.message); } finally { hideLoading(); }
 }
 
 // ═══════════════════════════════════════════
 //  ADD/EDIT FORM
 // ═══════════════════════════════════════════
-let formRating = 0;
-let formQuotes = [];
-
 function openAddForm() {
-  editingId = null;
-  formRating = 0;
-  formQuotes = [];
-  document.getElementById('formTitle').textContent = '➕ Thêm sách mới';
-  document.getElementById('fId').value = '';
-  document.getElementById('fIsbn').value = '';
-  document.getElementById('fTitle').value = '';
-  document.getElementById('fAuthor').value = '';
-  document.getElementById('fYear').value = '';
-  document.getElementById('fGenre').value = '';
-  document.getElementById('fStatus').value = 'unread';
-  document.getElementById('fCover').value = '';
-  document.getElementById('fNote').value = '';
-  document.getElementById('fRating').value = '0';
-  document.getElementById('isbnStatus').textContent = '';
-  document.getElementById('aiBookName').value = '';
-  document.getElementById('aiSearchResults').innerHTML = '';
-  document.getElementById('aiFilledBadge').style.display = 'none';
-  updateCoverPreview();
-  updateRatingUI();
-  renderQuotesForm();
+  if (!canEdit()) { showToast('⛔ Đăng nhập để thêm sách'); showAuthModal(); return; }
+  editingId=null; formRating=0; formQuotes=[];
+  document.getElementById('formTitle').textContent='➕ Thêm sách mới';
+  ['fId','fIsbn','fTitle','fAuthor','fYear','fCover','fNote'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fGenre').value='';
+  document.getElementById('fStatus').value='unread';
+  document.getElementById('fRating').value='0';
+  document.getElementById('isbnStatus').textContent='';
+  document.getElementById('aiBookName').value='';
+  document.getElementById('aiSearchResults').innerHTML='';
+  document.getElementById('aiFilledBadge').style.display='none';
+  updateCoverPreview(); updateRatingUI(); renderQuotesForm();
   document.getElementById('formOverlay').classList.add('on');
 }
 
 function openEditForm(id) {
-  const b = BOOKS.find(x=>x.id===id);
-  if (!b) return;
-  closeModal();
-  editingId = id;
-  formRating = b.rating || 0;
-  formQuotes = Array.isArray(b.quotes) ? JSON.parse(JSON.stringify(b.quotes)) : [];
-  document.getElementById('formTitle').textContent = '✏️ Sửa sách';
-  document.getElementById('fId').value = b.id;
-  document.getElementById('fIsbn').value = '';
-  document.getElementById('fTitle').value = b.title || '';
-  document.getElementById('fAuthor').value = b.author || '';
-  document.getElementById('fYear').value = b.year || '';
-  document.getElementById('fGenre').value = b.genre || '';
-  document.getElementById('fStatus').value = b.status || 'unread';
-  document.getElementById('fCover').value = b.cover || '';
-  document.getElementById('fNote').value = b.note || '';
-  document.getElementById('fRating').value = formRating;
-  document.getElementById('isbnStatus').textContent = '';
-  document.getElementById('aiBookName').value = '';
-  document.getElementById('aiSearchResults').innerHTML = '';
-  document.getElementById('aiFilledBadge').style.display = 'none';
-  updateCoverPreview();
-  updateRatingUI();
-  renderQuotesForm();
+  if (!canEdit()) { showToast('⛔ Bạn không có quyền sửa sách này'); return; }
+  const b = BOOKS.find(x=>x.id===id); if (!b) return;
+  closeModal(); editingId=id; formRating=b.rating||0;
+  formQuotes = Array.isArray(b.quotes)?JSON.parse(JSON.stringify(b.quotes)):[];
+  document.getElementById('formTitle').textContent='✏️ Sửa sách';
+  document.getElementById('fId').value=b.id;
+  document.getElementById('fIsbn').value='';
+  document.getElementById('fTitle').value=b.title||'';
+  document.getElementById('fAuthor').value=b.author||'';
+  document.getElementById('fYear').value=b.year||'';
+  document.getElementById('fGenre').value=b.genre||'';
+  document.getElementById('fStatus').value=b.status||'unread';
+  document.getElementById('fCover').value=b.cover||'';
+  document.getElementById('fNote').value=b.note||'';
+  document.getElementById('fRating').value=formRating;
+  document.getElementById('isbnStatus').textContent='';
+  document.getElementById('aiBookName').value='';
+  document.getElementById('aiSearchResults').innerHTML='';
+  document.getElementById('aiFilledBadge').style.display='none';
+  updateCoverPreview(); updateRatingUI(); renderQuotesForm();
   document.getElementById('formOverlay').classList.add('on');
 }
 
-function closeForm() {
-  document.getElementById('formOverlay').classList.remove('on');
-}
-
-function setRating(r) {
-  formRating = r;
-  document.getElementById('fRating').value = r;
-  updateRatingUI();
-}
-
+function closeForm() { document.getElementById('formOverlay').classList.remove('on'); }
+function setRating(r) { formRating=r; document.getElementById('fRating').value=r; updateRatingUI(); }
 function updateRatingUI() {
-  document.querySelectorAll('.star-btn').forEach(btn => {
-    btn.classList.toggle('active', parseInt(btn.dataset.r) <= formRating);
+  document.querySelectorAll('.star-btn').forEach(btn=>{
+    btn.classList.toggle('active', parseInt(btn.dataset.r)<=formRating);
   });
 }
-
 function updateCoverPreview() {
   const url = document.getElementById('fCover').value.trim();
-  const preview = document.getElementById('coverPreview');
-  if (url) {
-    preview.innerHTML = `<img src="${url}" onerror="this.parentElement.innerHTML='📖'">`;
-  } else {
-    preview.innerHTML = '📖';
-  }
+  document.getElementById('coverPreview').innerHTML = url ? `<img src="${url}" onerror="this.parentElement.innerHTML='📖'">` : '📖';
 }
 
-// ISBN Lookup
 async function fetchISBN() {
   const isbn = document.getElementById('fIsbn').value.trim().replace(/[-\s]/g,'');
   if (!isbn) { showToast('Nhập ISBN trước'); return; }
   const status = document.getElementById('isbnStatus');
-  status.className = 'isbn-status loading';
-  status.textContent = '⏳ Đang tìm...';
-
+  status.className='isbn-status loading'; status.textContent='⏳ Đang tìm...';
   try {
     const res = await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
     const data = await res.json();
     const key = `ISBN:${isbn}`;
-    if (!data[key]) {
-      status.className = 'isbn-status err';
-      status.textContent = '❌ Không tìm thấy ISBN này. Nhập tay bên dưới.';
-      return;
-    }
+    if (!data[key]) { status.className='isbn-status err'; status.textContent='❌ Không tìm thấy ISBN này.'; return; }
     const book = data[key];
-    document.getElementById('fTitle').value = book.title || '';
-    document.getElementById('fAuthor').value = (book.authors || []).map(a=>a.name).join(', ') || '';
-    const year = book.publish_date ? book.publish_date.match(/\d{4}/)?.[0] : '';
-    if (year) document.getElementById('fYear').value = year;
-    const coverUrl = book.cover?.large || book.cover?.medium || `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;    document.getElementById('fCover').value = coverUrl;
-    updateCoverPreview();
-    status.className = 'isbn-status ok';
-    status.textContent = '✅ Đã điền tự động! Kiểm tra và chỉnh sửa nếu cần.';
-  } catch(e) {
-    // Try cover directly
-    const coverUrl = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
-    document.getElementById('fCover').value = coverUrl;
-    updateCoverPreview();
-    status.className = 'isbn-status err';
-    status.textContent = '⚠️ API lỗi, đã thử lấy bìa trực tiếp. Nhập thông tin tay.';
+    document.getElementById('fTitle').value=book.title||'';
+    document.getElementById('fAuthor').value=(book.authors||[]).map(a=>a.name).join(', ')||'';
+    const year = book.publish_date?book.publish_date.match(/\d{4}/)?.[0]:'';
+    if (year) document.getElementById('fYear').value=year;
+    const coverUrl = book.cover?.large||book.cover?.medium||`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
+    document.getElementById('fCover').value=coverUrl; updateCoverPreview();
+    status.className='isbn-status ok'; status.textContent='✅ Đã điền tự động!';
+  } catch {
+    const coverUrl=`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
+    document.getElementById('fCover').value=coverUrl; updateCoverPreview();
+    status.className='isbn-status err'; status.textContent='⚠️ API lỗi, thử lấy bìa trực tiếp.';
   }
 }
+document.getElementById('fIsbn').addEventListener('keydown',e=>{ if(e.key==='Enter') fetchISBN(); });
 
-document.getElementById('fIsbn').addEventListener('keydown', e => {
-  if (e.key === 'Enter') fetchISBN();
-});
-
-// Quotes form
-function addQuoteRow(q = {}) {
-  formQuotes.push({ text: q.text || '', page: q.page || '', ch: q.ch || '' });
-  renderQuotesForm();
-}
-
-function removeQuoteRow(idx) {
-  formQuotes.splice(idx, 1);
-  renderQuotesForm();
-}
-
+function addQuoteRow(q={}) { formQuotes.push({text:q.text||'',page:q.page||'',ch:q.ch||''}); renderQuotesForm(); }
+function removeQuoteRow(idx) { formQuotes.splice(idx,1); renderQuotesForm(); }
 function renderQuotesForm() {
   const list = document.getElementById('quotesFormList');
-  if (!formQuotes.length) {
-    list.innerHTML = '<div style="font-size:0.78rem;color:#4a3020;font-style:italic">Chưa có trích dẫn nào.</div>';
-    return;
-  }
-  list.innerHTML = formQuotes.map((q, i) => `
+  if (!formQuotes.length) { list.innerHTML='<div style="font-size:0.78rem;color:#4a3020;font-style:italic">Chưa có trích dẫn nào.</div>'; return; }
+  list.innerHTML = formQuotes.map((q,i)=>`
     <div class="quote-form-item">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div class="form-label">Trích dẫn ${i+1}</div>
         <button class="quote-remove" onclick="removeQuoteRow(${i})">✕ Xóa</button>
       </div>
       <textarea class="form-textarea" style="min-height:55px" placeholder="Nội dung trích dẫn..."
-        oninput="formQuotes[${i}].text=this.value">${q.text||''}</textarea>
+        oninput="formQuotes[${i}].text=this.value">${escapeHtml(q.text||'')}</textarea>
       <div class="quote-form-row">
-        <input class="form-input" placeholder="Trang" value="${q.page||''}" oninput="formQuotes[${i}].page=this.value">
-        <input class="form-input" placeholder="Chương" value="${q.ch||''}" oninput="formQuotes[${i}].ch=this.value">
+        <input class="form-input" placeholder="Trang" value="${escapeHtml(q.page||'')}" oninput="formQuotes[${i}].page=this.value">
+        <input class="form-input" placeholder="Chương" value="${escapeHtml(q.ch||'')}" oninput="formQuotes[${i}].ch=this.value">
         <div></div>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-// Submit book
 async function submitBook() {
-  const title = document.getElementById('fTitle').value.trim();
+  if (!canEdit()) { showToast('⛔ Không có quyền'); return; }
+  const title  = document.getElementById('fTitle').value.trim();
   const author = document.getElementById('fAuthor').value.trim();
-  if (!title || !author) { showToast('Vui lòng nhập tên sách và tác giả'); return; }
-
-  // Random book color based on title
+  if (!title||!author) { showToast('Vui lòng nhập tên sách và tác giả'); return; }
   const colors = ['#1a0d05','#0d1a05','#050d1a','#1a051a','#1a1005','#051a1a','#18100a','#0a1018','#180a10'];
-  const randomColor = colors[Math.abs(title.split('').reduce((a,c)=>a+c.charCodeAt(0),0)) % colors.length];
-
+  const randomColor = colors[Math.abs(title.split('').reduce((a,c)=>a+c.charCodeAt(0),0))%colors.length];
   const bookData = {
-    title,
-    author,
-    year: parseInt(document.getElementById('fYear').value) || null,
-    genre: document.getElementById('fGenre').value || 'Khác',
+    title, author,
+    year: parseInt(document.getElementById('fYear').value)||null,
+    genre: document.getElementById('fGenre').value||'Khác',
     status: document.getElementById('fStatus').value,
     rating: formRating,
-    cover: document.getElementById('fCover').value.trim() || null,
+    cover: document.getElementById('fCover').value.trim()||null,
     note: document.getElementById('fNote').value.trim(),
-    quotes: formQuotes.filter(q => q.text.trim()),
-    color: randomColor,
-    text_color: '#e8d5a0'
+    quotes: formQuotes.filter(q=>q.text.trim()),
+    color: randomColor, text_color: '#e8d5a0'
   };
-
   const btn = document.getElementById('formSubmit');
-  btn.disabled = true;
-  btn.textContent = '⏳ Đang lưu...';
-  showLoading(editingId ? 'Đang cập nhật...' : 'Đang thêm sách...');
-
+  btn.disabled=true; btn.textContent='⏳ Đang lưu...';
+  showLoading(editingId?'Đang cập nhật...':'Đang thêm sách...');
   try {
     if (editingId) {
       await updateBook(editingId, bookData);
       const idx = BOOKS.findIndex(x=>x.id===editingId);
-      if (idx !== -1) BOOKS[idx] = { ...BOOKS[idx], ...bookData };
+      if (idx!==-1) BOOKS[idx]={...BOOKS[idx],...bookData};
       showToast('✅ Đã cập nhật sách!');
     } else {
       const result = await addBook(bookData);
-      const newBook = Array.isArray(result) ? result[0] : result;
-      if (newBook) BOOKS.push(newBook);
+      const newBook = Array.isArray(result)?result[0]:result;
+      if (newBook) BOOKS.push({...newBook, quotes: bookData.quotes});
       showToast('✅ Đã thêm sách mới!');
     }
-    closeForm();
-    render();
-  } catch(e) {
-    showToast('❌ Lỗi: ' + e.message);
-    console.error(e);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '💾 Lưu sách';
-    hideLoading();
-  }
+    closeForm(); render();
+  } catch(e) { showToast('❌ Lỗi: '+e.message); console.error(e); }
+  finally { btn.disabled=false; btn.textContent='💾 Lưu sách'; hideLoading(); }
 }
 
 // ═══════════════════════════════════════════
-//  AI BOOK SEARCH
+//  AI BOOK SEARCH (giữ nguyên từ file gốc)
 // ═══════════════════════════════════════════
-let aiPanelOpen = true;
-
+let aiPanelOpen=true;
 function toggleAiPanel() {
-  aiPanelOpen = !aiPanelOpen;
-  const body = document.getElementById('aiSearchBody');
-  const arrow = document.getElementById('aiPanelArrow');
-  body.style.display = aiPanelOpen ? '' : 'none';
-  arrow.style.transform = aiPanelOpen ? '' : 'rotate(-90deg)';
+  aiPanelOpen=!aiPanelOpen;
+  document.getElementById('aiSearchBody').style.display=aiPanelOpen?'':'none';
+  document.getElementById('aiPanelArrow').style.transform=aiPanelOpen?'':'rotate(-90deg)';
 }
 
-function escapeHtml(value = '') {
-  return String(value).replace(/[&<>"']/g, ch => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
-  }[ch]));
+function escapeHtml(value='') {
+  return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 }
-
-function normalizeBookText(value = '') {
-  return String(value).toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^\w\s]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+function normalizeBookText(value='') {
+  return String(value).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^\w\s]/g,' ').replace(/\s+/g,' ').trim();
 }
-
-function scoreBookMatch(book, query) {
-  const q = normalizeBookText(query);
-  const title = normalizeBookText(book.title);
-  const author = normalizeBookText(book.author);
-  const haystack = `${title} ${author}`;
-  const tokens = q.split(' ').filter(Boolean);
-  let score = 0;
-
-  if (title === q) score += 120;
-  if (title.startsWith(q)) score += 70;
-  if (title.includes(q)) score += 55;
-  if (author.includes(q)) score += 25;
-  tokens.forEach(token => {
-    if (title.includes(token)) score += 12;
-    else if (haystack.includes(token)) score += 5;
-  });
-  if (book.cover || book.cover_i || book.isbn) score += 12;
-  if (book.description) score += 8;
-  if (book.year) score += 4;
-  if (book.source === 'Google Books') score += 6;
-
+function scoreBookMatch(book,query) {
+  const q=normalizeBookText(query),title=normalizeBookText(book.title),author=normalizeBookText(book.author);
+  const haystack=`${title} ${author}`;
+  const tokens=q.split(' ').filter(Boolean);
+  let score=0;
+  if(title===q) score+=120; if(title.startsWith(q)) score+=70; if(title.includes(q)) score+=55;
+  if(author.includes(q)) score+=25;
+  tokens.forEach(t=>{ if(title.includes(t)) score+=12; else if(haystack.includes(t)) score+=5; });
+  if(book.cover||book.cover_i||book.isbn) score+=12;
+  if(book.description) score+=8; if(book.year) score+=4;
+  if(book.source==='Google Books') score+=6;
   return score;
 }
-
 function inferGenre(book) {
-  const text = normalizeBookText([
-    book.title,
-    book.author,
-    book.categories,
-    book.subjects,
-    book.description
-  ].filter(Boolean).join(' '));
-
-  const rules = [
-    ['Kỹ năng sống', ['self help', 'personal development', 'success', 'habits', 'productivity', 'leadership', 'ky nang', 'thanh cong', 'thoi quen']],
-    ['Tài chính', ['business', 'finance', 'money', 'investing', 'economics', 'tai chinh', 'kinh doanh', 'dau tu']],
-    ['Tâm lý học', ['psychology', 'mental', 'behavior', 'emotion', 'tam ly', 'hanh vi', 'cam xuc']],
-    ['Triết học', ['philosophy', 'ethics', 'nietzsche', 'plato', 'aristotle', 'triet hoc']],
-    ['Lịch sử', ['history', 'historical', 'war', 'biography', 'lich su', 'chien tranh', 'hoi ky']],
-    ['Khoa học viễn tưởng', ['science fiction', 'sci fi', 'dystopian', 'space', 'robot', 'vien tuong']],
-    ['Văn học Nhật', ['japanese', 'japan', 'murakami', 'kawabata', 'mishima', 'nhat ban', 'van hoc nhat']],
-    ['Văn học Việt', ['vietnamese', 'vietnam', 'nguyen nhat anh', 'nam cao', 'vu trong phung', 'van hoc viet']],
-    ['Tâm linh', ['spiritual', 'religion', 'buddhism', 'mindfulness', 'meditation', 'tam linh', 'thien', 'phat giao']],
-    ['Tiểu thuyết', ['fiction', 'novel', 'literature', 'classic', 'tieu thuyet', 'van hoc']]
+  const text=normalizeBookText([book.title,book.author,book.categories,book.subjects,book.description].filter(Boolean).join(' '));
+  const rules=[
+    ['Kỹ năng sống',['self help','personal development','success','habits','productivity','leadership','ky nang','thanh cong','thoi quen']],
+    ['Tài chính',['business','finance','money','investing','economics','tai chinh','kinh doanh','dau tu']],
+    ['Tâm lý học',['psychology','mental','behavior','emotion','tam ly','hanh vi','cam xuc']],
+    ['Triết học',['philosophy','ethics','nietzsche','plato','aristotle','triet hoc']],
+    ['Lịch sử',['history','historical','war','biography','lich su','chien tranh','hoi ky']],
+    ['Khoa học viễn tưởng',['science fiction','sci fi','dystopian','space','robot','vien tuong']],
+    ['Văn học Nhật',['japanese','japan','murakami','kawabata','mishima','nhat ban','van hoc nhat']],
+    ['Văn học Việt',['vietnamese','vietnam','nguyen nhat anh','nam cao','vu trong phung','van hoc viet']],
+    ['Tâm linh',['spiritual','religion','buddhism','mindfulness','meditation','tam linh','thien','phat giao']],
+    ['Tiểu thuyết',['fiction','novel','literature','classic','tieu thuyet','van hoc']]
   ];
-
-  for (const [genre, keywords] of rules) {
-    if (keywords.some(keyword => text.includes(keyword))) return genre;
-  }
+  for(const [genre,keywords] of rules) if(keywords.some(k=>text.includes(k))) return genre;
   return 'Khác';
 }
-
-function cleanDescription(text = '') {
-  const div = document.createElement('div');
-  div.innerHTML = text;
-  return div.textContent.replace(/\s+/g, ' ').trim().slice(0, 260);
+function cleanDescription(text='') {
+  const d=document.createElement('div'); d.innerHTML=text;
+  return d.textContent.replace(/\s+/g,' ').trim().slice(0,260);
 }
-
 function mergeBookResults(results) {
-  const byKey = new Map();
-  results.forEach(book => {
-    if (!book.title) return;
-    const key = `${normalizeBookText(book.title)}|${normalizeBookText(book.author).slice(0, 32)}`;
-    const current = byKey.get(key) || {};
-    byKey.set(key, {
-      ...current,
-      ...book,
-      title: current.title || book.title,
-      author: current.author || book.author,
-      year: current.year || book.year,
-      isbn: current.isbn || book.isbn,
-      cover: current.cover || book.cover,
-      cover_i: current.cover_i || book.cover_i,
-      description: current.description || book.description,
-      categories: [current.categories, book.categories].filter(Boolean).join(', '),
-      subjects: [current.subjects, book.subjects].filter(Boolean).join(', '),
-      source: [current.source, book.source].filter(Boolean).join(' + ')
-    });
+  const byKey=new Map();
+  results.forEach(book=>{
+    if(!book.title) return;
+    const key=`${normalizeBookText(book.title)}|${normalizeBookText(book.author).slice(0,32)}`;
+    const cur=byKey.get(key)||{};
+    byKey.set(key,{...cur,...book,title:cur.title||book.title,author:cur.author||book.author,
+      year:cur.year||book.year,isbn:cur.isbn||book.isbn,cover:cur.cover||book.cover,
+      cover_i:cur.cover_i||book.cover_i,description:cur.description||book.description,
+      categories:[cur.categories,book.categories].filter(Boolean).join(', '),
+      subjects:[cur.subjects,book.subjects].filter(Boolean).join(', '),
+      source:[cur.source,book.source].filter(Boolean).join(' + ')});
   });
   return Array.from(byKey.values());
 }
-
 async function searchOpenLibrary(query) {
-  const olRes = await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=10&fields=key,title,author_name,first_publish_year,isbn,cover_i,subject`);
-  if (!olRes.ok) throw new Error('Open Library không phản hồi');
-  const olData = await olRes.json();
-  return (olData.docs || []).map(d => ({
-    title: d.title || '',
-    author: (d.author_name || []).slice(0, 3).join(', '),
-    year: d.first_publish_year || null,
-    isbn: (d.isbn || []).find(x => String(x).length === 13) || (d.isbn || [])[0] || null,
-    cover_i: d.cover_i || null,
-    subjects: (d.subject || []).slice(0, 8).join(', '),
-    source: 'Open Library'
+  const res=await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=10&fields=key,title,author_name,first_publish_year,isbn,cover_i,subject`);
+  if(!res.ok) throw new Error('Open Library không phản hồi');
+  const data=await res.json();
+  return (data.docs||[]).map(d=>({
+    title:d.title||'',author:(d.author_name||[]).slice(0,3).join(', '),
+    year:d.first_publish_year||null,isbn:(d.isbn||[]).find(x=>String(x).length===13)||(d.isbn||[])[0]||null,
+    cover_i:d.cover_i||null,subjects:(d.subject||[]).slice(0,8).join(', '),source:'Open Library'
   }));
 }
-
 async function searchGoogleBooks(query) {
-  const gbRes = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=10&printType=books`);
-  if (!gbRes.ok) throw new Error('Google Books không phản hồi');
-  const gbData = await gbRes.json();
-  return (gbData.items || []).map(item => {
-    const info = item.volumeInfo || {};
-    const identifiers = info.industryIdentifiers || [];
-    const isbn13 = identifiers.find(x => x.type === 'ISBN_13')?.identifier;
-    const isbn10 = identifiers.find(x => x.type === 'ISBN_10')?.identifier;
+  const res=await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=10&printType=books`);
+  if(!res.ok) throw new Error('Google Books không phản hồi');
+  const data=await res.json();
+  return (data.items||[]).map(item=>{
+    const info=item.volumeInfo||{};
+    const identifiers=info.industryIdentifiers||[];
+    const isbn13=identifiers.find(x=>x.type==='ISBN_13')?.identifier;
+    const isbn10=identifiers.find(x=>x.type==='ISBN_10')?.identifier;
     return {
-      title: info.title || '',
-      author: (info.authors || []).join(', '),
-      year: info.publishedDate ? parseInt(String(info.publishedDate).match(/\d{4}/)?.[0]) || null : null,
-      isbn: isbn13 || isbn10 || null,
-      cover: info.imageLinks?.large
-        || (info.imageLinks?.thumbnail
-            ? info.imageLinks.thumbnail
-                .replace('http://', 'https://')
-                .replace('zoom=1', 'zoom=10')
-                .replace('&edge=curl', '')
-            : null),
-      categories: (info.categories || []).join(', '),
-      description: cleanDescription(info.description || ''),
-      source: 'Google Books'
+      title:info.title||'',author:(info.authors||[]).join(', '),
+      year:info.publishedDate?parseInt(String(info.publishedDate).match(/\d{4}/)?.[0])||null:null,
+      isbn:isbn13||isbn10||null,
+      cover:info.imageLinks?.large||(info.imageLinks?.thumbnail?info.imageLinks.thumbnail.replace('http://','https://').replace('zoom=1','zoom=10').replace('&edge=curl',''):null),
+      categories:(info.categories||[]).join(', '),description:cleanDescription(info.description||''),source:'Google Books'
     };
   });
 }
-
 async function aiSearchBooks() {
-  const query = document.getElementById('aiBookName').value.trim();
-  if (!query) { showToast('Nhập tên sách cần tìm'); return; }
-
-  const resultsEl = document.getElementById('aiSearchResults');
-  const btn = document.getElementById('aiSearchBtn');
-  btn.disabled = true;
-  document.getElementById('aiFilledBadge').style.display = 'none';
-
-  resultsEl.innerHTML = `<div class="ai-thinking">
-    <span>✨ AI đang tìm kiếm</span>
-    <div class="ai-dots"><span></span><span></span><span></span></div>
-  </div>`;
-
+  const query=document.getElementById('aiBookName').value.trim();
+  if(!query) { showToast('Nhập tên sách cần tìm'); return; }
+  const resultsEl=document.getElementById('aiSearchResults');
+  const btn=document.getElementById('aiSearchBtn');
+  btn.disabled=true; document.getElementById('aiFilledBadge').style.display='none';
+  resultsEl.innerHTML=`<div class="ai-thinking"><span>✨ AI đang tìm kiếm</span><div class="ai-dots"><span></span><span></span><span></span></div></div>`;
   try {
-    const searches = await Promise.allSettled([
-      searchOpenLibrary(query),
-      searchGoogleBooks(query)
-    ]);
-    const rawBooks = searches.flatMap(result => result.status === 'fulfilled' ? result.value : []);
-
-    resultsEl.innerHTML = `<div class="ai-thinking">
-      <span>🧠 AI đang phân tích và chọn kết quả phù hợp</span>
-      <div class="ai-dots"><span></span><span></span><span></span></div>
-    </div>`;
-
-    const books = mergeBookResults(rawBooks)
-      .map(book => ({
-        ...book,
-        genre: inferGenre(book),
-        score: scoreBookMatch(book, query)
-      }))
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 6);
-
-    if (!books.length) {
-      resultsEl.innerHTML = `<div style="font-size:0.78rem;color:#f08060;padding:0.4rem 0">Không tìm thấy kết quả. Thử từ khóa khác.</div>`;
-      return;
-    }
-
-    // Render results
-    resultsEl.innerHTML = `
+    const searches=await Promise.allSettled([searchOpenLibrary(query),searchGoogleBooks(query)]);
+    const rawBooks=searches.flatMap(r=>r.status==='fulfilled'?r.value:[]);
+    resultsEl.innerHTML=`<div class="ai-thinking"><span>🧠 AI đang phân tích kết quả</span><div class="ai-dots"><span></span><span></span><span></span></div></div>`;
+    const books=mergeBookResults(rawBooks).map(book=>({...book,genre:inferGenre(book),score:scoreBookMatch(book,query)})).sort((a,b)=>b.score-a.score).slice(0,6);
+    if(!books.length) { resultsEl.innerHTML=`<div style="font-size:0.78rem;color:#f08060;padding:0.4rem 0">Không tìm thấy kết quả.</div>`; return; }
+    resultsEl.innerHTML=`
       <div style="font-size:0.72rem;color:#907050;margin-bottom:0.3rem">Chọn sách để tự động điền form:</div>
       <div class="search-results-list">
-        ${books.map((b, i) => {
-          const coverUrl = b.cover || (b.isbn
-            ? `https://covers.openlibrary.org/b/isbn/${b.isbn}-M.jpg`
-            : b.cover_i
-              ? `https://covers.openlibrary.org/b/id/${b.cover_i}-M.jpg`
-              : null);
-          return `
-            <div class="search-result-item" onclick="selectAiBook(${i})">
-              <div class="search-result-thumb">
-                ${coverUrl
-                  ? `<img src="${coverUrl}" onerror="this.parentElement.innerHTML='📖'">`
-                  : '📖'}
-              </div>
-              <div class="search-result-info">
-                <div class="search-result-title">${escapeHtml(b.title)}</div>
-                <div class="search-result-author">${escapeHtml(b.author || 'Không rõ')}</div>
-                <div class="search-result-meta">${escapeHtml(b.year || '?')} · ${escapeHtml(b.genre || 'Khác')} · ${escapeHtml(b.source || '')}</div>
-                ${b.description ? `<div style="font-size:0.68rem;color:#7a6040;margin-top:2px;line-height:1.4">${escapeHtml(b.description)}</div>` : ''}
-              </div>
-              <div class="search-result-select">➕ Chọn</div>
-            </div>`;
+        ${books.map((b,i)=>{
+          const coverUrl=b.cover||(b.isbn?`https://covers.openlibrary.org/b/isbn/${b.isbn}-M.jpg`:b.cover_i?`https://covers.openlibrary.org/b/id/${b.cover_i}-M.jpg`:null);
+          return `<div class="search-result-item" onclick="selectAiBook(${i})">
+            <div class="search-result-thumb">${coverUrl?`<img src="${coverUrl}" onerror="this.parentElement.innerHTML='📖'">`:' 📖'}</div>
+            <div class="search-result-info">
+              <div class="search-result-title">${escapeHtml(b.title)}</div>
+              <div class="search-result-author">${escapeHtml(b.author||'Không rõ')}</div>
+              <div class="search-result-meta">${escapeHtml(String(b.year||'?'))} · ${escapeHtml(b.genre||'Khác')} · ${escapeHtml(b.source||'')}</div>
+              ${b.description?`<div style="font-size:0.68rem;color:#7a6040;margin-top:2px;line-height:1.4">${escapeHtml(b.description)}</div>`:''}
+            </div>
+            <div class="search-result-select">➕ Chọn</div>
+          </div>`;
         }).join('')}
       </div>`;
-
-    // Store books data on elements
-    document.querySelectorAll('.search-result-item').forEach((el, i) => {
-      el._bookData = books[i];
-    });
-
+    document.querySelectorAll('.search-result-item').forEach((el,i)=>{ el._bookData=books[i]; });
   } catch(e) {
     console.error(e);
-    resultsEl.innerHTML = `<div style="font-size:0.78rem;color:#f08060;padding:0.4rem 0">❌ Lỗi tìm kiếm: ${escapeHtml(e.message)}</div>`;
-  } finally {
-    btn.disabled = false;
-  }
+    resultsEl.innerHTML=`<div style="font-size:0.78rem;color:#f08060;padding:0.4rem 0">❌ Lỗi: ${escapeHtml(e.message)}</div>`;
+  } finally { btn.disabled=false; }
 }
 
 function selectAiBook(idx) {
-  const items = document.querySelectorAll('.search-result-item');
-  const b = items[idx]?._bookData;
-  if (!b) return;
-
-  // Fill form fields
-  if (b.title) document.getElementById('fTitle').value = b.title;
-  if (b.author) document.getElementById('fAuthor').value = b.author;
-  if (b.year) document.getElementById('fYear').value = b.year;
-  if (b.genre) {
-    const sel = document.getElementById('fGenre');
-    for (let opt of sel.options) {
-      if (opt.value === b.genre) { sel.value = b.genre; break; }
-    }
-  }
-  if (b.description && !document.getElementById('fNote').value.trim()) {
-    document.getElementById('fNote').value = b.description;
-  }
-
-  // Get best cover URL — ưu tiên OpenLibrary -L (~180px) hoặc Google Books zoom cao
-  let coverUrl = '';
-  if (b.isbn) {
-    coverUrl = `https://covers.openlibrary.org/b/isbn/${b.isbn}-L.jpg`;
-  } else if (b.cover_i) {
-    coverUrl = `https://covers.openlibrary.org/b/id/${b.cover_i}-L.jpg`;
-  } else if (b.cover) {
-    coverUrl = b.cover
-      .replace('http://', 'https://')
-      .replace(/zoom=\d+/, 'zoom=10')
-      .replace('&edge=curl', '');
-  }
-  if (coverUrl) {
-    document.getElementById('fCover').value = coverUrl;
-    updateCoverPreview();
-  }
-
-  // Highlight selected
-  document.querySelectorAll('.search-result-item').forEach(el => el.style.background = '');
-  items[idx].style.background = 'rgba(212,168,85,0.15)';
-  items[idx].style.borderColor = 'rgba(212,168,85,0.5)';
-
-  // Show filled badge
-  document.getElementById('aiFilledBadge').style.display = 'block';
-
-  // If has ISBN, also run ISBN lookup for extra data
-  if (b.isbn) {
-    document.getElementById('fIsbn').value = b.isbn;
-    fetchISBN();
-  }
-
+  const items=document.querySelectorAll('.search-result-item');
+  const b=items[idx]?._bookData; if(!b) return;
+  if(b.title) document.getElementById('fTitle').value=b.title;
+  if(b.author) document.getElementById('fAuthor').value=b.author;
+  if(b.year) document.getElementById('fYear').value=b.year;
+  if(b.genre) { const sel=document.getElementById('fGenre'); for(let opt of sel.options) if(opt.value===b.genre){sel.value=b.genre;break;} }
+  if(b.description&&!document.getElementById('fNote').value.trim()) document.getElementById('fNote').value=b.description;
+  let coverUrl='';
+  if(b.isbn) coverUrl=`https://covers.openlibrary.org/b/isbn/${b.isbn}-L.jpg`;
+  else if(b.cover_i) coverUrl=`https://covers.openlibrary.org/b/id/${b.cover_i}-L.jpg`;
+  else if(b.cover) coverUrl=b.cover.replace('http://','https://').replace(/zoom=\d+/,'zoom=10').replace('&edge=curl','');
+  if(coverUrl) { document.getElementById('fCover').value=coverUrl; updateCoverPreview(); }
+  document.querySelectorAll('.search-result-item').forEach(el=>el.style.background='');
+  items[idx].style.background='rgba(212,168,85,0.15)'; items[idx].style.borderColor='rgba(212,168,85,0.5)';
+  document.getElementById('aiFilledBadge').style.display='block';
+  if(b.isbn) { document.getElementById('fIsbn').value=b.isbn; fetchISBN(); }
   showToast('✅ Đã điền thông tin từ AI!');
-
-  // Scroll to cover preview
-  setTimeout(() => {
-    document.getElementById('coverPreview').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }, 200);
+  setTimeout(()=>document.getElementById('coverPreview').scrollIntoView({behavior:'smooth',block:'nearest'}),200);
 }
 
 // ═══════════════════════════════════════════
-//  SHELF SCROLL HELPERS
+//  SHELF SCROLL
 // ═══════════════════════════════════════════
-function shelfScroll(btn, dir) {
-  const wrap = btn.closest('.shelf-scroll-wrap');
-  const outer = wrap.querySelector('.books-container-outer');
-  outer.scrollBy({ left: dir * 320, behavior: 'smooth' });
+function shelfScroll(btn,dir) {
+  const outer=btn.closest('.shelf-scroll-wrap').querySelector('.books-container-outer');
+  outer.scrollBy({left:dir*320,behavior:'smooth'});
 }
-
 function updateShelfScroll(outer) {
-  const wrap  = outer.closest('.shelf-scroll-wrap');
-  const row   = outer.closest('.shelf-row');
-  const btnL  = wrap.querySelector('.shelf-arrow.left');
-  const btnR  = wrap.querySelector('.shelf-arrow.right');
-  const thumb = row.querySelector('.shelf-scrollbar-thumb');
-  const track = row.querySelector('.shelf-scrollbar-track');
-  const dotsEl= row.querySelector('.shelf-dots');
-
-  const maxScroll = outer.scrollWidth - outer.clientWidth;
-  const hasScroll = maxScroll > 2;
-  const ratio = hasScroll ? outer.scrollLeft / maxScroll : 0;
-
-  // Arrow + indicator visibility
-  if (btnL) btnL.classList.toggle('hidden', outer.scrollLeft <= 2);
-  if (btnR) btnR.classList.toggle('hidden', !hasScroll || outer.scrollLeft >= maxScroll - 2);
-  const indicator = wrap.querySelector('.more-books-indicator');
-  if (indicator) {
-    const showIndicator = hasScroll && outer.scrollLeft < maxScroll - 2;
-    indicator.classList.toggle('visible', showIndicator);
-    indicator.classList.toggle('hidden', !showIndicator);
+  const wrap=outer.closest('.shelf-scroll-wrap'),row=outer.closest('.shelf-row');
+  const btnL=wrap.querySelector('.shelf-arrow.left'),btnR=wrap.querySelector('.shelf-arrow.right');
+  const thumb=row.querySelector('.shelf-scrollbar-thumb'),track=row.querySelector('.shelf-scrollbar-track');
+  const dotsEl=row.querySelector('.shelf-dots');
+  const maxScroll=outer.scrollWidth-outer.clientWidth,hasScroll=maxScroll>2;
+  const ratio=hasScroll?outer.scrollLeft/maxScroll:0;
+  if(btnL) btnL.classList.toggle('hidden',outer.scrollLeft<=2);
+  if(btnR) btnR.classList.toggle('hidden',!hasScroll||outer.scrollLeft>=maxScroll-2);
+  const indicator=wrap.querySelector('.more-books-indicator');
+  if(indicator){indicator.classList.toggle('visible',hasScroll&&outer.scrollLeft<maxScroll-2);indicator.classList.toggle('hidden',!(hasScroll&&outer.scrollLeft<maxScroll-2));}
+  if(thumb&&track){
+    if(hasScroll){
+      track.parentElement.style.visibility='visible';
+      const tw=Math.max(36,track.clientWidth*(outer.clientWidth/outer.scrollWidth));
+      thumb.style.width=tw+'px'; thumb.style.left=(ratio*(track.clientWidth-tw))+'px';
+    } else { track.parentElement.style.visibility='hidden'; }
   }
-
-  // Thumb
-  if (thumb && track) {
-    if (hasScroll) {
-      track.parentElement.style.visibility = 'visible';
-      const thumbPct = outer.clientWidth / outer.scrollWidth;
-      const thumbW   = Math.max(36, track.clientWidth * thumbPct);
-      const thumbX   = ratio * (track.clientWidth - thumbW);
-      thumb.style.width = thumbW + 'px';
-      thumb.style.left  = thumbX + 'px';
-    } else {
-      track.parentElement.style.visibility = 'hidden';
-    }
-  }
-
-  // Dots — show one dot per "page" (outer.clientWidth steps)
-  if (dotsEl) {
-    if (!hasScroll) {
-      dotsEl.innerHTML = '';
-    } else {
-      const pageCount = Math.ceil(outer.scrollWidth / outer.clientWidth);
-      const activePage = Math.round(ratio * (pageCount - 1));
-      dotsEl.innerHTML = Array.from({length: pageCount}, (_, i) =>
-        `<div class="shelf-dot${i === activePage ? ' active' : ''}"></div>`
-      ).join('');
+  if(dotsEl){
+    if(!hasScroll){dotsEl.innerHTML='';}
+    else{
+      const pc=Math.ceil(outer.scrollWidth/outer.clientWidth),ap=Math.round(ratio*(pc-1));
+      dotsEl.innerHTML=Array.from({length:pc},(_,i)=>`<div class="shelf-dot${i===ap?' active':''}"></div>`).join('');
     }
   }
 }
-
 function initShelfScrollbars() {
-  document.querySelectorAll('.books-container-outer').forEach(outer => {
-    // Tính chiều rộng hiển thị đúng 6 cuốn dựa trên kích thước thực
-    const container = outer.querySelector('.books-container');
-    const items = container ? container.querySelectorAll('.book-item') : [];
-    if (items.length > 0) {
-      const cs = getComputedStyle(container);
-      const gap = parseFloat(cs.gap) || 20;
-      const pad = parseFloat(cs.paddingLeft) || 16;
-      const itemW = items[0].getBoundingClientRect().width;
-      const show = Math.min(6, items.length);
-      const visibleW = Math.ceil(itemW * show + gap * (show - 1) + pad * 2);
-      outer.style.width = visibleW + 'px';
-      outer.style.maxWidth = '100%';
+  document.querySelectorAll('.books-container-outer').forEach(outer=>{
+    const container=outer.querySelector('.books-container');
+    const items=container?container.querySelectorAll('.book-item'):[];
+    if(items.length>0){
+      const cs=getComputedStyle(container);
+      const gap=parseFloat(cs.gap)||20,pad=parseFloat(cs.paddingLeft)||16;
+      const itemW=items[0].getBoundingClientRect().width;
+      const show=Math.min(6,items.length);
+      outer.style.width=Math.ceil(itemW*show+gap*(show-1)+pad*2)+'px';
+      outer.style.maxWidth='100%';
     }
-
     updateShelfScroll(outer);
-
-    // Thumb drag
-    const row   = outer.closest('.shelf-row');
-    const thumb = row?.querySelector('.shelf-scrollbar-thumb');
-    const track = row?.querySelector('.shelf-scrollbar-track');
-    if (!thumb || !track) return;
-
-    let dragging = false, startX = 0, startScroll = 0;
-    thumb.addEventListener('mousedown', e => {
-      dragging = true; startX = e.clientX; startScroll = outer.scrollLeft;
-      thumb.classList.add('dragging'); e.preventDefault();
-    });
-    document.addEventListener('mousemove', e => {
-      if (!dragging) return;
-      const maxScroll = outer.scrollWidth - outer.clientWidth;
-      const maxThumbX = track.clientWidth - thumb.offsetWidth;
-      outer.scrollLeft = startScroll + ((e.clientX - startX) / maxThumbX) * maxScroll;
-    });
-    document.addEventListener('mouseup', () => {
-      if (dragging) { dragging = false; thumb.classList.remove('dragging'); }
-    });
+    const row=outer.closest('.shelf-row');
+    const thumb=row?.querySelector('.shelf-scrollbar-thumb'),track=row?.querySelector('.shelf-scrollbar-track');
+    if(!thumb||!track) return;
+    let dragging=false,startX=0,startScroll=0;
+    thumb.addEventListener('mousedown',e=>{dragging=true;startX=e.clientX;startScroll=outer.scrollLeft;thumb.classList.add('dragging');e.preventDefault();});
+    document.addEventListener('mousemove',e=>{if(!dragging)return;const mx=outer.scrollWidth-outer.clientWidth;outer.scrollLeft=startScroll+((e.clientX-startX)/(track.clientWidth-thumb.offsetWidth))*mx;});
+    document.addEventListener('mouseup',()=>{if(dragging){dragging=false;thumb.classList.remove('dragging');}});
   });
 }
-
-// ═══════════════════════════════════════════
-//  TOOLTIP POSITIONING (kept but unused — tooltip hidden)
-// ═══════════════════════════════════════════
-function positionTooltip(bookEl) { /* tooltip removed */ }
 
 // ═══════════════════════════════════════════
 //  TOAST
 // ═══════════════════════════════════════════
 let toastTimer;
 function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
 }
 
 // ═══════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════
-loadConfig();
-loadBooks();
+async function init() {
+  showLoading('Đang khởi động...');
+  const hasSession = await restoreSession();
+  if (hasSession) {
+    await onLogin();
+  } else {
+    // Hiện auth modal ngay khi vào lần đầu
+    hideLoading();
+    showAuthModal();
+  }
+}
+
+init();
 </script>
 </body>
 </html>
