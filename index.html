@@ -1,0 +1,2251 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tủ Sách Của Thơ Nụ</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold: #d4a855;
+  --gold-dim: rgba(212,168,85,0.25);
+  --bg-dark: #0e0703;
+  --bg-mid: #1a0d05;
+  --modal-bg: #faf6ef;
+}
+
+body {
+  font-family: 'Lora', serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, #2a1505 0%, transparent 70%),
+    linear-gradient(180deg, #0e0703 0%, #1a0d05 30%, #0e0703 100%);
+}
+
+/* ── ROOM ── */
+.room { position: relative; min-height: 100vh; padding-bottom: 3rem; }
+.room::before {
+  content: '';
+  position: fixed;
+  top: -80px; left: 50%;
+  transform: translateX(-50%);
+  width: 700px; height: 260px;
+  background: radial-gradient(ellipse, rgba(255,220,140,0.22) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── HEADER ── */
+.header {
+  position: relative; z-index: 10;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.2rem 2.5rem 1rem;
+  border-bottom: 1px solid rgba(255,200,100,0.08);
+  flex-wrap: wrap; gap: 0.6rem;
+}
+.brand {
+  font-family: 'Playfair Display', serif;
+  color: #d4a855; font-size: 1.5rem; letter-spacing: 0.04em;
+  text-shadow: 0 2px 12px rgba(212,168,85,0.3);
+}
+.brand span { font-style: italic; font-weight: 400; color: #a07838; }
+.header-controls { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+.view-hidden { display: none !important; }
+
+/* ── SUPABASE CONFIG BANNER ── */
+.config-banner {
+  background: rgba(200,100,30,0.12);
+  border: 1px solid rgba(200,120,30,0.4);
+  border-radius: 10px;
+  padding: 0.8rem 1.2rem;
+  margin: 0.8rem 2.5rem;
+  display: flex; gap: 0.8rem; align-items: center;
+  position: relative; z-index: 10;
+  font-size: 0.82rem; color: #e0a060;
+}
+.config-banner.hidden { display: none; }
+.config-banner a { color: #d4a855; text-decoration: underline; cursor: pointer; }
+.config-inner { display: flex; flex-direction: column; gap: 0.6rem; width: 100%; }
+.config-inputs { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.config-input {
+  flex: 1; min-width: 220px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(212,168,85,0.3);
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  color: #e8d5a0; font-family: 'Lora', serif; font-size: 0.78rem;
+  outline: none;
+}
+.config-input::placeholder { color: #6b5030; }
+
+/* ── BUTTONS ── */
+.pill-btn {
+  background: rgba(212,168,85,0.1);
+  border: 1px solid rgba(212,168,85,0.3);
+  color: #d4a855;
+  padding: 0.35rem 1rem;
+  border-radius: 20px;
+  font-family: 'Lora', serif; font-size: 0.78rem;
+  cursor: pointer; transition: all 0.2s; white-space: nowrap;
+}
+.pill-btn:hover { background: rgba(212,168,85,0.2); border-color: #d4a855; }
+.pill-btn.active { background: #d4a855; color: #1a0d05; font-weight: 600; }
+.pill-btn.danger { border-color: rgba(220,80,60,0.4); color: #f08060; }
+.pill-btn.danger:hover { background: rgba(220,80,60,0.15); }
+
+/* ── SEARCH ── */
+.search-wrap { position: relative; }
+.search-wrap input {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(212,168,85,0.25);
+  border-radius: 20px;
+  padding: 0.35rem 1rem 0.35rem 2rem;
+  color: #e8d5a0; font-family: 'Lora', serif; font-size: 0.78rem;
+  outline: none; width: 180px; transition: all 0.2s;
+}
+.search-wrap input:focus { border-color: #d4a855; width: 220px; }
+.search-wrap input::placeholder { color: #6b5030; }
+.search-wrap::before {
+  content: '⌕'; position: absolute; left: 0.6rem; top: 50%;
+  transform: translateY(-50%); color: #7a5830; font-size: 0.9rem; pointer-events: none;
+}
+
+/* ── FILTER TABS ── */
+.filter-row {
+  display: flex; gap: 0.4rem;
+  padding: 0.8rem 2.5rem;
+  position: relative; z-index: 10; flex-wrap: wrap;
+}
+
+/* ── STATS ── */
+.stats-row {
+  display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;
+  padding: 0.75rem 2rem; position: relative; z-index: 10;
+}
+.stat-chip {
+  font-size: 0.75rem; color: #907050;
+  border: 1px solid rgba(212,168,85,0.15);
+  border-radius: 20px; padding: 0.2rem 0.9rem;
+}
+.stat-chip b { color: #d4a855; font-family: 'Playfair Display', serif; }
+
+/* ── BOOKCASE ── */
+.bookcase-wrap { position: relative; z-index: 1; padding: 0 2rem; }
+.bookcase {
+  max-width: 1140px; margin: 0 auto; position: relative;
+  background:
+    linear-gradient(90deg, #1a0900 0px, #3d1c08 18px, #5a2e10 22px, #3a1a06 30px) left/30px 100% no-repeat,
+    linear-gradient(270deg, #1a0900 0px, #3d1c08 18px, #5a2e10 22px, #3a1a06 30px) right/30px 100% no-repeat,
+    repeating-linear-gradient(90deg, rgba(60,25,5,0.4) 0px, rgba(60,25,5,0.4) 1px, transparent 1px, transparent 80px),
+    linear-gradient(180deg, #2a1206 0%, #1e0d04 50%, #2a1206 100%);
+  border-radius: 4px; border: 2px solid #1a0900; overflow: hidden;
+  box-shadow: 0 0 0 6px #0d0603, 0 0 0 8px #3d1c08, 0 24px 70px rgba(0,0,0,0.85), inset 0 0 40px rgba(0,0,0,0.5);
+  padding: 0 30px;
+}
+.bookcase::before {
+  content: ''; display: block; height: 24px;
+  background: linear-gradient(180deg, #1a0900 0%, #4a2510 20%, #7a4520 40%, #9a6030 55%, #7a4520 70%, #4a2510 85%, #2a1206 100%);
+  margin: 0 -30px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,200,100,0.18);
+}
+
+/* ── SHELF ROW ── */
+.shelf-row { position: relative; padding: 10px 14px 0; }
+.shelf-label {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'Playfair Display', serif; font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: #1a0d03;
+  background: linear-gradient(135deg, #e8b84a 0%, #d4913a 40%, #c8882e 70%, #d4a040 100%);
+  padding: 5px 16px 5px 12px; border-radius: 3px 20px 20px 3px; margin-bottom: 8px;
+  position: relative;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,240,180,0.5), inset 0 -1px 0 rgba(0,0,0,0.2);
+  border-left: 3px solid rgba(255,230,120,0.6);
+}
+.shelf-label::before {
+  content: ''; position: absolute; left: -8px; top: 50%; transform: translateY(-50%);
+  width: 0; height: 0;
+  border-top: 12px solid transparent; border-bottom: 12px solid transparent;
+  border-right: 8px solid #c8882e; filter: drop-shadow(-1px 0 2px rgba(0,0,0,0.4));
+}
+.shelf-label .genre-icon { font-size: 0.8rem; line-height: 1; }
+
+/* ── SHELF SCROLL WRAPPER ── */
+.shelf-scroll-wrap {
+  position: relative;
+  /* KHÔNG có overflow ở đây — để sách hover lên tự do */
+}
+
+/* Xoá fade cũ — thay bằng dot indicator */
+.shelf-scroll-wrap::before,
+.shelf-scroll-wrap::after { display: none; }
+
+/* Scroll arrow buttons */
+.shelf-arrow {
+  position: absolute; top: 50%; transform: translateY(calc(-50% - 12px));
+  z-index: 20;
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(18,8,2,0.82);
+  border: 1px solid rgba(212,168,85,0.5);
+  border-radius: 50%;
+  cursor: pointer;
+  color: #d4a855;
+  font-size: 18px; line-height: 1;
+  transition: background 0.18s, opacity 0.2s, transform 0.18s, box-shadow 0.18s;
+  opacity: 0;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,220,100,0.12);
+}
+.shelf-scroll-wrap:hover .shelf-arrow:not(.hidden) { opacity: 1; }
+.shelf-arrow:hover {
+  background: rgba(212,168,85,0.22);
+  border-color: #d4a855;
+  transform: translateY(calc(-50% - 12px)) scale(1.12);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.8), 0 0 12px rgba(212,168,85,0.25);
+}
+.shelf-arrow.left  { left: 6px; }
+.shelf-arrow.right { right: 6px; }
+.shelf-arrow.hidden { opacity: 0 !important; pointer-events: none; }
+
+/* ── BOOKS CONTAINER: tách overflow để fix clipping ── */
+/* Lớp ngoài chỉ scroll ngang, KHÔNG clip dọc */
+.books-container-outer {
+  overflow-x: auto;
+  overflow-y: visible; /* bị browser override nếu đặt cùng — xử lý bằng padding-top trên lớp trong */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
+}
+.books-container-outer::-webkit-scrollbar { display: none; }
+
+/* Books container */
+.books-container {
+  display: flex; align-items: flex-end; gap: 10px;
+  flex-wrap: nowrap;
+  width: max-content;
+  padding: 0 14px 6px;
+  overflow: visible;
+}
+
+/* Khoảng trống để sách hover lên không bị clip — đặt trên từng item thay vì padding container */
+.book-item {
+  margin-top: 32px;
+}
+
+/* ── DOT SCROLL INDICATOR ── */
+.shelf-dots {
+  display: flex; align-items: center; justify-content: center;
+  gap: 5px; height: 16px; padding: 0 14px; margin-top: 2px;
+}
+.shelf-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: rgba(212,168,85,0.2);
+  border: 1px solid rgba(212,168,85,0.25);
+  transition: background 0.25s, transform 0.25s, width 0.25s;
+  flex-shrink: 0;
+}
+.shelf-dot.active {
+  background: rgba(212,168,85,0.75);
+  border-color: rgba(212,168,85,0.9);
+  width: 14px; border-radius: 3px;
+}
+
+/* ── CUSTOM SCROLL TRACK below shelf plank ── */
+.shelf-scrollbar-wrap {
+  height: 14px;
+  display: flex; align-items: center;
+  padding: 0 14px;
+}
+.shelf-scrollbar-track {
+  flex: 1; height: 3px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+.shelf-scrollbar-thumb {
+  position: absolute; top: 0; left: 0;
+  height: 100%;
+  min-width: 36px;
+  background: linear-gradient(90deg, rgba(212,168,85,0.2), rgba(212,168,85,0.5), rgba(212,168,85,0.2));
+  border-radius: 2px;
+  transition: width 0.12s;
+  cursor: pointer;
+}
+.shelf-scrollbar-thumb:hover,
+.shelf-scrollbar-thumb.dragging {
+  background: linear-gradient(90deg, rgba(212,168,85,0.5), rgba(212,168,85,0.9), rgba(212,168,85,0.5));
+}
+
+/* Shelf plank */
+.shelf-plank {
+  position: relative; height: 36px; margin: 0 -14px; z-index: 5;
+  background: linear-gradient(180deg, #f5c860 0%, #dba050 3%, #c07830 8%, #d08c38 15%, #a86828 22%, #c07830 30%, #a06020 40%, #c07830 50%, #a86828 60%, #906018 70%, #804518 82%, #5a2e08 92%, #3a1c04 100%);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.75), 0 3px 8px rgba(0,0,0,0.6), 0 -1px 0 rgba(255,210,100,0.3), inset 0 2px 5px rgba(255,225,130,0.2), inset 0 -2px 5px rgba(0,0,0,0.35);
+}
+.shelf-plank::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px;
+  background: linear-gradient(90deg, rgba(255,220,100,0.1), rgba(255,220,100,0.45) 15%, rgba(255,230,120,0.7) 30%, rgba(255,225,110,0.55) 50%, rgba(255,230,120,0.7) 70%, rgba(255,220,100,0.4) 85%, rgba(255,220,100,0.1));
+}
+
+/* ── BOOK ITEM ── */
+.book-item {
+  position: relative; flex-shrink: 0; cursor: pointer;
+  transform-origin: bottom center;
+  transition: transform 0.32s cubic-bezier(0.34,1.56,0.64,1), filter 0.3s;
+  z-index: 1;
+  margin-top: 44px; /* khoảng trống để hover lift không bị clip, KHÔNG dùng padding-top trên container */
+}
+.book-item:hover { transform: translateY(-28px) scale(1.07); z-index: 20; filter: drop-shadow(0 28px 22px rgba(0,0,0,0.75)); }
+
+/* ── BOOK SCENE WRAPPER (3D perspective per-book) ── */
+.book-scene {
+  width: 96px;
+  perspective: 700px;
+  position: relative;
+}
+
+.book-cover-wrap {
+  position: relative;
+  display: inline-block;
+  transform-style: preserve-3d;
+}
+
+/* Pages strip */
+.book-pages {
+  position: absolute; right: -7px; top: 4px; bottom: 4px; width: 7px; z-index: 1;
+  background: linear-gradient(90deg, #b8a870 0%, #d8c890 20%, #ece0b8 45%, #e8dcb0 55%, #d8c890 80%, #c0b078 100%);
+  border-radius: 0 2px 2px 0; box-shadow: inset -1px 0 2px rgba(0,0,0,0.15);
+}
+.book-pages::after {
+  content: ''; position: absolute; inset: 0;
+  background: repeating-linear-gradient(180deg, transparent 0px, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 2.5px);
+}
+
+/* ── BASE COVER ── */
+.book-cover {
+  display: block;
+  width: 128px;
+  border-radius: 2px 4px 4px 2px;
+  position: relative; z-index: 2;
+  overflow: hidden;
+  box-shadow:
+    inset 6px 0 12px rgba(0,0,0,0.5),
+    inset 2px 0 4px rgba(255,255,255,0.08),
+    3px 0 0 #e8d8b0, 4px 0 0 #ddd0a0, 5px 0 0 #d0c090, 6px 0 0 #c8b880,
+    8px 10px 28px rgba(0,0,0,0.65), 2px 4px 8px rgba(0,0,0,0.4),
+    inset 0 2px 3px rgba(255,255,255,0.1), inset 0 -2px 4px rgba(0,0,0,0.4);
+  user-select: none; transform: rotateY(-4deg); transform-origin: left center;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.book-cover img {
+  display: block;
+  width: 128px;
+  height: 195px;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: 2px 4px 4px 2px;
+}
+.book-cover::after {
+  content: ''; position: absolute; inset: 0; border-radius: 2px 4px 4px 2px;
+  background: linear-gradient(105deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.06) 25%, transparent 50%, rgba(0,0,0,0.08) 75%, rgba(0,0,0,0.15) 100%);
+  pointer-events: none; z-index: 5;
+}
+
+/* Fallback */
+.book-cover-fallback {
+  width: 128px; height: 195px;
+  border-radius: 2px 4px 4px 2px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 12px 8px; gap: 6px; position: relative; overflow: hidden;
+}
+.book-cover-fallback::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(105deg, rgba(255,255,255,0.1) 0%, transparent 40%, rgba(0,0,0,0.1) 100%);
+  pointer-events: none;
+}
+.cover-title { font-family: 'Playfair Display', serif; font-size: 11px; font-weight: 700; text-align: center; line-height: 1.3; word-break: break-word; position: relative; z-index: 1; }
+.cover-author { font-size: 8.5px; font-style: italic; text-align: center; opacity: 0.75; line-height: 1.3; position: relative; z-index: 1; }
+.cover-deco { width: 32px; height: 1px; background: currentColor; opacity: 0.35; position: relative; z-index: 1; }
+.book-spine { position: absolute; left: 0; top: 0; bottom: 0; width: 8px; z-index: 3; background: rgba(0,0,0,0.25); border-right: 1px solid rgba(255,255,255,0.07); }
+
+
+.mini-stars { position: absolute; bottom: 4px; left: 0; right: 0; text-align: center; font-size: 7px; z-index: 10; text-shadow: 0 1px 3px rgba(0,0,0,0.7); letter-spacing: -1px; }
+
+.book-floor-shadow {
+  position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%);
+  width: 80%; height: 8px;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.5) 0%, transparent 75%);
+  pointer-events: none; z-index: 0; transition: width 0.3s, opacity 0.3s;
+}
+.book-item:hover .book-floor-shadow { width: 110%; opacity: 0.8; }
+
+/* ═══════════════════════════════════════
+   STATUS VISUAL ELEMENTS
+═══════════════════════════════════════ */
+
+/* ── READING (đang đọc dở): mở dang dở, bookmark đỏ ── */
+.book-item.status-reading .book-cover {
+  transform: rotateY(-22deg);
+  transform-origin: left center;
+}
+.book-item.status-reading:hover .book-cover {
+  transform: rotateY(-32deg);
+  box-shadow:
+    inset 10px 0 20px rgba(0,0,0,0.6),
+    inset 2px 0 4px rgba(255,255,255,0.08),
+    4px 0 0 #e8d8b0, 7px 0 0 #d0c090, 10px 0 0 #c8b880, 13px 0 0 #bca870,
+    20px 20px 40px rgba(0,0,0,0.75), 4px 6px 12px rgba(0,0,0,0.5),
+    inset 0 2px 3px rgba(255,255,255,0.12);
+}
+
+/* Exposed inner pages when hovered open */
+.book-item.status-reading .book-cover-wrap::before {
+  content: '';
+  position: absolute; left: 0px; top: 4px; bottom: 4px;
+  width: 30px;
+  z-index: 1;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px, transparent 4px,
+      rgba(100,80,40,0.09) 4px, rgba(100,80,40,0.09) 5px
+    ),
+    linear-gradient(90deg, #f5edd8 0%, #ede3c8 50%, #d8cdb0 100%);
+  border-radius: 1px 0 0 1px;
+  box-shadow: inset 3px 0 8px rgba(0,0,0,0.1), 1px 0 2px rgba(0,0,0,0.08);
+  transform-origin: right center;
+  transform: rotateY(6deg);
+  opacity: 0;
+  transition: opacity 0.28s 0.08s;
+}
+.book-item.status-reading:hover .book-cover-wrap::before { opacity: 1; }
+
+/* ── BOOKMARK on reading books ── */
+.book-bookmark {
+  display: none;
+  position: absolute;
+  top: -8px; right: 16px;
+  width: 15px; height: 32px;
+  z-index: 15;
+  filter: drop-shadow(1px 3px 5px rgba(0,0,0,0.7));
+}
+.book-item.status-reading .book-bookmark { display: block; }
+
+.book-bookmark svg {
+  width: 15px; height: 32px;
+  animation: bookmark-sway 2.8s ease-in-out infinite;
+  transform-origin: top center;
+}
+@keyframes bookmark-sway {
+  0%,100% { transform: rotate(-1.5deg); }
+  50%      { transform: rotate(2deg); }
+}
+
+/* ── READ (đã đọc): đóng bình thường như unread ── */
+.book-item.status-read .book-cover {
+  transform: rotateY(-4deg);
+  transform-origin: left center;
+}
+.book-item.status-read:hover .book-cover {
+  transform: rotateY(-8deg);
+}
+
+/* ── UNREAD (chưa đọc): thẳng hoàn toàn ── */
+.book-item.status-unread .book-cover {
+  transform: rotateY(0deg);
+  transform-origin: left center;
+}
+.book-item.status-unread:hover .book-cover {
+  transform: rotateY(-4deg);
+}
+
+/* ── WANT (sắp đọc): thẳng hoàn toàn ── */
+.book-item.status-want .book-cover {
+  transform: rotateY(0deg);
+  transform-origin: left center;
+}
+.book-item.status-want:hover .book-cover {
+  transform: rotateY(-4deg);
+}
+
+/* tooltip bị xoá hoàn toàn */
+.book-tooltip { display: none !important; }
+
+/* ── LOADING OVERLAY ── */
+.loading-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10,5,2,0.92);
+  z-index: 2000;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem;
+  color: #d4a855;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  transition: opacity 0.4s;
+}
+.loading-overlay.hidden { opacity: 0; pointer-events: none; }
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid rgba(212,168,85,0.2);
+  border-top-color: #d4a855;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── MODAL (view book) ── */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.78);
+  z-index: 500;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+  backdrop-filter: blur(8px);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+.overlay.on { opacity: 1; pointer-events: all; }
+.modal {
+  background: linear-gradient(145deg, #faf6ef, #f0e8d8);
+  border-radius: 16px;
+  border: 1px solid rgba(212,168,85,0.4);
+  max-width: 600px; width: 100%;
+  max-height: 88vh; overflow-y: auto;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.7), 0 0 0 1px rgba(212,168,85,0.15);
+  transform: scale(0.92) translateY(20px);
+  transition: transform 0.35s cubic-bezier(0.34,1.3,0.64,1);
+  position: relative;
+}
+.overlay.on .modal { transform: scale(1) translateY(0); }
+.modal-close {
+  position: absolute; top: 1rem; right: 1rem;
+  background: none; border: none;
+  font-size: 1.3rem; cursor: pointer;
+  color: #8a6040; line-height: 1;
+}
+.modal-body { padding: 1.75rem; }
+.modal-cover-row { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.modal-book-cover {
+  width: 128px; min-width: 128px; height: 195px;
+  border-radius: 2px 6px 6px 2px; object-fit: cover;
+  box-shadow: 6px 8px 20px rgba(0,0,0,0.35), inset -6px 0 10px rgba(0,0,0,0.25), inset 4px 0 8px rgba(0,0,0,0.2);
+}
+.modal-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: #2c1810; margin-bottom: 0.25rem; line-height: 1.3; }
+.modal-author { font-style: italic; color: #7a5030; margin-bottom: 0.4rem; font-size: 0.9rem; }
+.modal-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.tag { padding: 0.15rem 0.6rem; border-radius: 10px; font-size: 0.72rem; background: rgba(139,90,43,0.1); color: #8b5a2b; border: 1px solid rgba(139,90,43,0.2); }
+.stars { color: #d4a855; font-size: 1rem; letter-spacing: 2px; }
+.section-hd { font-family: 'Playfair Display', serif; font-size: 0.9rem; color: #8b5a2b; border-bottom: 1px solid rgba(139,90,43,0.15); padding-bottom: 0.25rem; margin: 1.1rem 0 0.7rem; }
+.quotes-list { display: flex; flex-direction: column; gap: 0.6rem; }
+.quote-card {
+  background: rgba(139,90,43,0.06); border-left: 3px solid #d4a855;
+  padding: 0.7rem 1rem; border-radius: 0 8px 8px 0;
+  font-style: italic; font-size: 0.85rem; color: #2c1810;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.quote-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.8rem;
+}
+.quote-card-text {
+  line-height: 1.55;
+  word-break: break-word;
+}
+.quote-meta { font-style: normal; font-size: 0.72rem; color: #9a7050; margin-top: 0.35rem; }
+.quote-copy {
+  background: rgba(212,168,85,0.12);
+  border: 1px solid rgba(212,168,85,0.28);
+  color: #8b5a2b;
+  border-radius: 8px;
+  padding: 0.28rem 0.7rem;
+  font-family: 'Lora', serif;
+  font-size: 0.72rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.quote-copy:hover { background: rgba(212,168,85,0.22); border-color: rgba(212,168,85,0.45); }
+.modal-note { font-size: 0.85rem; color: #7a5030; font-style: italic; background: rgba(139,90,43,0.06); padding: 0.65rem 0.9rem; border-radius: 6px; }
+.modal-actions { display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
+.modal-btn {
+  padding: 0.4rem 1rem; border-radius: 20px; font-family: 'Lora', serif; font-size: 0.8rem;
+  cursor: pointer; transition: all 0.2s; border: 1px solid;
+}
+.btn-edit { background: rgba(212,168,85,0.1); border-color: rgba(212,168,85,0.4); color: #a07838; }
+.btn-edit:hover { background: rgba(212,168,85,0.2); }
+.btn-delete { background: rgba(200,60,40,0.08); border-color: rgba(200,60,40,0.3); color: #c05040; }
+.btn-delete:hover { background: rgba(200,60,40,0.18); }
+
+/* ── ADD/EDIT MODAL ── */
+.form-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.82);
+  z-index: 600;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+  backdrop-filter: blur(10px);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+.form-overlay.on { opacity: 1; pointer-events: all; }
+.form-modal {
+  background: linear-gradient(145deg, #1a0e06, #120906);
+  border-radius: 16px;
+  border: 1px solid rgba(212,168,85,0.3);
+  max-width: 560px; width: 100%;
+  max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.85);
+  transform: scale(0.92) translateY(20px);
+  transition: transform 0.35s cubic-bezier(0.34,1.3,0.64,1);
+  position: relative;
+}
+.form-overlay.on .form-modal { transform: scale(1) translateY(0); }
+.form-header {
+  padding: 1.4rem 1.75rem 0.8rem;
+  border-bottom: 1px solid rgba(212,168,85,0.1);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.form-title { font-family: 'Playfair Display', serif; color: #d4a855; font-size: 1.1rem; }
+.form-close { background: none; border: none; color: #7a5830; font-size: 1.3rem; cursor: pointer; }
+.form-body { padding: 1.25rem 1.75rem 1.75rem; display: flex; flex-direction: column; gap: 1rem; }
+
+/* ISBN row */
+.isbn-row { display: flex; gap: 0.5rem; align-items: flex-end; }
+.isbn-row .form-group { flex: 1; }
+
+/* Form groups */
+.form-group { display: flex; flex-direction: column; gap: 0.3rem; }
+.form-label { font-size: 0.72rem; color: #907050; letter-spacing: 0.1em; text-transform: uppercase; }
+.form-input, .form-select, .form-textarea {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(212,168,85,0.2);
+  border-radius: 8px;
+  padding: 0.5rem 0.8rem;
+  color: #e8d5a0; font-family: 'Lora', serif; font-size: 0.85rem;
+  outline: none; transition: border-color 0.2s;
+  width: 100%;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #d4a855; }
+.form-input::placeholder, .form-textarea::placeholder { color: #4a3020; }
+.form-select option { background: #1a0d05; }
+.form-textarea { resize: vertical; min-height: 70px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+
+/* Cover preview */
+.cover-preview-wrap { display: flex; gap: 1rem; align-items: flex-start; }
+.cover-preview {
+  width: 72px; min-width: 72px; height: 104px;
+  border-radius: 2px 4px 4px 2px; object-fit: cover;
+  background: rgba(212,168,85,0.08);
+  border: 1px solid rgba(212,168,85,0.2);
+  display: flex; align-items: center; justify-content: center;
+  color: #4a3020; font-size: 1.5rem;
+  overflow: hidden;
+}
+.cover-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Rating picker */
+.rating-stars { display: flex; gap: 4px; }
+.star-btn { background: none; border: none; cursor: pointer; font-size: 1.2rem; color: #4a3020; transition: color 0.15s, transform 0.15s; }
+.star-btn.active { color: #d4a855; }
+.star-btn:hover { color: #e8c860; transform: scale(1.2); }
+
+/* Quotes in form */
+.quotes-form-list { display: flex; flex-direction: column; gap: 0.6rem; }
+.quote-form-item {
+  background: rgba(212,168,85,0.05);
+  border: 1px solid rgba(212,168,85,0.15);
+  border-radius: 8px; padding: 0.7rem;
+  display: flex; gap: 0.5rem; flex-direction: column;
+}
+.quote-form-row { display: grid; grid-template-columns: 1fr 80px 1fr; gap: 0.4rem; }
+.quote-remove { background: none; border: none; color: #8a4030; cursor: pointer; font-size: 0.8rem; align-self: flex-end; }
+
+/* ── QUOTES PAGE ── */
+.quotes-page {
+  position: relative;
+  z-index: 5;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0.75rem 2rem 3rem;
+}
+.quotes-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.8rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.quotes-toolbar-title {
+  font-family: 'Playfair Display', serif;
+  color: #d4a855;
+  font-size: 1.25rem;
+}
+.quotes-toolbar-sub {
+  color: #907050;
+  font-size: 0.78rem;
+  margin-top: 0.2rem;
+}
+.quotes-search {
+  width: min(360px, 100%);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(212,168,85,0.25);
+  border-radius: 20px;
+  padding: 0.45rem 0.9rem;
+  color: #e8d5a0;
+  font-family: 'Lora', serif;
+  font-size: 0.82rem;
+  outline: none;
+}
+.quotes-search:focus { border-color: #d4a855; }
+.quotes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0.8rem;
+}
+.quote-page-card {
+  background: linear-gradient(145deg, rgba(250,246,239,0.96), rgba(232,215,188,0.94));
+  border: 1px solid rgba(212,168,85,0.28);
+  border-left: 4px solid #d4a855;
+  border-radius: 8px;
+  padding: 0.9rem;
+  box-shadow: 0 14px 30px rgba(0,0,0,0.24);
+}
+.quote-page-text {
+  color: #2c1810;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  font-style: italic;
+  word-break: break-word;
+}
+.quote-page-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: flex-end;
+  margin-top: 0.75rem;
+}
+.quote-page-book {
+  color: #7a5030;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+.quote-page-book b {
+  display: block;
+  color: #8b5a2b;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.86rem;
+}
+.quotes-empty {
+  text-align: center;
+  color: rgba(212,168,85,0.38);
+  font-style: italic;
+  padding: 3rem 1rem;
+  border: 1px dashed rgba(212,168,85,0.18);
+  border-radius: 8px;
+}
+
+/* Submit btn */
+.form-submit {
+  background: linear-gradient(135deg, #d4a855, #a07838);
+  border: none; border-radius: 10px;
+  padding: 0.7rem 1.5rem; color: #1a0d05;
+  font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700;
+  cursor: pointer; transition: opacity 0.2s, transform 0.2s;
+  width: 100%;
+}
+.form-submit:hover { opacity: 0.9; transform: translateY(-1px); }
+.form-submit:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+/* ISBN fetch status */
+.isbn-status { font-size: 0.75rem; padding: 0.25rem 0; min-height: 1.2rem; }
+.isbn-status.ok { color: #6dd89a; }
+.isbn-status.err { color: #f08060; }
+.isbn-status.loading { color: #d4a855; }
+
+/* ── AI SEARCH PANEL ── */
+.ai-search-section {
+  border: 1px solid rgba(212,168,85,0.25);
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(212,168,85,0.03);
+}
+.ai-search-header {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  background: rgba(212,168,85,0.07);
+  border-bottom: 1px solid rgba(212,168,85,0.15);
+  cursor: pointer; user-select: none;
+}
+.ai-search-header-title { font-size: 0.8rem; color: #d4a855; font-family: 'Playfair Display', serif; flex: 1; }
+.ai-badge {
+  font-size: 0.62rem; background: linear-gradient(135deg,#d4a855,#a07838);
+  color: #1a0d05; padding: 1px 7px; border-radius: 10px; font-weight: 700;
+}
+.ai-search-body { padding: 0.8rem; display: flex; flex-direction: column; gap: 0.7rem; }
+.ai-name-row { display: flex; gap: 0.5rem; }
+.ai-name-row .form-input { flex: 1; }
+.ai-btn {
+  background: linear-gradient(135deg, rgba(212,168,85,0.2), rgba(160,120,56,0.15));
+  border: 1px solid rgba(212,168,85,0.5);
+  color: #d4a855; border-radius: 8px;
+  padding: 0.5rem 1rem; font-family: 'Lora', serif; font-size: 0.8rem;
+  cursor: pointer; transition: all 0.2s; white-space: nowrap;
+}
+.ai-btn:hover { background: rgba(212,168,85,0.25); }
+.ai-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Search results dropdown */
+.search-results-list {
+  display: flex; flex-direction: column; gap: 0.4rem;
+  max-height: 260px; overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: rgba(212,168,85,0.2) transparent;
+}
+.search-result-item {
+  display: flex; gap: 0.7rem; align-items: center;
+  padding: 0.55rem 0.7rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(212,168,85,0.12);
+  border-radius: 8px; cursor: pointer;
+  transition: all 0.18s;
+}
+.search-result-item:hover { background: rgba(212,168,85,0.1); border-color: rgba(212,168,85,0.3); }
+.search-result-thumb {
+  width: 36px; height: 52px; border-radius: 2px;
+  object-fit: cover; background: rgba(212,168,85,0.1);
+  flex-shrink: 0; border: 1px solid rgba(212,168,85,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; color: #4a3020; overflow: hidden;
+}
+.search-result-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.search-result-info { flex: 1; min-width: 0; }
+.search-result-title { font-size: 0.82rem; color: #e8c870; font-family: 'Playfair Display', serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.search-result-author { font-size: 0.72rem; color: #907050; font-style: italic; }
+.search-result-meta { font-size: 0.68rem; color: #6b5030; margin-top: 2px; }
+.search-result-select { font-size: 0.7rem; color: #a07838; white-space: nowrap; opacity: 0.7; }
+
+/* AI thinking animation */
+.ai-thinking {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.78rem; color: #d4a855; padding: 0.4rem 0;
+}
+.ai-dots span {
+  display: inline-block; width: 5px; height: 5px;
+  border-radius: 50%; background: #d4a855;
+  animation: aiDot 1.2s ease-in-out infinite;
+}
+.ai-dots span:nth-child(2) { animation-delay: 0.2s; }
+.ai-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes aiDot { 0%,80%,100%{opacity:0.2;transform:scale(0.8)} 40%{opacity:1;transform:scale(1)} }
+
+/* AI filled indicator */
+.ai-filled-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.7rem; color: #6dd89a;
+  background: rgba(46,139,87,0.12); border: 1px solid rgba(46,139,87,0.3);
+  border-radius: 10px; padding: 2px 8px;
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 2rem; left: 50%;
+  transform: translateX(-50%);
+  background: #1a0d05; border: 1px solid #d4a855;
+  color: #d4a855; padding: 0.5rem 1.4rem;
+  border-radius: 20px; font-size: 0.82rem;
+  z-index: 9999; opacity: 0; transition: opacity 0.3s;
+  pointer-events: none; font-family: 'Lora', serif;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; }
+
+@media (max-width: 700px) {
+  .header { padding: 1rem 1rem 0.75rem; }
+  .filter-row { padding: 0.5rem 1rem; }
+  .bookcase-wrap { padding: 0 0.5rem; }
+  .books-container { gap: 10px; }
+  .book-cover-wrap, .book-cover, .book-cover-fallback, .book-cover img { width: 90px !important; }
+  .form-row { grid-template-columns: 1fr; }
+  .config-banner { margin: 0.5rem 1rem; }
+  .quotes-page { padding: 0.75rem 1rem 2rem; }
+  .quotes-toolbar { grid-template-columns: 1fr; }
+  .quotes-search { width: 100%; }
+  .quote-page-footer { align-items: flex-start; flex-direction: column; }
+}
+</style>
+</head>
+<body>
+<div class="room">
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div id="loadingText">Đang kết nối Supabase...</div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="brand">📚 Tủ Sách <span>Thơ Nụ</span></div>
+  <div class="header-controls">
+    <div class="search-wrap">
+      <input type="text" id="searchInput" placeholder="Tìm sách...">
+    </div>
+    <button class="pill-btn active filter-status" onclick="setFilter('all',this)">Tất cả</button>
+    <button class="pill-btn filter-status" onclick="setFilter('reading',this)">Đang đọc</button>
+    <button class="pill-btn filter-status" onclick="setFilter('read',this)">Đã đọc</button>
+    <button class="pill-btn filter-status" onclick="setFilter('unread',this)">Sắp đọc</button>
+    <button class="pill-btn" id="quotesNavBtn" onclick="showQuotesPage()">Trích dẫn</button>
+    <button class="pill-btn" onclick="openAddForm()" style="background:rgba(212,168,85,0.18);border-color:#d4a855">➕ Thêm sách</button>
+  </div>
+</div>
+
+<!-- SUPABASE CONFIG BANNER -->
+<div class="config-banner" id="configBanner">
+  <div class="config-inner">
+    <div>⚙️ <strong>Cài đặt Supabase</strong> — Nhập thông tin để kết nối database thật. <a onclick="showSetupGuide()">Hướng dẫn tạo project</a></div>
+    <div class="config-inputs">
+      <input class="config-input" id="cfgUrl" placeholder="Supabase URL: https://xxx.supabase.co" />
+      <input class="config-input" id="cfgKey" placeholder="Anon Key: eyJhbGci..." />
+    </div>
+    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center">
+      <button class="pill-btn" onclick="saveConfig()">💾 Lưu & Kết nối</button>
+      <button class="pill-btn danger" onclick="resetConfig()">🔁 Reset</button>
+      <span id="configStatus" style="font-size:0.75rem;color:#907050"></span>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-row" id="statsRow"></div>
+
+<!-- FILTER TABS -->
+<div class="filter-row" id="filterRow">
+  <!-- Genre filter chips injected here -->
+</div>
+
+<!-- BOOKCASE -->
+<div class="bookcase-wrap" id="libraryView">
+  <div class="bookcase" id="bookcase">
+    <div style="padding:3rem;text-align:center;color:rgba(212,168,85,0.3);font-style:italic">
+      Đang tải tủ sách...
+    </div>
+  </div>
+</div>
+
+<!-- QUOTES PAGE -->
+<div class="quotes-page view-hidden" id="quotesView">
+  <div class="quotes-toolbar">
+    <div>
+      <div class="quotes-toolbar-title">Trích dẫn</div>
+      <div class="quotes-toolbar-sub" id="quotesPageCount">Gom mọi trích dẫn bạn đã tự thêm trong từng cuốn sách.</div>
+    </div>
+    <input class="quotes-search" id="quotesSearchInput" placeholder="Tìm trong trích dẫn, sách, tác giả..." oninput="renderQuotesPage()">
+  </div>
+  <div class="quotes-grid" id="quotesGrid"></div>
+</div>
+
+<!-- VIEW BOOK MODAL -->
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- ADD/EDIT FORM MODAL -->
+<div class="form-overlay" id="formOverlay" onclick="if(event.target===this)closeForm()">
+  <div class="form-modal">
+    <div class="form-header">
+      <div class="form-title" id="formTitle">➕ Thêm sách mới</div>
+      <button class="form-close" onclick="closeForm()">✕</button>
+    </div>
+    <div class="form-body">
+      <!-- ✨ AI Book Search -->
+      <div class="ai-search-section">
+        <div class="ai-search-header" onclick="toggleAiPanel()">
+          <span style="font-size:1rem">✨</span>
+          <div class="ai-search-header-title">Tìm sách bằng tên — AI tự điền thông tin</div>
+          <span class="ai-badge">AI</span>
+          <span id="aiPanelArrow" style="color:#d4a855;font-size:0.8rem;transition:transform 0.2s">▼</span>
+        </div>
+        <div class="ai-search-body" id="aiSearchBody">
+          <div class="ai-name-row">
+            <input class="form-input" id="aiBookName"
+              placeholder="Nhập tên sách hoặc tác giả... (VD: Nhà Giả Kim, Atomic Habits)"
+              onkeydown="if(event.key==='Enter')aiSearchBooks()" />
+            <button class="ai-btn" id="aiSearchBtn" onclick="aiSearchBooks()">🔍 Tìm</button>
+          </div>
+          <div id="aiSearchResults"></div>
+          <div id="aiFilledBadge" style="display:none">
+            <span class="ai-filled-badge">✨ AI đã điền thông tin — kiểm tra và chỉnh sửa bên dưới nếu cần</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ISBN lookup -->
+      <div>
+        <div class="form-label">🔍 Nhập ISBN để tự động điền bìa (tùy chọn)</div>
+        <div class="isbn-row">
+          <div class="form-group">
+            <input class="form-input" id="fIsbn" placeholder="VD: 9780062315007" />
+          </div>
+          <button class="pill-btn" onclick="fetchISBN()" style="white-space:nowrap;padding:0.5rem 1rem">Tìm bìa</button>
+        </div>
+        <div class="isbn-status" id="isbnStatus"></div>
+      </div>
+
+      <!-- Cover preview + URL -->
+      <div class="cover-preview-wrap">
+        <div class="cover-preview" id="coverPreview">📖</div>
+        <div class="form-group" style="flex:1">
+          <label class="form-label">URL bìa sách</label>
+          <input class="form-input" id="fCover" placeholder="https://..." oninput="updateCoverPreview()">
+          <div style="font-size:0.72rem;color:#6b5030;margin-top:0.3rem">Tự động điền khi tìm theo tên sách hoặc ISBN</div>
+        </div>
+      </div>
+
+      <!-- Title & Author -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Tên sách *</label>
+          <input class="form-input" id="fTitle" placeholder="Tên sách..." required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tác giả *</label>
+          <input class="form-input" id="fAuthor" placeholder="Tên tác giả..." required>
+        </div>
+      </div>
+
+      <!-- Year & Genre -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Năm xuất bản</label>
+          <input class="form-input" id="fYear" type="number" placeholder="2024" min="0" max="2100">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Thể loại</label>
+          <select class="form-select" id="fGenre">
+            <option value="">-- Chọn thể loại --</option>
+            <option>Tiểu thuyết</option>
+            <option>Kỹ năng sống</option>
+            <option>Lịch sử</option>
+            <option>Khoa học viễn tưởng</option>
+            <option>Văn học Việt</option>
+            <option>Tâm lý học</option>
+            <option>Tài chính</option>
+            <option>Tâm linh</option>
+            <option>Triết học</option>
+            <option>Văn học Nhật</option>
+            <option>Khác</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Status & Rating -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Trạng thái</label>
+          <select class="form-select" id="fStatus">
+            <option value="unread">Sắp đọc</option>
+            <option value="reading">Đang đọc</option>
+            <option value="read">Đã đọc</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Đánh giá</label>
+          <div class="rating-stars" id="ratingStars">
+            <button class="star-btn" onclick="setRating(1)" data-r="1">★</button>
+            <button class="star-btn" onclick="setRating(2)" data-r="2">★</button>
+            <button class="star-btn" onclick="setRating(3)" data-r="3">★</button>
+            <button class="star-btn" onclick="setRating(4)" data-r="4">★</button>
+            <button class="star-btn" onclick="setRating(5)" data-r="5">★</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Note -->
+      <div class="form-group">
+        <label class="form-label">Ghi chú cá nhân</label>
+        <textarea class="form-textarea" id="fNote" placeholder="Cảm nhận, ghi chú..."></textarea>
+      </div>
+
+      <!-- Quotes -->
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
+          <div class="form-label">💬 Trích dẫn</div>
+          <button class="pill-btn" onclick="addQuoteRow()" style="font-size:0.72rem;padding:0.2rem 0.7rem">+ Thêm</button>
+        </div>
+        <div class="quotes-form-list" id="quotesFormList"></div>
+      </div>
+
+      <!-- Submit -->
+      <input type="hidden" id="fId">
+      <input type="hidden" id="fRating" value="0">
+      <input type="hidden" id="fColor" value="#1a1008">
+      <input type="hidden" id="fText" value="#e8d5a0">
+      <button class="form-submit" id="formSubmit" onclick="submitBook()">💾 Lưu sách</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETUP GUIDE MODAL -->
+<div class="overlay" id="guideOverlay" onclick="if(event.target===this)this.classList.remove('on')" style="z-index:700">
+  <div class="modal" style="background:linear-gradient(145deg,#1a0e06,#120906);max-width:640px">
+    <button class="modal-close" onclick="document.getElementById('guideOverlay').classList.remove('on')" style="color:#d4a855">✕</button>
+    <div class="modal-body" style="color:#e8d5a0">
+      <div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:#d4a855;margin-bottom:1rem">📋 Hướng dẫn tạo Supabase</div>
+      <div style="display:flex;flex-direction:column;gap:0.8rem;font-size:0.85rem;line-height:1.7;color:#c0a070">
+        <div><b style="color:#d4a855">Bước 1:</b> Truy cập <a href="https://supabase.com" target="_blank" style="color:#d4a855">supabase.com</a> → Đăng ký miễn phí</div>
+        <div><b style="color:#d4a855">Bước 2:</b> Tạo New Project → đặt tên, chọn region (Singapore gần nhất)</div>
+        <div><b style="color:#d4a855">Bước 3:</b> Vào <b>SQL Editor</b> → chạy đoạn SQL sau:</div>
+        <pre style="background:rgba(0,0,0,0.4);padding:1rem;border-radius:8px;font-size:0.78rem;overflow-x:auto;border:1px solid rgba(212,168,85,0.2);color:#c8e8a0;white-space:pre-wrap">-- Tạo bảng books
+CREATE TABLE books (
+  id BIGSERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  author TEXT NOT NULL,
+  year INTEGER,
+  genre TEXT,
+  status TEXT DEFAULT 'unread',
+  rating INTEGER DEFAULT 0,
+  cover TEXT,
+  color TEXT DEFAULT '#1a1008',
+  text_color TEXT DEFAULT '#e8d5a0',
+  note TEXT,
+  quotes JSONB DEFAULT '[]',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Cho phép đọc/ghi không cần đăng nhập (chỉ dùng cá nhân)
+ALTER TABLE books ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow all" ON books FOR ALL USING (true) WITH CHECK (true);</pre>
+        <div><b style="color:#d4a855">Bước 4:</b> Vào <b>Project Settings → API</b> → copy:</div>
+        <div style="padding:0.5rem 0.8rem;background:rgba(212,168,85,0.08);border-radius:8px;border:1px solid rgba(212,168,85,0.2)">
+          • <b>Project URL</b>: dán vào ô Supabase URL<br>
+          • <b>anon key</b> (public): dán vào ô Anon Key
+        </div>
+        <div><b style="color:#d4a855">Bước 5:</b> Nhấn <b>"Lưu & Kết nối"</b> — xong! 🎉</div>
+        <div style="color:#706050;font-size:0.78rem;font-style:italic">* Thông tin được lưu trong localStorage của trình duyệt, chỉ bạn truy cập được.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════
+//  GENRE ICONS
+// ═══════════════════════════════════════════
+const GENRE_ICONS = {
+  'Tiểu thuyết':'📖','Kỹ năng sống':'🌱','Lịch sử':'🏛️',
+  'Khoa học viễn tưởng':'🚀','Văn học Việt':'🌸','Tâm lý học':'🧠',
+  'Tài chính':'💰','Tâm linh':'✨','Triết học':'🦉','Văn học Nhật':'🌊','Khác':'📚'
+};
+
+const BOOK_W = 96;   // px — chiều rộng cố định
+const BOOK_H = 168;  // px — chiều cao cố định
+
+// ═══════════════════════════════════════════
+//  SUPABASE CONFIG
+// ═══════════════════════════════════════════
+let SUPABASE_URL = '';
+let SUPABASE_KEY = '';
+let BOOKS = [];
+let currentFilter = 'all';
+let currentGenreFilter = 'all';
+let searchQ = '';
+let currentView = 'library';
+let editingId = null;
+
+function loadConfig() {
+  SUPABASE_URL = localStorage.getItem('sb_url') || '';
+  SUPABASE_KEY = localStorage.getItem('sb_key') || '';
+  if (SUPABASE_URL && SUPABASE_KEY) {
+    document.getElementById('cfgUrl').value = SUPABASE_URL;
+    document.getElementById('cfgKey').value = SUPABASE_KEY;
+  }
+}
+
+function saveConfig() {
+  const url = document.getElementById('cfgUrl').value.trim().replace(/\/$/, '');
+  const key = document.getElementById('cfgKey').value.trim();
+  if (!url || !key) { showToast('Vui lòng nhập đủ URL và Key'); return; }
+  SUPABASE_URL = url;
+  SUPABASE_KEY = key;
+  localStorage.setItem('sb_url', url);
+  localStorage.setItem('sb_key', key);
+  document.getElementById('configBanner').classList.add('hidden');
+  showToast('✅ Đã lưu cấu hình Supabase!');
+  loadBooks();
+}
+
+function resetConfig() {
+  localStorage.removeItem('sb_url');
+  localStorage.removeItem('sb_key');
+  SUPABASE_URL = ''; SUPABASE_KEY = '';
+  document.getElementById('cfgUrl').value = '';
+  document.getElementById('cfgKey').value = '';
+  document.getElementById('configStatus').textContent = '';
+  BOOKS = [];
+  render();
+}
+
+function showSetupGuide() {
+  document.getElementById('guideOverlay').classList.add('on');
+}
+
+// ═══════════════════════════════════════════
+//  SUPABASE FETCH HELPERS
+// ═══════════════════════════════════════════
+async function sbFetch(path, options = {}) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    ...options,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation',
+      ...(options.headers || {})
+    }
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(err);
+  }
+  return res.status === 204 ? null : res.json();
+}
+
+async function loadBooks() {
+  if (!SUPABASE_URL || !SUPABASE_KEY) {
+    hideLoading();
+    document.getElementById('configBanner').classList.remove('hidden');
+    document.getElementById('bookcase').innerHTML = '<div style="padding:3rem;text-align:center;color:rgba(212,168,85,0.3);font-style:italic">⚙️ Chưa cấu hình Supabase — nhập thông tin phía trên để bắt đầu.</div>';
+    return;
+  }
+  showLoading('Đang tải tủ sách...');
+  try {
+    const data = await sbFetch('books?select=*&order=created_at.asc');
+    BOOKS = (data || []).map(b => ({
+      ...b,
+      quotes: Array.isArray(b.quotes) ? b.quotes : JSON.parse(b.quotes || '[]')
+    }));
+    document.getElementById('configBanner').classList.add('hidden');
+    render();
+    showToast(`✅ Đã tải ${BOOKS.length} cuốn sách`);
+  } catch(e) {
+    console.error(e);
+    document.getElementById('bookcase').innerHTML = `<div style="padding:3rem;text-align:center;color:#f08060;font-style:italic">❌ Lỗi kết nối: ${e.message}<br><span style="font-size:0.8rem;color:rgba(212,168,85,0.4)">Kiểm tra lại URL và Key trong cài đặt.</span></div>`;
+    document.getElementById('configBanner').classList.remove('hidden');
+  } finally {
+    hideLoading();
+  }
+}
+
+async function addBook(bookData) {
+  return sbFetch('books', {
+    method: 'POST',
+    body: JSON.stringify(bookData),
+    headers: { 'Prefer': 'return=representation' }
+  });
+}
+
+async function updateBook(id, bookData) {
+  return sbFetch(`books?id=eq.${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(bookData)
+  });
+}
+
+async function deleteBook(id) {
+  return sbFetch(`books?id=eq.${id}`, { method: 'DELETE' });
+}
+
+// ═══════════════════════════════════════════
+//  LOADING
+// ═══════════════════════════════════════════
+function showLoading(msg = 'Đang xử lý...') {
+  document.getElementById('loadingText').textContent = msg;
+  document.getElementById('loadingOverlay').classList.remove('hidden');
+}
+function hideLoading() {
+  document.getElementById('loadingOverlay').classList.add('hidden');
+}
+
+// ═══════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════
+function showLibraryView() {
+  currentView = 'library';
+  document.getElementById('libraryView').classList.remove('view-hidden');
+  document.getElementById('filterRow').classList.remove('view-hidden');
+  document.getElementById('quotesView').classList.add('view-hidden');
+  document.getElementById('quotesNavBtn').classList.remove('active');
+  document.querySelectorAll('.filter-status').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('onclick')?.includes(`'${currentFilter}'`));
+  });
+}
+
+function showQuotesPage() {
+  currentView = 'quotes';
+  document.getElementById('libraryView').classList.add('view-hidden');
+  document.getElementById('filterRow').classList.add('view-hidden');
+  document.getElementById('quotesView').classList.remove('view-hidden');
+  document.querySelectorAll('.filter-status').forEach(b => b.classList.remove('active'));
+  document.getElementById('quotesNavBtn').classList.add('active');
+  renderQuotesPage();
+}
+
+function render() {
+  const q = searchQ.toLowerCase();
+  let visible = BOOKS.filter(b => {
+    const matchF = currentFilter === 'all' || b.status === currentFilter;
+    const matchG = currentGenreFilter === 'all' || b.genre === currentGenreFilter;
+    const matchS = !q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q);
+    return matchF && matchG && matchS;
+  });
+
+  // Genre filter chips
+  const allGenres = [...new Set(BOOKS.map(b => b.genre).filter(Boolean))];
+  const fr = document.getElementById('filterRow');
+  fr.innerHTML = '<span style="font-size:0.72rem;color:#6b5030;align-self:center">Thể loại:</span>';
+  const allChip = document.createElement('button');
+  allChip.className = 'pill-btn' + (currentGenreFilter === 'all' ? ' active' : '');
+  allChip.textContent = 'Tất cả';
+  allChip.onclick = () => { currentGenreFilter = 'all'; render(); };
+  fr.appendChild(allChip);
+  allGenres.forEach(g => {
+    const chip = document.createElement('button');
+    chip.className = 'pill-btn' + (currentGenreFilter === g ? ' active' : '');
+    chip.textContent = (GENRE_ICONS[g] || '📚') + ' ' + g;
+    chip.onclick = () => { currentGenreFilter = g; render(); };
+    fr.appendChild(chip);
+  });
+
+  const groups = {};
+  visible.forEach(b => {
+    if (!groups[b.genre]) groups[b.genre] = [];
+    groups[b.genre].push(b);
+  });
+
+  const bc = document.getElementById('bookcase');
+  if (visible.length === 0) {
+    bc.innerHTML = '<div style="padding:3rem;text-align:center;color:rgba(212,168,85,0.3);font-style:italic">Không tìm thấy sách nào...</div>';
+    updateStats(visible);
+    if (currentView === 'quotes') renderQuotesPage();
+    return;
+  }
+
+  let html = '';
+  Object.entries(groups).forEach(([genre, gBooks]) => {
+    const icon = GENRE_ICONS[genre] || '📚';
+    html += `<div class="shelf-row">
+      <div class="shelf-label"><span class="genre-icon">${icon}</span>${genre}</div>
+      <div class="shelf-scroll-wrap" data-shelf="${genre.replace(/\s/g,'_')}">
+        <button class="shelf-arrow left hidden" onclick="shelfScroll(this,-1)" title="Cuộn trái">&#8249;</button>
+        <button class="shelf-arrow right hidden" onclick="shelfScroll(this,1)" title="Cuộn phải">&#8250;</button>
+        <div class="books-container-outer" onscroll="updateShelfScroll(this)">
+          <div class="books-container">`;
+
+    gBooks.forEach((b, idx) => {
+      const h = BOOK_H;
+      const w = BOOK_W;
+      const stars = b.rating ? '★'.repeat(b.rating) + '☆'.repeat(5-b.rating) : '';
+      const quotes = Array.isArray(b.quotes) ? b.quotes : [];
+
+      // Status config
+      const statusMap = {
+        read:    { cls:'status-read',    pillCls:'pill-read',    icon:'✓', pillLabel:'✓ Đã đọc' },
+        reading: { cls:'status-reading', pillCls:'pill-reading', icon:'▶', pillLabel:'▶ Đang đọc' },
+        unread:  { cls:'status-unread',  pillCls:'pill-unread',  icon:'○', pillLabel:'○ Chưa đọc' },
+        want:    { cls:'status-want',    pillCls:'pill-want',    icon:'✨', pillLabel:'✨ Sắp đọc' },
+      };
+      const st = statusMap[b.status] || statusMap['unread'];
+
+      // Bookmark SVG — only for "reading" (đang đọc dở)
+      const bookmarkSVG = b.status === 'reading' ? `<div class="book-bookmark">
+        <svg viewBox="0 0 15 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 0 H14 V29 L7.5 24.5 L1 29 Z" fill="#b82810" stroke="#7a1804" stroke-width="0.8"/>
+          <line x1="4.5" y1="10" x2="10.5" y2="10" stroke="rgba(255,190,170,0.55)" stroke-width="1"/>
+          <line x1="4.5" y1="13.5" x2="10.5" y2="13.5" stroke="rgba(255,190,170,0.35)" stroke-width="0.8"/>
+        </svg>
+      </div>` : '';
+
+      const coverHTML = b.cover
+        ? `<img src="${b.cover}" alt="${b.title}"
+            style="display:block;border-radius:2px 4px 4px 2px;"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="book-cover-fallback" style="background:${b.color||'#2a1a08'};color:${b.text_color||'#e8d5a0'};display:none">
+            <div class="book-spine"></div><div class="cover-deco"></div>
+            <div class="cover-title">${b.title}</div><div class="cover-deco"></div>
+            <div class="cover-author">${b.author}</div>
+          </div>`
+        : `<div class="book-cover-fallback" style="background:${b.color||'#2a1a08'};color:${b.text_color||'#e8d5a0'};display:flex">
+            <div class="book-spine"></div><div class="cover-deco"></div>
+            <div class="cover-title">${b.title}</div><div class="cover-deco"></div>
+            <div class="cover-author">${b.author}</div>
+          </div>`;
+
+      html += `<div class="book-item ${st.cls}" onclick="openBook(${b.id})" onmouseenter="positionTooltip(this)">
+        <div class="book-cover-wrap">
+          <div class="book-cover">${coverHTML}</div>
+          <div class="book-pages"></div>
+          ${bookmarkSVG}
+          ${stars ? `<div class="mini-stars" style="color:#f0d060">${stars}</div>` : ''}
+          <div class="book-floor-shadow"></div>
+        </div>
+        <div class="book-tooltip">
+          <div class="tt-title">${b.title}</div>
+          <div class="tt-author">${b.author}</div>
+          <div class="tt-divider"></div>
+          <div class="tt-meta">${[b.year, b.genre].filter(Boolean).join(' · ')}</div>
+          <div class="tt-status-pill ${st.pillCls}">${st.pillLabel}</div>
+          ${quotes.length ? `<div class="tt-meta" style="margin-top:5px">💬 ${quotes.length} trích dẫn</div>` : ''}
+          ${stars ? `<div class="tt-meta" style="margin-top:3px;color:#d4a855">${stars}</div>` : ''}
+        </div>
+      </div>`;
+    });
+
+    html += `</div><!-- .books-container -->
+        </div><!-- .books-container-outer -->
+      </div><!-- .shelf-scroll-wrap -->
+      <div class="shelf-plank"></div>
+      <div class="shelf-scrollbar-wrap">
+        <div class="shelf-scrollbar-track">
+          <div class="shelf-scrollbar-thumb"></div>
+        </div>
+      </div>
+      <div class="shelf-dots"></div>
+    </div>`;
+  });
+
+  bc.innerHTML = html;
+  updateStats(visible);
+  if (currentView === 'quotes') renderQuotesPage();
+  requestAnimationFrame(initShelfScrollbars);
+}
+
+function updateStats(visible) {
+  const all = visible || BOOKS;
+  const r = all.filter(b=>b.status==='read').length;
+  const ing = all.filter(b=>b.status==='reading').length;
+  const q = all.reduce((s,b)=> s + (Array.isArray(b.quotes) ? b.quotes.length : 0), 0);
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat-chip"><b>${all.length}</b> cuốn sách</div>
+    <div class="stat-chip"><b>${r}</b> đã đọc</div>
+    <div class="stat-chip"><b>${ing}</b> đang đọc</div>
+    <div class="stat-chip"><b>${q}</b> trích dẫn</div>
+  `;
+}
+
+// ═══════════════════════════════════════════
+//  FILTER
+// ═══════════════════════════════════════════
+function setFilter(f, el) {
+  showLibraryView();
+  currentFilter = f;
+  document.querySelectorAll('.filter-status').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  showLibraryView();
+  searchQ = e.target.value;
+  render();
+});
+
+function getAllQuotes() {
+  return BOOKS.flatMap(book => {
+    const quotes = Array.isArray(book.quotes) ? book.quotes : [];
+    return quotes
+      .filter(q => q && String(q.text || '').trim())
+      .map((q, idx) => ({
+        text: String(q.text || '').trim(),
+        page: q.page || '',
+        ch: q.ch || '',
+        index: idx + 1,
+        bookId: book.id,
+        bookTitle: book.title || '',
+        author: book.author || '',
+        genre: book.genre || ''
+      }));
+  });
+}
+
+function renderQuotesPage() {
+  const grid = document.getElementById('quotesGrid');
+  const count = document.getElementById('quotesPageCount');
+  if (!grid || !count) return;
+
+  const rawQ = document.getElementById('quotesSearchInput')?.value || '';
+  const q = rawQ.toLowerCase().trim();
+  const allQuotes = getAllQuotes();
+  const visible = allQuotes.filter(item => {
+    if (!q) return true;
+    const text = `${item.text} ${item.bookTitle} ${item.author} ${item.genre}`.toLowerCase();
+    return text.includes(q);
+  });
+
+  count.textContent = `${visible.length}/${allQuotes.length} trích dẫn trong ${BOOKS.length} cuốn sách.`;
+
+  if (!visible.length) {
+    grid.innerHTML = `<div class="quotes-empty">Chưa có trích dẫn phù hợp. Khi bạn thêm trích dẫn trong form sách, chúng sẽ xuất hiện tại đây.</div>`;
+    return;
+  }
+
+  grid.innerHTML = visible.map((item, idx) => {
+    const meta = [item.page ? `Trang ${item.page}` : '', item.ch ? `Chương ${item.ch}` : ''].filter(Boolean).join(' · ');
+    return `
+      <article class="quote-page-card">
+        <div class="quote-page-text">“${escapeHtml(item.text)}”</div>
+        <div class="quote-page-footer">
+          <div class="quote-page-book">
+            <b>${escapeHtml(item.bookTitle)}</b>
+            ${escapeHtml(item.author || 'Không rõ tác giả')}
+            ${meta ? `<div>${escapeHtml(meta)}</div>` : ''}
+          </div>
+          <button class="quote-copy" onclick="copyQuote(${idx})">Copy</button>
+        </div>
+      </article>`;
+  }).join('');
+
+  grid.querySelectorAll('.quote-copy').forEach((btn, idx) => {
+    btn._quoteText = formatQuoteForCopy(visible[idx]);
+  });
+}
+
+function formatQuoteForCopy(item) {
+  const place = [item.page ? `trang ${item.page}` : '', item.ch ? `chương ${item.ch}` : ''].filter(Boolean).join(', ');
+  const suffix = [item.bookTitle, item.author].filter(Boolean).join(' - ');
+  return `"${item.text}"${suffix ? `\n${suffix}` : ''}${place ? ` (${place})` : ''}`;
+}
+
+async function copyQuote(idx) {
+  const btn = document.querySelectorAll('#quotesGrid .quote-copy')[idx];
+  const text = btn?._quoteText;
+  await copyTextToClipboard(text);
+}
+
+async function copyTextToClipboard(text) {
+  if (!text) return;
+
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const area = document.createElement('textarea');
+      area.value = text;
+      area.style.position = 'fixed';
+      area.style.opacity = '0';
+      document.body.appendChild(area);
+      area.select();
+      document.execCommand('copy');
+      area.remove();
+    }
+    showToast('✅ Đã copy trích dẫn');
+  } catch(e) {
+    showToast('Không copy được, hãy thử lại');
+  }
+}
+
+async function copyBookQuote(bookId, idx) {
+  const book = BOOKS.find(x => x.id === bookId);
+  const quote = Array.isArray(book?.quotes) ? book.quotes[idx] : null;
+  if (!quote) return;
+  await copyTextToClipboard(formatQuoteForCopy({
+    text: quote.text || '',
+    page: quote.page || '',
+    ch: quote.ch || '',
+    bookTitle: book.title || '',
+    author: book.author || ''
+  }));
+}
+
+// ═══════════════════════════════════════════
+//  VIEW MODAL
+// ═══════════════════════════════════════════
+function openBook(id) {
+  const b = BOOKS.find(x=>x.id===id);
+  if (!b) return;
+  const statusLabel = {read:'Đã đọc', reading:'Đang đọc', unread:'Sắp đọc'}[b.status];
+  const statusCls = {read:'tt-read', reading:'tt-reading', unread:'tt-unread'}[b.status];
+  const stars = b.rating ? '★'.repeat(b.rating)+'☆'.repeat(5-b.rating) : 'Chưa đánh giá';
+  const quotes = Array.isArray(b.quotes) ? b.quotes : [];
+
+  let quotesHTML = quotes.length
+    ? quotes.map((q, idx)=>{
+      const meta = [q.page ? `Trang ${q.page}` : '', q.ch || ''].filter(Boolean).join(' · ');
+      return `<div class="quote-card">
+        <div class="quote-card-head">
+          <div class="quote-card-text">"${escapeHtml(q.text || '')}"</div>
+          <button class="quote-copy" onclick="event.stopPropagation();copyBookQuote(${b.id},${idx})">Copy</button>
+        </div>
+        ${meta ? `<div class="quote-meta">${escapeHtml(meta)}</div>` : ''}
+      </div>`;
+    }).join('')
+    : '<p style="color:#9a7050;font-style:italic;font-size:0.82rem">Chưa có trích dẫn.</p>';
+
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-cover-row">
+      ${b.cover
+        ? `<img class="modal-book-cover" src="${b.cover}" alt="${b.title}" onerror="this.style.background='${b.color||'#1a1008'}'">`
+        : `<div class="modal-book-cover" style="background:${b.color||'#1a1008'};display:flex;align-items:center;justify-content:center;color:${b.text_color||'#e8d5a0'};font-size:2rem">📖</div>`}
+      <div>
+        <div class="modal-title">${b.title}</div>
+        <div class="modal-author">bởi ${b.author}</div>
+        <div class="modal-tags">
+          <span class="tag">${GENRE_ICONS[b.genre]||''} ${b.genre||''}</span>
+          ${b.year ? `<span class="tag">${b.year}</span>` : ''}
+          <span class="tt-status ${statusCls}" style="padding:2px 8px;border-radius:10px;font-size:0.72rem">${statusLabel}</span>
+        </div>
+        <div class="stars">${stars}</div>
+        ${b.note ? `<div class="modal-note" style="margin-top:0.6rem">${b.note}</div>` : ''}
+        <div class="modal-actions">
+          <button class="modal-btn btn-edit" onclick="openEditForm(${b.id})">✏️ Sửa</button>
+          <button class="modal-btn btn-delete" onclick="confirmDelete(${b.id})">🗑️ Xóa</button>
+        </div>
+      </div>
+    </div>
+    <div class="section-hd">💬 Trích dẫn hay</div>
+    <div class="quotes-list">${quotesHTML}</div>
+  `;
+  document.getElementById('overlay').classList.add('on');
+}
+
+function closeModal() { document.getElementById('overlay').classList.remove('on'); }
+
+async function confirmDelete(id) {
+  const b = BOOKS.find(x=>x.id===id);
+  if (!b) return;
+  if (!confirm(`Xóa "${b.title}"? Hành động này không thể hoàn tác.`)) return;
+  closeModal();
+  showLoading('Đang xóa...');
+  try {
+    await deleteBook(id);
+    BOOKS = BOOKS.filter(x=>x.id!==id);
+    render();
+    showToast('🗑️ Đã xóa sách');
+  } catch(e) {
+    showToast('❌ Lỗi: ' + e.message);
+  } finally {
+    hideLoading();
+  }
+}
+
+// ═══════════════════════════════════════════
+//  ADD/EDIT FORM
+// ═══════════════════════════════════════════
+let formRating = 0;
+let formQuotes = [];
+
+function openAddForm() {
+  editingId = null;
+  formRating = 0;
+  formQuotes = [];
+  document.getElementById('formTitle').textContent = '➕ Thêm sách mới';
+  document.getElementById('fId').value = '';
+  document.getElementById('fIsbn').value = '';
+  document.getElementById('fTitle').value = '';
+  document.getElementById('fAuthor').value = '';
+  document.getElementById('fYear').value = '';
+  document.getElementById('fGenre').value = '';
+  document.getElementById('fStatus').value = 'unread';
+  document.getElementById('fCover').value = '';
+  document.getElementById('fNote').value = '';
+  document.getElementById('fRating').value = '0';
+  document.getElementById('isbnStatus').textContent = '';
+  document.getElementById('aiBookName').value = '';
+  document.getElementById('aiSearchResults').innerHTML = '';
+  document.getElementById('aiFilledBadge').style.display = 'none';
+  updateCoverPreview();
+  updateRatingUI();
+  renderQuotesForm();
+  document.getElementById('formOverlay').classList.add('on');
+}
+
+function openEditForm(id) {
+  const b = BOOKS.find(x=>x.id===id);
+  if (!b) return;
+  closeModal();
+  editingId = id;
+  formRating = b.rating || 0;
+  formQuotes = Array.isArray(b.quotes) ? JSON.parse(JSON.stringify(b.quotes)) : [];
+  document.getElementById('formTitle').textContent = '✏️ Sửa sách';
+  document.getElementById('fId').value = b.id;
+  document.getElementById('fIsbn').value = '';
+  document.getElementById('fTitle').value = b.title || '';
+  document.getElementById('fAuthor').value = b.author || '';
+  document.getElementById('fYear').value = b.year || '';
+  document.getElementById('fGenre').value = b.genre || '';
+  document.getElementById('fStatus').value = b.status || 'unread';
+  document.getElementById('fCover').value = b.cover || '';
+  document.getElementById('fNote').value = b.note || '';
+  document.getElementById('fRating').value = formRating;
+  document.getElementById('isbnStatus').textContent = '';
+  document.getElementById('aiBookName').value = '';
+  document.getElementById('aiSearchResults').innerHTML = '';
+  document.getElementById('aiFilledBadge').style.display = 'none';
+  updateCoverPreview();
+  updateRatingUI();
+  renderQuotesForm();
+  document.getElementById('formOverlay').classList.add('on');
+}
+
+function closeForm() {
+  document.getElementById('formOverlay').classList.remove('on');
+}
+
+function setRating(r) {
+  formRating = r;
+  document.getElementById('fRating').value = r;
+  updateRatingUI();
+}
+
+function updateRatingUI() {
+  document.querySelectorAll('.star-btn').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.r) <= formRating);
+  });
+}
+
+function updateCoverPreview() {
+  const url = document.getElementById('fCover').value.trim();
+  const preview = document.getElementById('coverPreview');
+  if (url) {
+    preview.innerHTML = `<img src="${url}" onerror="this.parentElement.innerHTML='📖'">`;
+  } else {
+    preview.innerHTML = '📖';
+  }
+}
+
+// ISBN Lookup
+async function fetchISBN() {
+  const isbn = document.getElementById('fIsbn').value.trim().replace(/[-\s]/g,'');
+  if (!isbn) { showToast('Nhập ISBN trước'); return; }
+  const status = document.getElementById('isbnStatus');
+  status.className = 'isbn-status loading';
+  status.textContent = '⏳ Đang tìm...';
+
+  try {
+    const res = await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
+    const data = await res.json();
+    const key = `ISBN:${isbn}`;
+    if (!data[key]) {
+      status.className = 'isbn-status err';
+      status.textContent = '❌ Không tìm thấy ISBN này. Nhập tay bên dưới.';
+      return;
+    }
+    const book = data[key];
+    document.getElementById('fTitle').value = book.title || '';
+    document.getElementById('fAuthor').value = (book.authors || []).map(a=>a.name).join(', ') || '';
+    const year = book.publish_date ? book.publish_date.match(/\d{4}/)?.[0] : '';
+    if (year) document.getElementById('fYear').value = year;
+    const coverUrl = book.cover?.large || book.cover?.medium || `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;    document.getElementById('fCover').value = coverUrl;
+    updateCoverPreview();
+    status.className = 'isbn-status ok';
+    status.textContent = '✅ Đã điền tự động! Kiểm tra và chỉnh sửa nếu cần.';
+  } catch(e) {
+    // Try cover directly
+    const coverUrl = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
+    document.getElementById('fCover').value = coverUrl;
+    updateCoverPreview();
+    status.className = 'isbn-status err';
+    status.textContent = '⚠️ API lỗi, đã thử lấy bìa trực tiếp. Nhập thông tin tay.';
+  }
+}
+
+document.getElementById('fIsbn').addEventListener('keydown', e => {
+  if (e.key === 'Enter') fetchISBN();
+});
+
+// Quotes form
+function addQuoteRow(q = {}) {
+  formQuotes.push({ text: q.text || '', page: q.page || '', ch: q.ch || '' });
+  renderQuotesForm();
+}
+
+function removeQuoteRow(idx) {
+  formQuotes.splice(idx, 1);
+  renderQuotesForm();
+}
+
+function renderQuotesForm() {
+  const list = document.getElementById('quotesFormList');
+  if (!formQuotes.length) {
+    list.innerHTML = '<div style="font-size:0.78rem;color:#4a3020;font-style:italic">Chưa có trích dẫn nào.</div>';
+    return;
+  }
+  list.innerHTML = formQuotes.map((q, i) => `
+    <div class="quote-form-item">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="form-label">Trích dẫn ${i+1}</div>
+        <button class="quote-remove" onclick="removeQuoteRow(${i})">✕ Xóa</button>
+      </div>
+      <textarea class="form-textarea" style="min-height:55px" placeholder="Nội dung trích dẫn..."
+        oninput="formQuotes[${i}].text=this.value">${q.text||''}</textarea>
+      <div class="quote-form-row">
+        <input class="form-input" placeholder="Trang" value="${q.page||''}" oninput="formQuotes[${i}].page=this.value">
+        <input class="form-input" placeholder="Chương" value="${q.ch||''}" oninput="formQuotes[${i}].ch=this.value">
+        <div></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Submit book
+async function submitBook() {
+  const title = document.getElementById('fTitle').value.trim();
+  const author = document.getElementById('fAuthor').value.trim();
+  if (!title || !author) { showToast('Vui lòng nhập tên sách và tác giả'); return; }
+
+  // Random book color based on title
+  const colors = ['#1a0d05','#0d1a05','#050d1a','#1a051a','#1a1005','#051a1a','#18100a','#0a1018','#180a10'];
+  const randomColor = colors[Math.abs(title.split('').reduce((a,c)=>a+c.charCodeAt(0),0)) % colors.length];
+
+  const bookData = {
+    title,
+    author,
+    year: parseInt(document.getElementById('fYear').value) || null,
+    genre: document.getElementById('fGenre').value || 'Khác',
+    status: document.getElementById('fStatus').value,
+    rating: formRating,
+    cover: document.getElementById('fCover').value.trim() || null,
+    note: document.getElementById('fNote').value.trim(),
+    quotes: formQuotes.filter(q => q.text.trim()),
+    color: randomColor,
+    text_color: '#e8d5a0'
+  };
+
+  const btn = document.getElementById('formSubmit');
+  btn.disabled = true;
+  btn.textContent = '⏳ Đang lưu...';
+  showLoading(editingId ? 'Đang cập nhật...' : 'Đang thêm sách...');
+
+  try {
+    if (editingId) {
+      await updateBook(editingId, bookData);
+      const idx = BOOKS.findIndex(x=>x.id===editingId);
+      if (idx !== -1) BOOKS[idx] = { ...BOOKS[idx], ...bookData };
+      showToast('✅ Đã cập nhật sách!');
+    } else {
+      const result = await addBook(bookData);
+      const newBook = Array.isArray(result) ? result[0] : result;
+      if (newBook) BOOKS.push(newBook);
+      showToast('✅ Đã thêm sách mới!');
+    }
+    closeForm();
+    render();
+  } catch(e) {
+    showToast('❌ Lỗi: ' + e.message);
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '💾 Lưu sách';
+    hideLoading();
+  }
+}
+
+// ═══════════════════════════════════════════
+//  AI BOOK SEARCH
+// ═══════════════════════════════════════════
+let aiPanelOpen = true;
+
+function toggleAiPanel() {
+  aiPanelOpen = !aiPanelOpen;
+  const body = document.getElementById('aiSearchBody');
+  const arrow = document.getElementById('aiPanelArrow');
+  body.style.display = aiPanelOpen ? '' : 'none';
+  arrow.style.transform = aiPanelOpen ? '' : 'rotate(-90deg)';
+}
+
+function escapeHtml(value = '') {
+  return String(value).replace(/[&<>"']/g, ch => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[ch]));
+}
+
+function normalizeBookText(value = '') {
+  return String(value).toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^\w\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function scoreBookMatch(book, query) {
+  const q = normalizeBookText(query);
+  const title = normalizeBookText(book.title);
+  const author = normalizeBookText(book.author);
+  const haystack = `${title} ${author}`;
+  const tokens = q.split(' ').filter(Boolean);
+  let score = 0;
+
+  if (title === q) score += 120;
+  if (title.startsWith(q)) score += 70;
+  if (title.includes(q)) score += 55;
+  if (author.includes(q)) score += 25;
+  tokens.forEach(token => {
+    if (title.includes(token)) score += 12;
+    else if (haystack.includes(token)) score += 5;
+  });
+  if (book.cover || book.cover_i || book.isbn) score += 12;
+  if (book.description) score += 8;
+  if (book.year) score += 4;
+  if (book.source === 'Google Books') score += 6;
+
+  return score;
+}
+
+function inferGenre(book) {
+  const text = normalizeBookText([
+    book.title,
+    book.author,
+    book.categories,
+    book.subjects,
+    book.description
+  ].filter(Boolean).join(' '));
+
+  const rules = [
+    ['Kỹ năng sống', ['self help', 'personal development', 'success', 'habits', 'productivity', 'leadership', 'ky nang', 'thanh cong', 'thoi quen']],
+    ['Tài chính', ['business', 'finance', 'money', 'investing', 'economics', 'tai chinh', 'kinh doanh', 'dau tu']],
+    ['Tâm lý học', ['psychology', 'mental', 'behavior', 'emotion', 'tam ly', 'hanh vi', 'cam xuc']],
+    ['Triết học', ['philosophy', 'ethics', 'nietzsche', 'plato', 'aristotle', 'triet hoc']],
+    ['Lịch sử', ['history', 'historical', 'war', 'biography', 'lich su', 'chien tranh', 'hoi ky']],
+    ['Khoa học viễn tưởng', ['science fiction', 'sci fi', 'dystopian', 'space', 'robot', 'vien tuong']],
+    ['Văn học Nhật', ['japanese', 'japan', 'murakami', 'kawabata', 'mishima', 'nhat ban', 'van hoc nhat']],
+    ['Văn học Việt', ['vietnamese', 'vietnam', 'nguyen nhat anh', 'nam cao', 'vu trong phung', 'van hoc viet']],
+    ['Tâm linh', ['spiritual', 'religion', 'buddhism', 'mindfulness', 'meditation', 'tam linh', 'thien', 'phat giao']],
+    ['Tiểu thuyết', ['fiction', 'novel', 'literature', 'classic', 'tieu thuyet', 'van hoc']]
+  ];
+
+  for (const [genre, keywords] of rules) {
+    if (keywords.some(keyword => text.includes(keyword))) return genre;
+  }
+  return 'Khác';
+}
+
+function cleanDescription(text = '') {
+  const div = document.createElement('div');
+  div.innerHTML = text;
+  return div.textContent.replace(/\s+/g, ' ').trim().slice(0, 260);
+}
+
+function mergeBookResults(results) {
+  const byKey = new Map();
+  results.forEach(book => {
+    if (!book.title) return;
+    const key = `${normalizeBookText(book.title)}|${normalizeBookText(book.author).slice(0, 32)}`;
+    const current = byKey.get(key) || {};
+    byKey.set(key, {
+      ...current,
+      ...book,
+      title: current.title || book.title,
+      author: current.author || book.author,
+      year: current.year || book.year,
+      isbn: current.isbn || book.isbn,
+      cover: current.cover || book.cover,
+      cover_i: current.cover_i || book.cover_i,
+      description: current.description || book.description,
+      categories: [current.categories, book.categories].filter(Boolean).join(', '),
+      subjects: [current.subjects, book.subjects].filter(Boolean).join(', '),
+      source: [current.source, book.source].filter(Boolean).join(' + ')
+    });
+  });
+  return Array.from(byKey.values());
+}
+
+async function searchOpenLibrary(query) {
+  const olRes = await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=10&fields=key,title,author_name,first_publish_year,isbn,cover_i,subject`);
+  if (!olRes.ok) throw new Error('Open Library không phản hồi');
+  const olData = await olRes.json();
+  return (olData.docs || []).map(d => ({
+    title: d.title || '',
+    author: (d.author_name || []).slice(0, 3).join(', '),
+    year: d.first_publish_year || null,
+    isbn: (d.isbn || []).find(x => String(x).length === 13) || (d.isbn || [])[0] || null,
+    cover_i: d.cover_i || null,
+    subjects: (d.subject || []).slice(0, 8).join(', '),
+    source: 'Open Library'
+  }));
+}
+
+async function searchGoogleBooks(query) {
+  const gbRes = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=10&printType=books`);
+  if (!gbRes.ok) throw new Error('Google Books không phản hồi');
+  const gbData = await gbRes.json();
+  return (gbData.items || []).map(item => {
+    const info = item.volumeInfo || {};
+    const identifiers = info.industryIdentifiers || [];
+    const isbn13 = identifiers.find(x => x.type === 'ISBN_13')?.identifier;
+    const isbn10 = identifiers.find(x => x.type === 'ISBN_10')?.identifier;
+    return {
+      title: info.title || '',
+      author: (info.authors || []).join(', '),
+      year: info.publishedDate ? parseInt(String(info.publishedDate).match(/\d{4}/)?.[0]) || null : null,
+      isbn: isbn13 || isbn10 || null,
+      cover: info.imageLinks?.large
+        || (info.imageLinks?.thumbnail
+            ? info.imageLinks.thumbnail
+                .replace('http://', 'https://')
+                .replace('zoom=1', 'zoom=10')
+                .replace('&edge=curl', '')
+            : null),
+      categories: (info.categories || []).join(', '),
+      description: cleanDescription(info.description || ''),
+      source: 'Google Books'
+    };
+  });
+}
+
+async function aiSearchBooks() {
+  const query = document.getElementById('aiBookName').value.trim();
+  if (!query) { showToast('Nhập tên sách cần tìm'); return; }
+
+  const resultsEl = document.getElementById('aiSearchResults');
+  const btn = document.getElementById('aiSearchBtn');
+  btn.disabled = true;
+  document.getElementById('aiFilledBadge').style.display = 'none';
+
+  resultsEl.innerHTML = `<div class="ai-thinking">
+    <span>✨ AI đang tìm kiếm</span>
+    <div class="ai-dots"><span></span><span></span><span></span></div>
+  </div>`;
+
+  try {
+    const searches = await Promise.allSettled([
+      searchOpenLibrary(query),
+      searchGoogleBooks(query)
+    ]);
+    const rawBooks = searches.flatMap(result => result.status === 'fulfilled' ? result.value : []);
+
+    resultsEl.innerHTML = `<div class="ai-thinking">
+      <span>🧠 AI đang phân tích và chọn kết quả phù hợp</span>
+      <div class="ai-dots"><span></span><span></span><span></span></div>
+    </div>`;
+
+    const books = mergeBookResults(rawBooks)
+      .map(book => ({
+        ...book,
+        genre: inferGenre(book),
+        score: scoreBookMatch(book, query)
+      }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 6);
+
+    if (!books.length) {
+      resultsEl.innerHTML = `<div style="font-size:0.78rem;color:#f08060;padding:0.4rem 0">Không tìm thấy kết quả. Thử từ khóa khác.</div>`;
+      return;
+    }
+
+    // Render results
+    resultsEl.innerHTML = `
+      <div style="font-size:0.72rem;color:#907050;margin-bottom:0.3rem">Chọn sách để tự động điền form:</div>
+      <div class="search-results-list">
+        ${books.map((b, i) => {
+          const coverUrl = b.cover || (b.isbn
+            ? `https://covers.openlibrary.org/b/isbn/${b.isbn}-M.jpg`
+            : b.cover_i
+              ? `https://covers.openlibrary.org/b/id/${b.cover_i}-M.jpg`
+              : null);
+          return `
+            <div class="search-result-item" onclick="selectAiBook(${i})">
+              <div class="search-result-thumb">
+                ${coverUrl
+                  ? `<img src="${coverUrl}" onerror="this.parentElement.innerHTML='📖'">`
+                  : '📖'}
+              </div>
+              <div class="search-result-info">
+                <div class="search-result-title">${escapeHtml(b.title)}</div>
+                <div class="search-result-author">${escapeHtml(b.author || 'Không rõ')}</div>
+                <div class="search-result-meta">${escapeHtml(b.year || '?')} · ${escapeHtml(b.genre || 'Khác')} · ${escapeHtml(b.source || '')}</div>
+                ${b.description ? `<div style="font-size:0.68rem;color:#7a6040;margin-top:2px;line-height:1.4">${escapeHtml(b.description)}</div>` : ''}
+              </div>
+              <div class="search-result-select">➕ Chọn</div>
+            </div>`;
+        }).join('')}
+      </div>`;
+
+    // Store books data on elements
+    document.querySelectorAll('.search-result-item').forEach((el, i) => {
+      el._bookData = books[i];
+    });
+
+  } catch(e) {
+    console.error(e);
+    resultsEl.innerHTML = `<div style="font-size:0.78rem;color:#f08060;padding:0.4rem 0">❌ Lỗi tìm kiếm: ${escapeHtml(e.message)}</div>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function selectAiBook(idx) {
+  const items = document.querySelectorAll('.search-result-item');
+  const b = items[idx]?._bookData;
+  if (!b) return;
+
+  // Fill form fields
+  if (b.title) document.getElementById('fTitle').value = b.title;
+  if (b.author) document.getElementById('fAuthor').value = b.author;
+  if (b.year) document.getElementById('fYear').value = b.year;
+  if (b.genre) {
+    const sel = document.getElementById('fGenre');
+    for (let opt of sel.options) {
+      if (opt.value === b.genre) { sel.value = b.genre; break; }
+    }
+  }
+  if (b.description && !document.getElementById('fNote').value.trim()) {
+    document.getElementById('fNote').value = b.description;
+  }
+
+  // Get best cover URL — ưu tiên OpenLibrary -L (~180px) hoặc Google Books zoom cao
+  let coverUrl = '';
+  if (b.isbn) {
+    coverUrl = `https://covers.openlibrary.org/b/isbn/${b.isbn}-L.jpg`;
+  } else if (b.cover_i) {
+    coverUrl = `https://covers.openlibrary.org/b/id/${b.cover_i}-L.jpg`;
+  } else if (b.cover) {
+    coverUrl = b.cover
+      .replace('http://', 'https://')
+      .replace(/zoom=\d+/, 'zoom=10')
+      .replace('&edge=curl', '');
+  }
+  if (coverUrl) {
+    document.getElementById('fCover').value = coverUrl;
+    updateCoverPreview();
+  }
+
+  // Highlight selected
+  document.querySelectorAll('.search-result-item').forEach(el => el.style.background = '');
+  items[idx].style.background = 'rgba(212,168,85,0.15)';
+  items[idx].style.borderColor = 'rgba(212,168,85,0.5)';
+
+  // Show filled badge
+  document.getElementById('aiFilledBadge').style.display = 'block';
+
+  // If has ISBN, also run ISBN lookup for extra data
+  if (b.isbn) {
+    document.getElementById('fIsbn').value = b.isbn;
+    fetchISBN();
+  }
+
+  showToast('✅ Đã điền thông tin từ AI!');
+
+  // Scroll to cover preview
+  setTimeout(() => {
+    document.getElementById('coverPreview').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 200);
+}
+
+// ═══════════════════════════════════════════
+//  SHELF SCROLL HELPERS
+// ═══════════════════════════════════════════
+function shelfScroll(btn, dir) {
+  const wrap = btn.closest('.shelf-scroll-wrap');
+  const outer = wrap.querySelector('.books-container-outer');
+  outer.scrollBy({ left: dir * 320, behavior: 'smooth' });
+}
+
+function updateShelfScroll(outer) {
+  const wrap  = outer.closest('.shelf-scroll-wrap');
+  const row   = outer.closest('.shelf-row');
+  const btnL  = wrap.querySelector('.shelf-arrow.left');
+  const btnR  = wrap.querySelector('.shelf-arrow.right');
+  const thumb = row.querySelector('.shelf-scrollbar-thumb');
+  const track = row.querySelector('.shelf-scrollbar-track');
+  const dotsEl= row.querySelector('.shelf-dots');
+
+  const maxScroll = outer.scrollWidth - outer.clientWidth;
+  const hasScroll = maxScroll > 2;
+  const ratio = hasScroll ? outer.scrollLeft / maxScroll : 0;
+
+  // Arrow visibility
+  if (btnL) btnL.classList.toggle('hidden', outer.scrollLeft <= 2);
+  if (btnR) btnR.classList.toggle('hidden', !hasScroll || outer.scrollLeft >= maxScroll - 2);
+
+  // Thumb
+  if (thumb && track) {
+    if (hasScroll) {
+      track.parentElement.style.visibility = 'visible';
+      const thumbPct = outer.clientWidth / outer.scrollWidth;
+      const thumbW   = Math.max(36, track.clientWidth * thumbPct);
+      const thumbX   = ratio * (track.clientWidth - thumbW);
+      thumb.style.width = thumbW + 'px';
+      thumb.style.left  = thumbX + 'px';
+    } else {
+      track.parentElement.style.visibility = 'hidden';
+    }
+  }
+
+  // Dots — show one dot per "page" (outer.clientWidth steps)
+  if (dotsEl) {
+    if (!hasScroll) {
+      dotsEl.innerHTML = '';
+    } else {
+      const pageCount = Math.ceil(outer.scrollWidth / outer.clientWidth);
+      const activePage = Math.round(ratio * (pageCount - 1));
+      dotsEl.innerHTML = Array.from({length: pageCount}, (_, i) =>
+        `<div class="shelf-dot${i === activePage ? ' active' : ''}"></div>`
+      ).join('');
+    }
+  }
+}
+
+function initShelfScrollbars() {
+  document.querySelectorAll('.books-container-outer').forEach(outer => {
+    updateShelfScroll(outer);
+
+    // Thumb drag
+    const row   = outer.closest('.shelf-row');
+    const thumb = row?.querySelector('.shelf-scrollbar-thumb');
+    const track = row?.querySelector('.shelf-scrollbar-track');
+    if (!thumb || !track) return;
+
+    let dragging = false, startX = 0, startScroll = 0;
+    thumb.addEventListener('mousedown', e => {
+      dragging = true; startX = e.clientX; startScroll = outer.scrollLeft;
+      thumb.classList.add('dragging'); e.preventDefault();
+    });
+    document.addEventListener('mousemove', e => {
+      if (!dragging) return;
+      const maxScroll = outer.scrollWidth - outer.clientWidth;
+      const maxThumbX = track.clientWidth - thumb.offsetWidth;
+      outer.scrollLeft = startScroll + ((e.clientX - startX) / maxThumbX) * maxScroll;
+    });
+    document.addEventListener('mouseup', () => {
+      if (dragging) { dragging = false; thumb.classList.remove('dragging'); }
+    });
+  });
+}
+
+// ═══════════════════════════════════════════
+//  TOOLTIP POSITIONING (kept but unused — tooltip hidden)
+// ═══════════════════════════════════════════
+function positionTooltip(bookEl) { /* tooltip removed */ }
+
+// ═══════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+loadConfig();
+loadBooks();
+</script>
+</body>
+</html>
