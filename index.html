@@ -954,55 +954,44 @@ body {
   .auth-modal { border-radius: 18px 18px 0 0; max-width: 100%; }
 }
 
-/* ── TOUCH / NO-HOVER DEVICE — chuẩn CSS, không cần JS ── */
-/* @media (hover: none) match chính xác mọi thiết bị cảm ứng: iOS, Android */
+/* ── TOUCH / NO-HOVER DEVICE ── */
 @media (hover: none) {
-  /* Tắt hoàn toàn transform hover — nguyên nhân gây khoảng trống */
   .book-item {
     margin-top: 10px !important;
-    transform: none !important;
     transition: none !important;
   }
+  /* Tắt hoàn toàn mọi transform khi tap */
+  .book-item,
   .book-item:hover,
   .book-item:active {
     transform: none !important;
     filter: none !important;
   }
-  /* Tắt hover trên cover */
+  .book-item .book-cover,
   .book-item:hover .book-cover,
   .book-item:active .book-cover {
-    transform: rotateY(-4deg) !important;
+    transition: none !important;
   }
-  .book-item.status-reading:hover .book-cover,
-  .book-item.status-reading:active .book-cover {
+  .book-item.status-reading .book-cover,
+  .book-item.status-reading:hover .book-cover {
     transform: rotateY(-22deg) !important;
   }
-  /* Ẩn page reveal trên reading hover */
-  .book-item.status-reading:hover .book-cover-wrap::before {
-    opacity: 0 !important;
+  .book-item.status-read .book-cover,
+  .book-item.status-read:hover .book-cover,
+  .book-item.status-unread .book-cover,
+  .book-item.status-unread:hover .book-cover,
+  .book-item.status-want .book-cover,
+  .book-item.status-want:hover .book-cover {
+    transform: rotateY(-4deg) !important;
   }
-  /* Tắt floor shadow hover */
-  .book-item:hover .book-floor-shadow {
-    width: 80% !important;
-    opacity: 0.5 !important;
-  }
-  /* Book size cho mobile */
-  .book-cover img {
-    width: 82px !important;
-    height: 125px !important;
-  }
-  .book-cover,
-  .book-cover-fallback {
-    width: 82px !important;
-    height: 125px !important;
-  }
-  /* books-container: height cố định = bìa + margin, không thừa */
+  .book-item.status-reading:hover .book-cover-wrap::before { opacity: 0 !important; }
+  .book-item:hover .book-floor-shadow { width: 80% !important; opacity: 0.5 !important; }
+
+  /* Container height = bìa (125px) + margin-top (10px) */
   .books-container {
-    align-items: flex-end;
-    height: calc(125px + 10px + 6px); /* bìa + margin-top + padding-bottom */
+    height: calc(125px + 10px);
   }
 }
-
 /* ── MOBILE BOTTOM NAV ── */
 .mobile-bottom-nav {
   display: none;
@@ -1523,7 +1512,9 @@ const GENRE_ICONS = {
   'Tài chính':'💰','Tâm linh':'✨','Triết học':'🦉','Văn học Nhật':'🌊','Khác':'📚'
 };
 
-const BOOK_W = 128, BOOK_H = 195;
+const IS_TOUCH = window.matchMedia('(hover: none)').matches;
+const BOOK_W = IS_TOUCH ? 82 : 128;
+const BOOK_H = IS_TOUCH ? 125 : 195;
 
 // ═══════════════════════════════════════════
 //  STATE
@@ -2451,10 +2442,8 @@ function showToast(msg) {
 // ═══════════════════════════════════════════
 //  DEVICE DETECTION — tự động nhận diện mobile/touch
 // ═══════════════════════════════════════════
-const IS_TOUCH = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-if (IS_TOUCH) {
-  document.documentElement.classList.add('is-touch');
-}
+// IS_TOUCH đã được khai báo ở đầu script cùng với BOOK_W/H
+if (IS_TOUCH) document.documentElement.classList.add('is-touch');
 
 // ═══════════════════════════════════════════
 //  MOBILE NAV HELPERS
