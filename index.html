@@ -5,44 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tủ Sách Của Thơ Nụ</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<script>
+  (function () {
+    const savedTheme = localStorage.getItem('bookshelf_theme') || 'dark';
+    const savedLang = localStorage.getItem('bookshelf_lang') || 'vi';
+    document.documentElement.dataset.theme = savedTheme;
+    document.documentElement.lang = savedLang;
+  })();
+</script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ══ THEME VARIABLES ══ */
 :root {
   --gold: #d4a855;
   --gold-dim: rgba(212,168,85,0.25);
-  /* Dark mode (default) */
-  --bg-page:    #0e0703;
-  --bg-page2:   #1a0d05;
-  --bg-header:  rgba(14,7,3,0.95);
-  --bg-modal:   #faf6ef;
-  --bg-modal-text: #2c1810;
-  --text-main:  #e8d5a0;
-  --text-muted: #907050;
-  --text-dim:   #6b5030;
-  --border-dim: rgba(212,168,85,0.15);
-  --border-mid: rgba(212,168,85,0.28);
-  --chip-bg:    rgba(255,255,255,0.04);
-  --form-bg:    linear-gradient(145deg, #1a0e06, #120906);
-  --bookcase-bg: #2a1206;
-}
-
-/* Light mode */
-html.light {
-  --bg-page:    #f5ede0;
-  --bg-page2:   #ecdcc8;
-  --bg-header:  rgba(240,230,215,0.97);
-  --bg-modal:   #ffffff;
-  --bg-modal-text: #2c1810;
-  --text-main:  #3a2010;
-  --text-muted: #7a5030;
-  --text-dim:   #9a7050;
-  --border-dim: rgba(139,90,43,0.2);
-  --border-mid: rgba(139,90,43,0.35);
-  --chip-bg:    rgba(139,90,43,0.07);
-  --form-bg:    linear-gradient(145deg, #fff8f0, #f5ead8);
-  --bookcase-bg: #c8905a;
+  --bg-dark: #0e0703;
+  --bg-mid: #1a0d05;
+  --modal-bg: #faf6ef;
 }
 
 body {
@@ -51,84 +30,8 @@ body {
   overflow-x: hidden;
   background:
     radial-gradient(ellipse 80% 60% at 50% 0%, #2a1505 0%, transparent 70%),
-    linear-gradient(180deg, var(--bg-page) 0%, var(--bg-page2) 30%, var(--bg-page) 100%);
-  color: var(--text-main);
-  transition: background 0.35s, color 0.35s;
+    linear-gradient(180deg, #0e0703 0%, #1a0d05 30%, #0e0703 100%);
 }
-html.light body {
-  background:
-    radial-gradient(ellipse 80% 60% at 50% 0%, #e8d0b0 0%, transparent 70%),
-    linear-gradient(180deg, var(--bg-page) 0%, var(--bg-page2) 30%, var(--bg-page) 100%);
-}
-
-/* Light mode component overrides */
-html.light .header {
-  background: var(--bg-header);
-  border-bottom-color: rgba(139,90,43,0.15);
-}
-html.light .brand { color: #8b5a2b; text-shadow: none; }
-html.light .brand span { color: #a07838; }
-html.light .pill-btn { color: #8b5a2b; background: rgba(139,90,43,0.08); border-color: rgba(139,90,43,0.3); }
-html.light .pill-btn:hover { background: rgba(139,90,43,0.15); border-color: #8b5a2b; }
-html.light .pill-btn.active { background: #8b5a2b; color: #fff8f0; }
-html.light .pill-btn.danger { color: #c05040; border-color: rgba(192,80,64,0.3); }
-html.light .search-wrap input { background: rgba(139,90,43,0.07); border-color: rgba(139,90,43,0.2); color: #3a2010; }
-html.light .search-wrap input::placeholder { color: #b09070; }
-html.light .stat-chip { color: #7a5030; border-color: rgba(139,90,43,0.2); }
-html.light .stat-chip b { color: #8b5a2b; }
-html.light .filter-row .pill-btn { color: #7a5030; }
-html.light .readonly-banner { background: rgba(139,90,43,0.08); border-color: rgba(139,90,43,0.2); color: #7a5030; }
-html.light .bookcase {
-  background:
-    linear-gradient(90deg, #8a5020 0px, #c07040 18px, #d88040 22px, #b06030 30px) left/30px 100% no-repeat,
-    linear-gradient(270deg, #8a5020 0px, #c07040 18px, #d88040 22px, #b06030 30px) right/30px 100% no-repeat,
-    repeating-linear-gradient(90deg, rgba(120,70,20,0.15) 0px, rgba(120,70,20,0.15) 1px, transparent 1px, transparent 80px),
-    linear-gradient(180deg, #d09060 0%, #c07840 50%, #d09060 100%);
-  box-shadow: 0 0 0 6px #b07040, 0 0 0 8px #c88050, 0 24px 70px rgba(0,0,0,0.25);
-}
-html.light .bookcase::before {
-  background: linear-gradient(180deg, #8a5020 0%, #c07040 20%, #e09050 40%, #f0a860 55%, #e09050 70%, #c07040 85%, #a06030 100%);
-}
-html.light .shelf-plank {
-  background: linear-gradient(180deg, #f5c860 0%, #e0a050 8%, #c88030 20%, #e09040 35%, #c07830 50%, #b06828 65%, #904018 82%, #6a2e08 92%, #4a1c04 100%);
-}
-html.light .modal { background: linear-gradient(145deg, #ffffff, #fdf5e8); }
-html.light .form-modal { background: var(--form-bg); border-color: rgba(139,90,43,0.3); }
-html.light .form-input, html.light .form-select, html.light .form-textarea {
-  background: rgba(139,90,43,0.06); border-color: rgba(139,90,43,0.2); color: #3a2010;
-}
-html.light .form-input:focus, html.light .form-select:focus, html.light .form-textarea:focus { border-color: #8b5a2b; }
-html.light .form-input::placeholder, html.light .form-textarea::placeholder { color: #c0a080; }
-html.light .form-select option { background: #fff8f0; color: #3a2010; }
-html.light .form-label { color: #7a5030; }
-html.light .form-title { color: #8b5a2b; }
-html.light .form-close, html.light .form-header { color: #8b5a2b; border-color: rgba(139,90,43,0.15); }
-html.light .ai-search-section { background: rgba(139,90,43,0.04); border-color: rgba(139,90,43,0.2); }
-html.light .ai-search-header { background: rgba(139,90,43,0.08); border-color: rgba(139,90,43,0.12); }
-html.light .ai-search-header-title { color: #8b5a2b; }
-html.light .auth-modal { background: linear-gradient(145deg, #fff8f0, #f5ead8); border-color: rgba(139,90,43,0.3); }
-html.light .auth-title { color: #8b5a2b; }
-html.light .auth-subtitle { color: #9a7050; }
-html.light .auth-tabs { border-color: rgba(139,90,43,0.15); }
-html.light .auth-tab { color: #9a7050; }
-html.light .auth-tab.active { color: #8b5a2b; border-bottom-color: #8b5a2b; }
-html.light .auth-input { background: rgba(139,90,43,0.06); border-color: rgba(139,90,43,0.22); color: #3a2010; }
-html.light .auth-input::placeholder { color: #c0a080; }
-html.light .auth-guest-btn { border-color: rgba(139,90,43,0.2); color: #9a7050; }
-html.light .auth-guest-btn:hover { border-color: #8b5a2b; color: #8b5a2b; }
-html.light .quote-page-card { background: linear-gradient(145deg, #ffffff, #fdf5e8); border-color: rgba(139,90,43,0.2); }
-html.light .quote-page-text { color: #2c1810; }
-html.light .quote-page-book { color: #7a5030; }
-html.light .quotes-search { background: rgba(139,90,43,0.07); border-color: rgba(139,90,43,0.2); color: #3a2010; }
-html.light .toast { background: #fff8f0; border-color: #8b5a2b; color: #8b5a2b; }
-html.light .mobile-bottom-nav { background: linear-gradient(180deg, rgba(240,225,200,0.98), rgba(230,210,180,0.99)); border-top-color: rgba(139,90,43,0.2); }
-html.light .mobile-nav-btn { color: #b09070; }
-html.light .mobile-nav-btn.active { color: #8b5a2b; }
-html.light .mobile-search-wrap input { background: rgba(139,90,43,0.07); border-color: rgba(139,90,43,0.18); color: #3a2010; }
-html.light .shelf-label { color: #1a0d03; }
-html.light .more-books-indicator { background: linear-gradient(to right, transparent 0%, rgba(200,170,110,0.6) 45%, rgba(200,170,110,0.92) 100%); }
-html.light .shelf-arrow { background: linear-gradient(145deg, rgba(240,220,180,0.95), rgba(220,190,140,0.98)); border-color: rgba(139,90,43,0.5); color: #8b5a2b; }
-
 
 /* ── ROOM ── */
 .room { position: relative; min-height: 100vh; padding-bottom: 3rem; }
@@ -1270,6 +1173,147 @@ html.light .shelf-arrow { background: linear-gradient(145deg, rgba(240,220,180,0
 }
 .readonly-banner.hidden { display: none; }
 .readonly-banner b { color: #d4a855; }
+
+/* ── THEME / LANGUAGE TOGGLES ── */
+.theme-toggle,
+.lang-toggle {
+  min-width: 42px;
+  padding-inline: 0.75rem;
+  text-align: center;
+}
+
+html[data-theme="light"] body {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(215,166,95,0.34) 0%, transparent 70%),
+    linear-gradient(180deg, #f7eddd 0%, #ead7b9 42%, #d9bd91 100%);
+  color: #3a2415;
+}
+html[data-theme="light"] .room::before {
+  background: radial-gradient(ellipse, rgba(168,105,42,0.18) 0%, transparent 70%);
+}
+html[data-theme="light"] .header {
+  background: rgba(255,247,234,0.74);
+  border-bottom-color: rgba(127,78,30,0.18);
+  box-shadow: 0 8px 24px rgba(122,80,42,0.08);
+}
+html[data-theme="light"] .brand,
+html[data-theme="light"] .form-title,
+html[data-theme="light"] .quotes-toolbar-title,
+html[data-theme="light"] .auth-title,
+html[data-theme="light"] .ai-search-header-title {
+  color: #8a5525;
+  text-shadow: none;
+}
+html[data-theme="light"] .brand span { color: #b57a39; }
+html[data-theme="light"] .pill-btn,
+html[data-theme="light"] .view-switcher,
+html[data-theme="light"] .user-chip,
+html[data-theme="light"] .quote-copy,
+html[data-theme="light"] .auth-guest-btn {
+  background: rgba(137,83,34,0.08);
+  border-color: rgba(137,83,34,0.28);
+  color: #805028;
+}
+html[data-theme="light"] .pill-btn:hover,
+html[data-theme="light"] .quote-copy:hover,
+html[data-theme="light"] .auth-guest-btn:hover {
+  background: rgba(137,83,34,0.15);
+  border-color: rgba(137,83,34,0.45);
+  color: #6b3d1c;
+}
+html[data-theme="light"] .pill-btn.active,
+html[data-theme="light"] .view-switch-btn.active {
+  background: #9c6630;
+  color: #fff7e9;
+}
+html[data-theme="light"] .search-wrap input,
+html[data-theme="light"] .mobile-search-wrap input,
+html[data-theme="light"] .quotes-search,
+html[data-theme="light"] .form-input,
+html[data-theme="light"] .form-select,
+html[data-theme="light"] .form-textarea,
+html[data-theme="light"] .auth-input,
+html[data-theme="light"] .config-input {
+  background: rgba(255,250,241,0.74);
+  border-color: rgba(137,83,34,0.25);
+  color: #3a2415;
+}
+html[data-theme="light"] .search-wrap input::placeholder,
+html[data-theme="light"] .mobile-search-wrap input::placeholder,
+html[data-theme="light"] .quotes-search::placeholder,
+html[data-theme="light"] .form-input::placeholder,
+html[data-theme="light"] .form-textarea::placeholder,
+html[data-theme="light"] .auth-input::placeholder {
+  color: #9c7a55;
+}
+html[data-theme="light"] .bookcase {
+  background:
+    linear-gradient(90deg, #6a3c1d 0px, #9c642f 18px, #b97937 22px, #875125 30px) left/30px 100% no-repeat,
+    linear-gradient(270deg, #6a3c1d 0px, #9c642f 18px, #b97937 22px, #875125 30px) right/30px 100% no-repeat,
+    repeating-linear-gradient(90deg, rgba(145,82,32,0.22) 0px, rgba(145,82,32,0.22) 1px, transparent 1px, transparent 80px),
+    linear-gradient(180deg, #b77838 0%, #8d5729 52%, #b77838 100%);
+  border-color: #6a3c1d;
+  box-shadow: 0 0 0 6px #d7b982, 0 0 0 8px #9f672f, 0 24px 52px rgba(98,61,30,0.36), inset 0 0 28px rgba(82,41,12,0.24);
+}
+html[data-theme="light"] .bookcase::before,
+html[data-theme="light"] .shelf-plank {
+  background: linear-gradient(180deg, #7a431f 0%, #a86631 25%, #d19a56 52%, #a86631 78%, #7a431f 100%);
+}
+html[data-theme="light"] .more-books-indicator {
+  background: linear-gradient(to right, transparent 0%, rgba(176,114,54,0.42) 45%, rgba(122,72,30,0.78) 100%);
+}
+html[data-theme="light"] .modal,
+html[data-theme="light"] .form-modal,
+html[data-theme="light"] .auth-modal,
+html[data-theme="light"] .quote-page-card {
+  background: linear-gradient(145deg, #fff8ed, #ead7bc);
+  border-color: rgba(137,83,34,0.28);
+  box-shadow: 0 34px 78px rgba(87,54,28,0.28), 0 0 0 1px rgba(137,83,34,0.08);
+}
+html[data-theme="light"] .overlay,
+html[data-theme="light"] .form-overlay,
+html[data-theme="light"] .auth-overlay {
+  background: rgba(73,45,24,0.42);
+}
+html[data-theme="light"] .modal-title,
+html[data-theme="light"] .quote-card,
+html[data-theme="light"] .quote-page-text {
+  color: #3a2415;
+}
+html[data-theme="light"] .modal-author,
+html[data-theme="light"] .modal-note,
+html[data-theme="light"] .form-label,
+html[data-theme="light"] .quotes-toolbar-sub,
+html[data-theme="light"] .quote-page-book,
+html[data-theme="light"] .stat-chip,
+html[data-theme="light"] .view-switcher span,
+html[data-theme="light"] .auth-subtitle,
+html[data-theme="light"] .auth-divider {
+  color: #7d5732;
+}
+html[data-theme="light"] .quote-card,
+html[data-theme="light"] .modal-note,
+html[data-theme="light"] .quote-form-item,
+html[data-theme="light"] .ai-search-section,
+html[data-theme="light"] .ai-search-header,
+html[data-theme="light"] .readonly-banner {
+  background: rgba(137,83,34,0.08);
+  border-color: rgba(137,83,34,0.18);
+}
+html[data-theme="light"] .form-select option { background: #fff8ed; color: #3a2415; }
+html[data-theme="light"] .mobile-bottom-nav {
+  background: linear-gradient(180deg, rgba(255,247,234,0.98), rgba(239,219,188,0.99));
+  border-top-color: rgba(137,83,34,0.2);
+  box-shadow: 0 -4px 24px rgba(98,61,30,0.18);
+}
+html[data-theme="light"] .mobile-nav-btn { color: #8b6844; }
+html[data-theme="light"] .mobile-nav-btn.active { color: #8a5525; }
+html[data-theme="light"] .toast {
+  background: #fff8ed;
+  border-color: #9c6630;
+  color: #6b3d1c;
+  box-shadow: 0 12px 30px rgba(87,54,28,0.18);
+}
 </style>
 </head>
 <body>
@@ -1286,25 +1330,20 @@ html.light .shelf-arrow { background: linear-gradient(145deg, rgba(240,220,180,0
   <div class="auth-modal">
     <div class="auth-header">
       <div class="auth-logo">📚</div>
-      <div class="auth-title" data-i18n="appName">Tủ Sách Thơ Nụ</div>
-      <div class="auth-subtitle" data-i18n="authSubtitle">Đăng nhập để tạo tủ sách riêng của bạn</div>
+      <div class="auth-title">Tủ Sách Thơ Nụ</div>
+      <div class="auth-subtitle">Đăng nhập để tạo tủ sách riêng của bạn</div>
     </div>
     <div class="auth-tabs">
-      <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')" data-i18n="login">Đăng nhập</button>
-      <button class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')" data-i18n="register">Đăng ký</button>
+      <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Đăng nhập</button>
+      <button class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Đăng ký</button>
     </div>
     <div class="auth-body">
-      <input class="auth-input" id="authNickname" type="text"
-        placeholder="Tên tủ sách của bạn (VD: Minh Anh, Thư Viện Của Lan...)"
-        autocomplete="nickname" maxlength="40"
-        style="display:none"
-        data-i18n-placeholder="nicknamePlaceholder">
-      <input class="auth-input" id="authEmail" type="email" data-i18n-placeholder="emailPlaceholder" placeholder="Email của bạn" autocomplete="email">
-      <input class="auth-input" id="authPassword" type="password" data-i18n-placeholder="passwordPlaceholder" placeholder="Mật khẩu (tối thiểu 6 ký tự)" autocomplete="current-password">
+      <input class="auth-input" id="authEmail" type="email" placeholder="Email của bạn" autocomplete="email">
+      <input class="auth-input" id="authPassword" type="password" placeholder="Mật khẩu (tối thiểu 6 ký tự)" autocomplete="current-password">
       <div class="auth-err" id="authErr"></div>
-      <button class="auth-btn" id="authSubmitBtn" onclick="submitAuth()" data-i18n="login">Đăng nhập</button>
-      <div class="auth-divider" data-i18n="or">hoặc</div>
-      <button class="auth-guest-btn" onclick="continueAsGuest()" data-i18n="guestBtn">👁 Xem tủ sách của Thơ Nụ (không cần đăng nhập)</button>
+      <button class="auth-btn" id="authSubmitBtn" onclick="submitAuth()">Đăng nhập</button>
+      <div class="auth-divider">hoặc</div>
+      <button class="auth-guest-btn" onclick="continueAsGuest()">👁 Xem tủ sách của Thơ Nụ (không cần đăng nhập)</button>
     </div>
   </div>
 </div>
@@ -1314,31 +1353,29 @@ html.light .shelf-arrow { background: linear-gradient(145deg, rgba(240,220,180,0
   <div class="brand">📚 Tủ Sách <span>Thơ Nụ</span></div>
   <div class="header-controls">
     <div class="search-wrap">
-      <input type="text" id="searchInput" data-i18n-placeholder="search" placeholder="Tìm sách...">
+      <input type="text" id="searchInput" placeholder="Tìm sách...">
     </div>
-    <button class="pill-btn active filter-status" onclick="setFilter('all',this)" data-i18n="all">Tất cả</button>
-    <button class="pill-btn filter-status" onclick="setFilter('reading',this)" data-i18n="reading">Đang đọc</button>
-    <button class="pill-btn filter-status" onclick="setFilter('read',this)" data-i18n="read">Đã đọc</button>
-    <button class="pill-btn filter-status" onclick="setFilter('unread',this)" data-i18n="unread">Sắp đọc</button>
-    <button class="pill-btn" id="quotesNavBtn" onclick="showQuotesPage()" data-i18n="quotes">Trích dẫn</button>
-    <!-- View switcher -->
+    <button class="pill-btn theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Đổi giao diện">🌙</button>
+    <button class="pill-btn lang-toggle" id="langToggle" onclick="toggleLanguage()" aria-label="Switch language">EN</button>
+    <button class="pill-btn active filter-status" onclick="setFilter('all',this)">Tất cả</button>
+    <button class="pill-btn filter-status" onclick="setFilter('reading',this)">Đang đọc</button>
+    <button class="pill-btn filter-status" onclick="setFilter('read',this)">Đã đọc</button>
+    <button class="pill-btn filter-status" onclick="setFilter('unread',this)">Sắp đọc</button>
+    <button class="pill-btn" id="quotesNavBtn" onclick="showQuotesPage()">Trích dẫn</button>
+    <!-- View switcher: chỉ hiện khi đã đăng nhập -->
     <div class="view-switcher view-hidden" id="viewSwitcher">
-      <span data-i18n="view">Xem:</span>
-      <button class="view-switch-btn active" id="btnMyShelf" onclick="switchShelfView('my')" data-i18n="myShelf">Của tôi</button>
+      <span>Xem:</span>
+      <button class="view-switch-btn active" id="btnMyShelf" onclick="switchShelfView('my')">Của tôi</button>
       <button class="view-switch-btn" id="btnAdminShelf" onclick="switchShelfView('admin')">Thơ Nụ</button>
     </div>
-    <button class="pill-btn view-hidden" id="addBookBtn" onclick="openAddForm()" style="background:rgba(212,168,85,0.18);border-color:#d4a855">➕ <span data-i18n="addBook">Thêm sách</span></button>
+    <button class="pill-btn view-hidden" id="addBookBtn" onclick="openAddForm()" style="background:rgba(212,168,85,0.18);border-color:#d4a855">➕ Thêm sách</button>
+    <!-- User chip / login button -->
     <div class="user-chip view-hidden" id="userChip">
       <div class="user-avatar" id="userAvatar">?</div>
       <span class="user-name" id="userName">...</span>
-      <button class="pill-btn danger" style="padding:0.2rem 0.7rem;font-size:0.7rem;margin-left:0.2rem" onclick="signOut()" data-i18n="logout">Đăng xuất</button>
+      <button class="pill-btn danger" id="logoutBtn" style="padding:0.2rem 0.7rem;font-size:0.7rem;margin-left:0.2rem" onclick="signOut()">Đăng xuất</button>
     </div>
-    <button class="pill-btn view-hidden" id="loginBtn" onclick="showAuthModal()" style="background:rgba(212,168,85,0.18);border-color:#d4a855">🔑 <span data-i18n="login">Đăng nhập</span></button>
-    <!-- Settings: Dark mode + Language -->
-    <div style="display:flex;gap:0.3rem;align-items:center">
-      <button class="pill-btn" id="themeBtn" onclick="toggleTheme()" title="Chế độ sáng/tối" style="padding:0.3rem 0.55rem;font-size:0.85rem">🌙</button>
-      <button class="pill-btn" id="langBtn" onclick="toggleLang()" style="padding:0.3rem 0.6rem;font-size:0.72rem;font-weight:600">EN</button>
-    </div>
+    <button class="pill-btn view-hidden" id="loginBtn" onclick="showAuthModal()" style="background:rgba(212,168,85,0.18);border-color:#d4a855">🔑 Đăng nhập</button>
   </div>
 </div>
 
@@ -1484,17 +1521,17 @@ html.light .shelf-arrow { background: linear-gradient(145deg, rgba(240,220,180,0
           <label class="form-label">Thể loại</label>
           <select class="form-select" id="fGenre">
             <option value="">-- Chọn thể loại --</option>
-            <option>Tiểu thuyết</option>
-            <option>Kỹ năng sống</option>
-            <option>Lịch sử</option>
-            <option>Khoa học viễn tưởng</option>
-            <option>Văn học Việt</option>
-            <option>Tâm lý học</option>
-            <option>Tài chính</option>
-            <option>Tâm linh</option>
-            <option>Triết học</option>
-            <option>Văn học Nhật</option>
-            <option>Khác</option>
+            <option value="Tiểu thuyết">Tiểu thuyết</option>
+            <option value="Kỹ năng sống">Kỹ năng sống</option>
+            <option value="Lịch sử">Lịch sử</option>
+            <option value="Khoa học viễn tưởng">Khoa học viễn tưởng</option>
+            <option value="Văn học Việt">Văn học Việt</option>
+            <option value="Tâm lý học">Tâm lý học</option>
+            <option value="Tài chính">Tài chính</option>
+            <option value="Tâm linh">Tâm linh</option>
+            <option value="Triết học">Triết học</option>
+            <option value="Văn học Nhật">Văn học Nhật</option>
+            <option value="Khác">Khác</option>
           </select>
         </div>
       </div>
@@ -1531,7 +1568,7 @@ html.light .shelf-arrow { background: linear-gradient(145deg, rgba(240,220,180,0
       <div>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
           <div class="form-label">💬 Trích dẫn</div>
-          <button class="pill-btn" onclick="addQuoteRow()" style="font-size:0.72rem;padding:0.2rem 0.7rem">+ Thêm</button>
+          <button class="pill-btn" id="addQuoteBtn" onclick="addQuoteRow()" style="font-size:0.72rem;padding:0.2rem 0.7rem">+ Thêm</button>
         </div>
         <div class="quotes-form-list" id="quotesFormList"></div>
       </div>
@@ -1618,6 +1655,223 @@ const ADMIN_EMAIL     = 'anhthommo@gmail.com';                    // ← Email a
 const ADMIN_USER_ID   = '0a9656c7-dc28-446e-a770-28474eff5dd4';              // ← UUID admin (Supabase → Auth → Users → copy cột UID)
 
 // ═══════════════════════════════════════════
+//  THEME + LANGUAGE
+// ═══════════════════════════════════════════
+let currentTheme = localStorage.getItem('bookshelf_theme') || 'dark';
+let currentLang = localStorage.getItem('bookshelf_lang') || 'vi';
+
+const I18N = {
+  vi: {
+    pageTitle: 'Tủ Sách Của Thơ Nụ', brandMain: 'Tủ Sách', brandName: 'Thơ Nụ',
+    loadingConnect: 'Đang kết nối...', loadingBoot: 'Đang khởi động...', loadingBooks: 'Đang tải tủ sách...', loadingDelete: 'Đang xóa...', loadingSave: 'Đang lưu...', loadingUpdate: 'Đang cập nhật...', loadingAdd: 'Đang thêm sách...',
+    searchBooks: 'Tìm sách...', all: 'Tất cả', reading: 'Đang đọc', read: 'Đã đọc', unread: 'Sắp đọc', want: 'Muốn đọc', notRead: 'Chưa đọc',
+    quotes: 'Trích dẫn', view: 'Xem:', mine: 'Của tôi', thoNu: 'Thơ Nụ', addBook: '➕ Thêm sách', loginKey: '🔑 Đăng nhập', logout: 'Đăng xuất',
+    readonly: '👁 Bạn đang xem <b>tủ sách của Thơ Nụ</b> — chỉ đọc. <a onclick="showAuthModal()" style="color:#d4a855;cursor:pointer;text-decoration:underline">Đăng nhập</a> để tạo tủ sách riêng.',
+    library: 'Tủ sách', authLogin: 'Đăng nhập', authRegister: 'Đăng ký', authSubtitle: 'Đăng nhập để tạo tủ sách riêng của bạn',
+    emailPlaceholder: 'Email của bạn', passwordPlaceholder: 'Mật khẩu (tối thiểu 6 ký tự)', or: 'hoặc', guest: '👁 Xem tủ sách của Thơ Nụ (không cần đăng nhập)',
+    quotesSub: 'Gom mọi trích dẫn bạn đã tự thêm trong từng cuốn sách.', quotesSearch: 'Tìm trong trích dẫn, sách, tác giả...',
+    addBookTitle: '➕ Thêm sách mới', editBookTitle: '✏️ Sửa sách', aiSearchTitle: 'Tìm sách bằng tên — AI tự điền thông tin',
+    aiBookName: 'Nhập tên sách hoặc tác giả... (VD: Nhà Giả Kim, Atomic Habits)', search: '🔍 Tìm', aiFilled: '✨ AI đã điền thông tin — kiểm tra và chỉnh sửa bên dưới nếu cần',
+    isbnLabel: '🔍 Nhập ISBN để tự động điền bìa (tùy chọn)', isbnExample: 'VD: 9780062315007', findCover: 'Tìm bìa',
+    coverUrl: 'URL bìa sách', coverHelp: 'Tự động điền khi tìm theo tên sách hoặc ISBN', title: 'Tên sách *', titlePh: 'Tên sách...', author: 'Tác giả *', authorPh: 'Tên tác giả...',
+    year: 'Năm xuất bản', genre: 'Thể loại', chooseGenre: '-- Chọn thể loại --', status: 'Trạng thái', rating: 'Đánh giá', note: 'Ghi chú cá nhân', notePh: 'Cảm nhận, ghi chú...',
+    add: '+ Thêm', saveBook: '💾 Lưu sách', bookCount: 'cuốn sách', readCount: 'đã đọc', readingCount: 'đang đọc', quoteCount: 'trích dẫn',
+    filterGenre: 'Thể loại:', emptyMine: '📚 Tủ sách của bạn trống — hãy thêm cuốn đầu tiên!', emptySearch: 'Không tìm thấy sách nào...', emptyQuotes: 'Chưa có trích dẫn. Thêm trích dẫn trong form sách.',
+    quotesCount: '{visible}/{total} trích dẫn trong {books} cuốn sách.', page: 'Trang', chapter: 'Chương', pageLower: 'trang', chapterLower: 'chương', unknownAuthor: 'Không rõ tác giả',
+    copy: 'Copy', copyOk: '✅ Đã copy trích dẫn', copyFail: 'Không copy được', noQuotes: 'Chưa có trích dẫn.', by: 'bởi', noRating: 'Chưa đánh giá', goodQuotes: '💬 Trích dẫn hay',
+    edit: '✏️ Sửa', delete: '🗑️ Xóa', noDelete: '⛔ Bạn không có quyền xóa sách này', noEdit: '⛔ Bạn không có quyền sửa sách này', loginToAdd: '⛔ Đăng nhập để thêm sách', noPermission: '⛔ Không có quyền',
+    deleteConfirm: 'Xóa "{title}"? Hành động này không thể hoàn tác.', deleted: '🗑️ Đã xóa sách', loaded: '✅ Đã tải {count} cuốn sách', added: '✅ Đã thêm sách mới!', updated: '✅ Đã cập nhật sách!',
+    needEmailPass: 'Vui lòng nhập đủ email và mật khẩu', passMin: 'Mật khẩu tối thiểu 6 ký tự', processing: '⏳ Đang xử lý...', invalidLogin: '❌ Email hoặc mật khẩu không đúng', registered: '❌ Email đã được đăng ký', unknownError: 'Lỗi không xác định', confirmEmail: '✅ Đã gửi email xác nhận! Kiểm tra hộp thư và nhấn link để kích hoạt.',
+    needTitleAuthor: 'Vui lòng nhập tên sách và tác giả', needIsbn: 'Nhập ISBN trước', isbnFinding: '⏳ Đang tìm...', isbnNotFound: '❌ Không tìm thấy ISBN này.', isbnFilled: '✅ Đã điền tự động!', isbnApiFail: '⚠️ API lỗi, thử lấy bìa trực tiếp.',
+    noQuoteRows: 'Chưa có trích dẫn nào.', quoteN: 'Trích dẫn {n}', remove: '✕ Xóa', quoteContent: 'Nội dung trích dẫn...', pagePh: 'Trang', chapterPh: 'Chương',
+    aiNeedQuery: 'Nhập tên sách cần tìm', aiSearching: '✨ AI đang tìm kiếm', aiThinking: '🧠 AI đang phân tích kết quả', aiNoResult: 'Không tìm thấy kết quả.', aiChoose: 'Chọn sách để tự động điền form:', aiUnknown: 'Không rõ', aiSelect: '➕ Chọn', aiFilledToast: '✅ Đã điền thông tin từ AI!',
+    configMissing: '⚙️ Chưa cấu hình ADMIN_USER_ID trong file HTML.<br><span style="font-size:0.8rem;color:rgba(212,168,85,0.4)">Vào Supabase → Authentication → Users → copy UID và dán vào ADMIN_USER_ID trong code.</span>',
+    error: '❌ Lỗi: {message}'
+  },
+  en: {
+    pageTitle: 'Tho Nu Bookshelf', brandMain: 'Bookshelf', brandName: 'Tho Nu',
+    loadingConnect: 'Connecting...', loadingBoot: 'Starting...', loadingBooks: 'Loading bookshelf...', loadingDelete: 'Deleting...', loadingSave: 'Saving...', loadingUpdate: 'Updating...', loadingAdd: 'Adding book...',
+    searchBooks: 'Search books...', all: 'All', reading: 'Reading', read: 'Read', unread: 'To read', want: 'Want to read', notRead: 'Unread',
+    quotes: 'Quotes', view: 'View:', mine: 'Mine', thoNu: 'Tho Nu', addBook: '➕ Add book', loginKey: '🔑 Sign in', logout: 'Sign out',
+    readonly: '👁 You are viewing <b>Tho Nu’s bookshelf</b> in read-only mode. <a onclick="showAuthModal()" style="color:#d4a855;cursor:pointer;text-decoration:underline">Sign in</a> to create your own bookshelf.',
+    library: 'Library', authLogin: 'Sign in', authRegister: 'Sign up', authSubtitle: 'Sign in to create your own bookshelf',
+    emailPlaceholder: 'Your email', passwordPlaceholder: 'Password (at least 6 characters)', or: 'or', guest: '👁 View Tho Nu’s bookshelf without signing in',
+    quotesSub: 'All quotes you have added inside each book.', quotesSearch: 'Search quotes, books, authors...',
+    addBookTitle: '➕ Add new book', editBookTitle: '✏️ Edit book', aiSearchTitle: 'Find a book by name — AI fills details',
+    aiBookName: 'Enter book title or author... (e.g. The Alchemist, Atomic Habits)', search: '🔍 Search', aiFilled: '✨ AI filled the details — review and edit below if needed',
+    isbnLabel: '🔍 Enter ISBN to auto-fill cover (optional)', isbnExample: 'e.g. 9780062315007', findCover: 'Find cover',
+    coverUrl: 'Book cover URL', coverHelp: 'Auto-filled when searching by title or ISBN', title: 'Book title *', titlePh: 'Book title...', author: 'Author *', authorPh: 'Author name...',
+    year: 'Publication year', genre: 'Genre', chooseGenre: '-- Choose genre --', status: 'Status', rating: 'Rating', note: 'Personal note', notePh: 'Thoughts, notes...',
+    add: '+ Add', saveBook: '💾 Save book', bookCount: 'books', readCount: 'read', readingCount: 'reading', quoteCount: 'quotes',
+    filterGenre: 'Genre:', emptyMine: '📚 Your bookshelf is empty — add the first book!', emptySearch: 'No books found...', emptyQuotes: 'No quotes yet. Add quotes in the book form.',
+    quotesCount: '{visible}/{total} quotes across {books} books.', page: 'Page', chapter: 'Chapter', pageLower: 'page', chapterLower: 'chapter', unknownAuthor: 'Unknown author',
+    copy: 'Copy', copyOk: '✅ Quote copied', copyFail: 'Could not copy', noQuotes: 'No quotes yet.', by: 'by', noRating: 'No rating yet', goodQuotes: '💬 Favorite quotes',
+    edit: '✏️ Edit', delete: '🗑️ Delete', noDelete: '⛔ You do not have permission to delete this book', noEdit: '⛔ You do not have permission to edit this book', loginToAdd: '⛔ Sign in to add books', noPermission: '⛔ No permission',
+    deleteConfirm: 'Delete "{title}"? This action cannot be undone.', deleted: '🗑️ Book deleted', loaded: '✅ Loaded {count} books', added: '✅ New book added!', updated: '✅ Book updated!',
+    needEmailPass: 'Please enter both email and password', passMin: 'Password must be at least 6 characters', processing: '⏳ Processing...', invalidLogin: '❌ Email or password is incorrect', registered: '❌ Email is already registered', unknownError: 'Unknown error', confirmEmail: '✅ Confirmation email sent! Check your inbox and open the activation link.',
+    needTitleAuthor: 'Please enter book title and author', needIsbn: 'Enter ISBN first', isbnFinding: '⏳ Searching...', isbnNotFound: '❌ ISBN not found.', isbnFilled: '✅ Filled automatically!', isbnApiFail: '⚠️ API failed, trying direct cover URL.',
+    noQuoteRows: 'No quotes yet.', quoteN: 'Quote {n}', remove: '✕ Remove', quoteContent: 'Quote content...', pagePh: 'Page', chapterPh: 'Chapter',
+    aiNeedQuery: 'Enter a book title to search', aiSearching: '✨ AI is searching', aiThinking: '🧠 AI is analyzing results', aiNoResult: 'No results found.', aiChoose: 'Choose a book to auto-fill the form:', aiUnknown: 'Unknown', aiSelect: '➕ Select', aiFilledToast: '✅ Filled details from AI!',
+    configMissing: '⚙️ ADMIN_USER_ID is not configured in the HTML file.<br><span style="font-size:0.8rem;color:rgba(212,168,85,0.4)">Open Supabase → Authentication → Users → copy the UID and paste it into ADMIN_USER_ID in the code.</span>',
+    error: '❌ Error: {message}'
+  }
+};
+
+const GENRE_LABELS = {
+  'Tiểu thuyết': 'Fiction',
+  'Kỹ năng sống': 'Self-help',
+  'Lịch sử': 'History',
+  'Khoa học viễn tưởng': 'Science fiction',
+  'Văn học Việt': 'Vietnamese literature',
+  'Tâm lý học': 'Psychology',
+  'Tài chính': 'Finance',
+  'Tâm linh': 'Spirituality',
+  'Triết học': 'Philosophy',
+  'Văn học Nhật': 'Japanese literature',
+  'Khác': 'Other'
+};
+
+function t(key, vars = {}) {
+  let text = (I18N[currentLang] && I18N[currentLang][key]) || I18N.vi[key] || key;
+  Object.entries(vars).forEach(([name, value]) => {
+    text = text.replaceAll(`{${name}}`, value);
+  });
+  return text;
+}
+
+function genreLabel(genre) {
+  return currentLang === 'en' ? (GENRE_LABELS[genre] || genre || '') : (genre || '');
+}
+
+function statusText(status, compact = false) {
+  const map = {
+    read: compact ? 'read' : 'read',
+    reading: compact ? 'reading' : 'reading',
+    unread: compact ? 'notRead' : 'unread',
+    want: 'want'
+  };
+  return t(map[status] || 'unread');
+}
+
+function applyTheme() {
+  document.documentElement.dataset.theme = currentTheme;
+  localStorage.setItem('bookshelf_theme', currentTheme);
+  const btn = document.getElementById('themeToggle');
+  if (btn) {
+    btn.textContent = currentTheme === 'dark' ? '🌙' : '☀️';
+    btn.setAttribute('aria-label', currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+  }
+}
+
+function toggleTheme() {
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  applyTheme();
+}
+
+function setText(id, value) { const el = document.getElementById(id); if (el) el.textContent = value; }
+function setHtml(id, value) { const el = document.getElementById(id); if (el) el.innerHTML = value; }
+function setPlaceholder(id, value) { const el = document.getElementById(id); if (el) el.placeholder = value; }
+
+function applyLanguage() {
+  document.documentElement.lang = currentLang;
+  document.title = t('pageTitle');
+  localStorage.setItem('bookshelf_lang', currentLang);
+
+  const langBtn = document.getElementById('langToggle');
+  if (langBtn) langBtn.textContent = currentLang === 'vi' ? 'EN' : 'VI';
+  const brand = document.querySelector('.brand');
+  if (brand) brand.innerHTML = `📚 ${t('brandMain')} <span>${t('brandName')}</span>`;
+
+  setText('loadingText', t('loadingConnect'));
+  setPlaceholder('searchInput', t('searchBooks'));
+  setPlaceholder('mobileSearchInput', t('searchBooks'));
+  setText('quotesNavBtn', t('quotes'));
+  setText('btnMyShelf', t('mine'));
+  setText('btnAdminShelf', t('thoNu'));
+  setText('addBookBtn', t('addBook'));
+  setText('loginBtn', t('loginKey'));
+  setText('logoutBtn', t('logout'));
+  setHtml('readonlyBanner', t('readonly'));
+  setText('mNavSwitcherLabel', shelfMode === 'my' ? t('thoNu') : t('mine'));
+  setText('mNavAuthLabel', currentUser ? t('logout') : t('authLogin'));
+
+  const statusBtns = document.querySelectorAll('.filter-status');
+  ['all','reading','read','unread'].forEach((key, idx) => {
+    if (statusBtns[idx]) statusBtns[idx].textContent = t(key);
+  });
+  const viewLabel = document.querySelector('#viewSwitcher span');
+  if (viewLabel) viewLabel.textContent = t('view');
+  const mobileLabels = document.querySelectorAll('.mobile-nav-btn');
+  if (mobileLabels[0]) mobileLabels[0].lastChild.textContent = t('library');
+  if (mobileLabels[1]) mobileLabels[1].lastChild.textContent = t('quotes');
+
+  document.querySelector('.auth-title') && (document.querySelector('.auth-title').textContent = `${t('brandMain')} ${t('brandName')}`);
+  document.querySelector('.auth-subtitle') && (document.querySelector('.auth-subtitle').textContent = t('authSubtitle'));
+  setText('tabLogin', t('authLogin'));
+  setText('tabRegister', t('authRegister'));
+  setText('authSubmitBtn', authTab === 'login' ? t('authLogin') : t('authRegister'));
+  setPlaceholder('authEmail', t('emailPlaceholder'));
+  setPlaceholder('authPassword', t('passwordPlaceholder'));
+  document.querySelector('.auth-divider') && (document.querySelector('.auth-divider').textContent = t('or'));
+  document.querySelector('.auth-guest-btn') && (document.querySelector('.auth-guest-btn').textContent = t('guest'));
+
+  document.querySelector('.quotes-toolbar-title') && (document.querySelector('.quotes-toolbar-title').textContent = t('quotes'));
+  setText('quotesPageCount', t('quotesSub'));
+  setPlaceholder('quotesSearchInput', t('quotesSearch'));
+
+  setText('formTitle', editingId ? t('editBookTitle') : t('addBookTitle'));
+  document.querySelector('.ai-search-header-title') && (document.querySelector('.ai-search-header-title').textContent = t('aiSearchTitle'));
+  setPlaceholder('aiBookName', t('aiBookName'));
+  setText('aiSearchBtn', t('search'));
+  const aiFilled = document.querySelector('.ai-filled-badge');
+  if (aiFilled) aiFilled.textContent = t('aiFilled');
+
+  const isbnLabel = document.querySelector('.isbn-row')?.previousElementSibling;
+  if (isbnLabel) isbnLabel.textContent = t('isbnLabel');
+  setPlaceholder('fIsbn', t('isbnExample'));
+  const isbnBtn = document.querySelector('.isbn-row .pill-btn');
+  if (isbnBtn) isbnBtn.textContent = t('findCover');
+
+  const labels = document.querySelectorAll('.form-label');
+  const labelMap = [
+    null, t('coverUrl'), t('title'), t('author'), t('year'), t('genre'),
+    t('status'), t('rating'), t('note'), t('quotes')
+  ];
+  labels.forEach((label, idx) => { if (labelMap[idx]) label.textContent = labelMap[idx]; });
+  setPlaceholder('fCover', 'https://...');
+  setPlaceholder('fTitle', t('titlePh'));
+  setPlaceholder('fAuthor', t('authorPh'));
+  setPlaceholder('fNote', t('notePh'));
+  setText('formSubmit', t('saveBook'));
+  setText('addQuoteBtn', t('add'));
+  if (document.getElementById('formOverlay')?.classList.contains('on')) renderQuotesForm();
+  const coverHelp = document.querySelector('#fCover + div');
+  if (coverHelp) coverHelp.textContent = t('coverHelp');
+
+  const genreSelect = document.getElementById('fGenre');
+  if (genreSelect) {
+    [...genreSelect.options].forEach((opt, idx) => {
+      opt.textContent = idx === 0 ? t('chooseGenre') : genreLabel(opt.value || opt.textContent);
+    });
+  }
+  const statusSelect = document.getElementById('fStatus');
+  if (statusSelect) {
+    [...statusSelect.options].forEach(opt => { opt.textContent = statusText(opt.value); });
+  }
+
+  applyTheme();
+  updateMobileNav();
+  const hasRenderedLibrary = BOOKS.length > 0 || !!document.getElementById('statsRow')?.innerHTML.trim();
+  if (hasRenderedLibrary) render();
+  if (currentView === 'quotes') renderQuotesPage();
+}
+
+function toggleLanguage() {
+  currentLang = currentLang === 'vi' ? 'en' : 'vi';
+  applyLanguage();
+}
+
+// ═══════════════════════════════════════════
 //  GENRE ICONS
 // ═══════════════════════════════════════════
 const GENRE_ICONS = {
@@ -1684,12 +1938,8 @@ async function sbSignOut(token) {
 function showAuthModal() {
   document.getElementById('authOverlay').classList.add('on');
   document.getElementById('authErr').textContent = '';
-  document.getElementById('authErr').style.color = '#f08060';
   document.getElementById('authEmail').value = '';
   document.getElementById('authPassword').value = '';
-  const nick = document.getElementById('authNickname');
-  if (nick) { nick.value = ''; nick.style.display = 'none'; }
-  switchAuthTab('login');
 }
 function hideAuthModal() { document.getElementById('authOverlay').classList.remove('on'); }
 
@@ -1697,52 +1947,39 @@ function switchAuthTab(tab) {
   authTab = tab;
   document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
   document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
-  document.getElementById('authSubmitBtn').textContent = tab === 'login' ? t('login') : t('register');
+  document.getElementById('authSubmitBtn').textContent = tab === 'login' ? t('authLogin') : t('authRegister');
   document.getElementById('authErr').textContent = '';
-  // Hiện/ẩn nickname field
-  const nicknameEl = document.getElementById('authNickname');
-  if (nicknameEl) nicknameEl.style.display = tab === 'register' ? 'block' : 'none';
 }
 
 async function submitAuth() {
-  const email    = document.getElementById('authEmail').value.trim();
-  const pass     = document.getElementById('authPassword').value;
-  const nickname = document.getElementById('authNickname')?.value.trim() || '';
-  const errEl    = document.getElementById('authErr');
-  const btn      = document.getElementById('authSubmitBtn');
-  if (!email || !pass) { errEl.textContent = t('errFillAuth'); return; }
-  if (pass.length < 6)  { errEl.textContent = t('errPassShort'); return; }
-  if (authTab === 'register' && !nickname) {
-    errEl.textContent = currentLang === 'vi' ? '📚 Hãy đặt tên cho tủ sách của bạn!' : '📚 Please enter a name for your bookshelf!';
-    return;
-  }
+  const email = document.getElementById('authEmail').value.trim();
+  const pass  = document.getElementById('authPassword').value;
+  const errEl = document.getElementById('authErr');
+  const btn   = document.getElementById('authSubmitBtn');
+  if (!email || !pass) { errEl.textContent = t('needEmailPass'); return; }
+  if (pass.length < 6)  { errEl.textContent = t('passMin'); return; }
 
   btn.disabled = true;
-  btn.textContent = '⏳...';
+  btn.textContent = t('processing');
   errEl.textContent = '';
 
   const endpoint = authTab === 'login' ? 'token?grant_type=password' : 'signup';
-  const body = authTab === 'register'
-    ? { email, password: pass, data: { nickname } }   // data = user_metadata
-    : { email, password: pass };
-  const data = await sbAuth(endpoint, body);
+  const data = await sbAuth(endpoint, { email, password: pass });
 
   btn.disabled = false;
-  btn.textContent = authTab === 'login' ? t('login') : t('register');
+  btn.textContent = authTab === 'login' ? t('authLogin') : t('authRegister');
 
   if (data.error || data.error_description) {
-    const msg = data.error_description || data.error || 'Lỗi không xác định';
-    errEl.textContent = msg.includes('Invalid login') ? t('errWrongPass')
-      : msg.includes('already registered') ? t('errAlreadyReg')
+    const msg = data.error_description || data.error || t('unknownError');
+    errEl.textContent = msg.includes('Invalid login') ? t('invalidLogin')
+      : msg.includes('already registered') ? t('registered')
       : '❌ ' + msg;
     return;
   }
 
   if (authTab === 'register' && !data.access_token) {
     errEl.style.color = '#6dd89a';
-    errEl.textContent = currentLang === 'vi'
-      ? `✅ Đã gửi email xác nhận! Kiểm tra hộp thư để kích hoạt tài khoản "${nickname}".`
-      : `✅ Confirmation email sent! Check your inbox to activate "${nickname}"'s shelf.`;
+    errEl.textContent = t('confirmEmail');
     return;
   }
 
@@ -1776,38 +2013,15 @@ async function restoreSession() {
   try {
     const { user, access_token } = JSON.parse(saved);
     if (!user || !access_token) return false;
-    // Verify token với timeout 5s
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000);
-    let res;
-    try {
-      res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
-        headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${access_token}` },
-        signal: controller.signal
-      });
-    } finally {
-      clearTimeout(timeout);
-    }
+    // Verify token still valid
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${access_token}` }
+    });
     if (!res.ok) { localStorage.removeItem('sb_session'); return false; }
-    const freshUser = await res.json();
-    currentUser = { ...freshUser, access_token };
+    currentUser = user;
+    currentUser.access_token = access_token;
     return true;
   } catch { return false; }
-}
-
-// ═══════════════════════════════════════════
-//  BRAND NAME — đổi tên tủ sách theo user/admin
-// ═══════════════════════════════════════════
-function updateBrandName(name, mode) {
-  const brandEl = document.querySelector('.brand span');
-  if (!brandEl) return;
-  // Khi xem tủ admin hoặc là guest → dùng tên admin (Thơ Nụ)
-  // Khi xem tủ của mình → dùng nickname của user
-  if (mode === 'my' && name) {
-    brandEl.textContent = name;
-  } else {
-    brandEl.textContent = 'Thơ Nụ'; // tên admin mặc định
-  }
 }
 
 // ═══════════════════════════════════════════
@@ -1817,35 +2031,32 @@ async function onLogin() {
   isAdmin = currentUser.email === ADMIN_EMAIL;
   shelfMode = 'my';
 
-  // Lấy nickname từ user_metadata (đặt lúc đăng ký)
-  const nickname = currentUser.user_metadata?.nickname
-    || currentUser.email.split('@')[0];
-
-  // Cập nhật brand name theo nickname
-  updateBrandName(nickname, shelfMode);
-
-  // User chip
-  document.getElementById('userAvatar').textContent = nickname[0].toUpperCase();
-  document.getElementById('userName').textContent = nickname;
+  // Show user chip
+  const emailShort = currentUser.email.split('@')[0];
+  document.getElementById('userAvatar').textContent = emailShort[0].toUpperCase();
+  document.getElementById('userName').textContent = emailShort;
   show('userChip'); hide('loginBtn');
   show('addBookBtn'); show('viewSwitcher');
   hide('readonlyBanner');
 
+  // Admin không cần switcher nếu đang ở tủ của mình
   document.getElementById('btnMyShelf').classList.add('active');
   document.getElementById('btnAdminShelf').classList.remove('active');
 
+  // Resolve admin user id
   await resolveAdminId();
+  applyLanguage();
   updateMobileNav();
   await loadBooks();
 }
 
 async function onGuest() {
   currentUser = null; isAdmin = false; shelfMode = 'guest';
-  updateBrandName(null, 'guest'); // reset về Thơ Nụ
   hide('userChip'); show('loginBtn');
   hide('addBookBtn'); hide('viewSwitcher');
   show('readonlyBanner');
   await resolveAdminId();
+  applyLanguage();
   updateMobileNav();
   await loadBooks();
 }
@@ -1867,11 +2078,7 @@ function switchShelfView(mode) {
   shelfMode = mode;
   document.getElementById('btnMyShelf').classList.toggle('active', mode === 'my');
   document.getElementById('btnAdminShelf').classList.toggle('active', mode === 'admin');
-
-  // Cập nhật tên tủ sách
-  const nickname = currentUser?.user_metadata?.nickname || currentUser?.email?.split('@')[0];
-  updateBrandName(nickname, mode);
-
+  // Ẩn nút thêm khi đang xem tủ admin (trừ khi là admin)
   if (mode === 'admin' && !isAdmin) {
     hide('addBookBtn');
     show('readonlyBanner');
@@ -1886,7 +2093,7 @@ function switchShelfView(mode) {
 //  LOAD BOOKS
 // ═══════════════════════════════════════════
 async function loadBooks() {
-  showLoading(t('loading'));
+  showLoading(t('loadingBooks'));
   try {
     let data;
     if (shelfMode === 'my' && currentUser) {
@@ -1896,7 +2103,7 @@ async function loadBooks() {
       // Guest hoặc xem tủ admin — dùng anon key
       if (!adminUserId) {
         hideLoading();
-        document.getElementById('bookcase').innerHTML = '<div style="padding:3rem;text-align:center;color:#f08060;font-style:italic">⚙️ Chưa cấu hình ADMIN_USER_ID trong file HTML.<br><span style="font-size:0.8rem;color:rgba(212,168,85,0.4)">Vào Supabase → Authentication → Users → copy UID và dán vào ADMIN_USER_ID trong code.</span></div>';
+        document.getElementById('bookcase').innerHTML = `<div style="padding:3rem;text-align:center;color:#f08060;font-style:italic">${t('configMissing')}</div>`;
         return;
       }
       data = await sbFetch(`books?user_id=eq.${adminUserId}&select=*&order=created_at.asc`);
@@ -1906,10 +2113,10 @@ async function loadBooks() {
       quotes: Array.isArray(b.quotes) ? b.quotes : JSON.parse(b.quotes || '[]')
     }));
     render();
-    showToast(t('toastLoaded', BOOKS.length));
+    showToast(t('loaded', { count: BOOKS.length }));
   } catch(e) {
     console.error(e);
-    document.getElementById('bookcase').innerHTML = `<div style="padding:3rem;text-align:center;color:#f08060;font-style:italic">❌ Lỗi: ${escapeHtml(e.message)}</div>`;
+    document.getElementById('bookcase').innerHTML = `<div style="padding:3rem;text-align:center;color:#f08060;font-style:italic">${t('error', { message: escapeHtml(e.message) })}</div>`;
   } finally {
     hideLoading();
   }
@@ -1948,7 +2155,7 @@ async function deleteBook(id) {
 // ═══════════════════════════════════════════
 //  LOADING
 // ═══════════════════════════════════════════
-function showLoading(msg='Đang xử lý...') {
+function showLoading(msg=t('processing')) {
   document.getElementById('loadingText').textContent = msg;
   document.getElementById('loadingOverlay').classList.remove('hidden');
 }
@@ -1987,16 +2194,16 @@ function render() {
 
   const allGenres = [...new Set(BOOKS.map(b => b.genre).filter(Boolean))];
   const fr = document.getElementById('filterRow');
-  fr.innerHTML = `<span style="font-size:0.72rem;color:#6b5030;align-self:center">${t('genreLabel')}</span>`;
+  fr.innerHTML = `<span style="font-size:0.72rem;color:#6b5030;align-self:center">${t('filterGenre')}</span>`;
   const allChip = document.createElement('button');
   allChip.className = 'pill-btn' + (currentGenreFilter === 'all' ? ' active' : '');
-  allChip.textContent = t('genreAll');
+  allChip.textContent = t('all');
   allChip.onclick = () => { currentGenreFilter = 'all'; render(); };
   fr.appendChild(allChip);
   allGenres.forEach(g => {
     const chip = document.createElement('button');
     chip.className = 'pill-btn' + (currentGenreFilter === g ? ' active' : '');
-    chip.textContent = (GENRE_ICONS[g] || '📚') + ' ' + g;
+    chip.textContent = (GENRE_ICONS[g] || '📚') + ' ' + genreLabel(g);
     chip.onclick = () => { currentGenreFilter = g; render(); };
     fr.appendChild(chip);
   });
@@ -2008,7 +2215,7 @@ function render() {
   if (!visible.length) {
     const isEmpty = BOOKS.length === 0;
     bc.innerHTML = `<div style="padding:3rem;text-align:center;color:rgba(212,168,85,0.3);font-style:italic">
-      ${isEmpty && shelfMode === 'my' ? t('emptyMyShelf') : t('emptySearch')}
+      ${isEmpty && shelfMode === 'my' ? t('emptyMine') : t('emptySearch')}
     </div>`;
     updateStats(visible); if (currentView === 'quotes') renderQuotesPage(); return;
   }
@@ -2018,7 +2225,7 @@ function render() {
   Object.entries(groups).forEach(([genre, gBooks]) => {
     const icon = GENRE_ICONS[genre] || '📚';
     html += `<div class="shelf-row">
-      <div class="shelf-label"><span class="genre-icon">${icon}</span>${genre}</div>
+      <div class="shelf-label"><span class="genre-icon">${icon}</span>${genreLabel(genre)}</div>
       <div class="shelf-scroll-wrap">
         <button class="shelf-arrow left hidden" onclick="shelfScroll(this,-1)">&#8249;</button>
         <button class="shelf-arrow right hidden" onclick="shelfScroll(this,1)">&#8250;</button>
@@ -2029,10 +2236,10 @@ function render() {
       const stars = b.rating ? '★'.repeat(b.rating) + '☆'.repeat(5-b.rating) : '';
       const quotes = Array.isArray(b.quotes) ? b.quotes : [];
       const statusMap = {
-        read:    { cls:'status-read',    pillLabel:t('pillRead') },
-        reading: { cls:'status-reading', pillLabel:t('pillReading') },
-        unread:  { cls:'status-unread',  pillLabel:t('pillUnread') },
-        want:    { cls:'status-want',    pillLabel:t('pillWant') },
+        read:    { cls:'status-read',    pillLabel:`✓ ${t('read')}` },
+        reading: { cls:'status-reading', pillLabel:`▶ ${t('reading')}` },
+        unread:  { cls:'status-unread',  pillLabel:`○ ${t('notRead')}` },
+        want:    { cls:'status-want',    pillLabel:`✨ ${t('unread')}` },
       };
       const st = statusMap[b.status] || statusMap['unread'];
       const bookmarkSVG = b.status === 'reading' ? `<div class="book-bookmark">
@@ -2086,10 +2293,10 @@ function updateStats(visible) {
   const ing = all.filter(b=>b.status==='reading').length;
   const q   = all.reduce((s,b)=>s+(Array.isArray(b.quotes)?b.quotes.length:0),0);
   document.getElementById('statsRow').innerHTML = `
-    <div class="stat-chip"><b>${all.length}</b> ${t('statBooks')}</div>
-    <div class="stat-chip"><b>${r}</b> ${t('statRead')}</div>
-    <div class="stat-chip"><b>${ing}</b> ${t('statReading')}</div>
-    <div class="stat-chip"><b>${q}</b> ${t('statQuotes')}</div>`;
+    <div class="stat-chip"><b>${all.length}</b> ${t('bookCount')}</div>
+    <div class="stat-chip"><b>${r}</b> ${t('readCount')}</div>
+    <div class="stat-chip"><b>${ing}</b> ${t('readingCount')}</div>
+    <div class="stat-chip"><b>${q}</b> ${t('quoteCount')}</div>`;
 }
 
 // ═══════════════════════════════════════════
@@ -2129,7 +2336,7 @@ function renderQuotesPage() {
     if (!q) return true;
     return `${item.text} ${item.bookTitle} ${item.author} ${item.genre}`.toLowerCase().includes(q);
   });
-  count.textContent = t('quotesCount', visible.length, allQuotes.length, BOOKS.length);
+  count.textContent = t('quotesCount', { visible: visible.length, total: allQuotes.length, books: BOOKS.length });
   if (!visible.length) {
     grid.innerHTML = `<div class="quotes-empty">${t('emptyQuotes')}</div>`; return;
   }
@@ -2143,7 +2350,7 @@ function renderQuotesPage() {
           ${escapeHtml(item.author||t('unknownAuthor'))}
           ${meta?`<div>${escapeHtml(meta)}</div>`:''}
         </div>
-        <button class="quote-copy" onclick="copyQuote(${idx})">${t('copyBtn')}</button>
+        <button class="quote-copy" onclick="copyQuote(${idx})">${t('copy')}</button>
       </div></article>`;
   }).join('');
   grid.querySelectorAll('.quote-copy').forEach((btn,idx) => {
@@ -2152,7 +2359,7 @@ function renderQuotesPage() {
 }
 
 function formatQuoteForCopy(item) {
-  const place = [item.page?`trang ${item.page}`:'',item.ch?`chương ${item.ch}`:''].filter(Boolean).join(', ');
+  const place = [item.page?`${t('pageLower')} ${item.page}`:'',item.ch?`${t('chapterLower')} ${item.ch}`:''].filter(Boolean).join(', ');
   const suffix = [item.bookTitle, item.author].filter(Boolean).join(' - ');
   return `"${item.text}"${suffix?`\n${suffix}`:''}${place?` (${place})`:''}`;
 }
@@ -2176,8 +2383,8 @@ async function copyTextToClipboard(text) {
       a.value=text; a.style.position='fixed'; a.style.opacity='0';
       document.body.appendChild(a); a.select(); document.execCommand('copy'); a.remove();
     }
-    showToast(t('toastCopied'));
-  } catch { showToast(t('toastCopyFail')); }
+    showToast(t('copyOk'));
+  } catch { showToast(t('copyFail')); }
 }
 
 // ═══════════════════════════════════════════
@@ -2185,24 +2392,24 @@ async function copyTextToClipboard(text) {
 // ═══════════════════════════════════════════
 function openBook(id) {
   const b = BOOKS.find(x=>x.id===id); if (!b) return;
-  const statusLabel = {read:t('statusRead'),reading:t('statusReading'),unread:t('statusUnread'),want:t('statusWant')}[b.status]||'';
+  const statusLabel = statusText(b.status);
   const statusCls   = {read:'tt-read',reading:'tt-reading',unread:'tt-unread',want:'tt-unread'}[b.status]||'';
-  const stars = b.rating ? '★'.repeat(b.rating)+'☆'.repeat(5-b.rating) : 'Chưa đánh giá';
+  const stars = b.rating ? '★'.repeat(b.rating)+'☆'.repeat(5-b.rating) : t('noRating');
   const quotes = Array.isArray(b.quotes)?b.quotes:[];
   const editable = canEdit();
 
   const quotesHTML = quotes.length
     ? quotes.map((q,idx)=>{
-        const meta = [q.page?`${t('page')} ${q.page}`:'',q.ch?`${t('chapter')} ${q.ch}`:''].filter(Boolean).join(' · ');
+        const meta = [q.page?`${t('page')} ${q.page}`:'',q.ch||''].filter(Boolean).join(' · ');
         return `<div class="quote-card">
           <div class="quote-card-head">
             <div class="quote-card-text">"${escapeHtml(q.text||'')}"</div>
-            <button class="quote-copy" onclick="event.stopPropagation();copyBookQuote(${b.id},${idx})">${t('copyBtn')}</button>
+            <button class="quote-copy" onclick="event.stopPropagation();copyBookQuote(${b.id},${idx})">${t('copy')}</button>
           </div>
           ${meta?`<div class="quote-meta">${escapeHtml(meta)}</div>`:''}
         </div>`;
       }).join('')
-    : '<p style="color:#9a7050;font-style:italic;font-size:0.82rem">${t('noQuotes')}</p>';
+    : `<p style="color:#9a7050;font-style:italic;font-size:0.82rem">${t('noQuotes')}</p>`;
 
   document.getElementById('modalBody').innerHTML = `
     <div class="modal-cover-row">
@@ -2213,19 +2420,19 @@ function openBook(id) {
         <div class="modal-title">${escapeHtml(b.title)}</div>
         <div class="modal-author">${t('by')} ${escapeHtml(b.author)}</div>
         <div class="modal-tags">
-          <span class="tag">${GENRE_ICONS[b.genre]||''} ${escapeHtml(b.genre||'')}</span>
+          <span class="tag">${GENRE_ICONS[b.genre]||''} ${escapeHtml(genreLabel(b.genre))}</span>
           ${b.year?`<span class="tag">${b.year}</span>`:''}
           <span class="tt-status ${statusCls}" style="padding:2px 8px;border-radius:10px;font-size:0.72rem">${statusLabel}</span>
         </div>
         <div class="stars">${stars}</div>
         ${b.note?`<div class="modal-note" style="margin-top:0.6rem">${escapeHtml(b.note)}</div>`:''}
         ${editable ? `<div class="modal-actions">
-          <button class="modal-btn btn-edit" onclick="openEditForm(${b.id})">${t('editBtn')}</button>
-          <button class="modal-btn btn-delete" onclick="confirmDelete(${b.id})">${t('deleteBtn')}</button>
+          <button class="modal-btn btn-edit" onclick="openEditForm(${b.id})">${t('edit')}</button>
+          <button class="modal-btn btn-delete" onclick="confirmDelete(${b.id})">${t('delete')}</button>
         </div>` : ''}
       </div>
     </div>
-    <div class="section-hd">💬 Trích dẫn hay</div>
+    <div class="section-hd">${t('goodQuotes')}</div>
     <div class="quotes-list">${quotesHTML}</div>`;
   document.getElementById('overlay').classList.add('on');
 }
@@ -2233,22 +2440,22 @@ function openBook(id) {
 function closeModal() { document.getElementById('overlay').classList.remove('on'); }
 
 async function confirmDelete(id) {
-  if (!canEdit()) { showToast(t('toastNoPermDel')); return; }
+  if (!canEdit()) { showToast(t('noDelete')); return; }
   const b = BOOKS.find(x=>x.id===id); if (!b) return;
-  if (!confirm(t('confirmDelete', b.title))) return;
-  closeModal(); showLoading(t('loading'));
+  if (!confirm(t('deleteConfirm', { title: b.title }))) return;
+  closeModal(); showLoading(t('loadingDelete'));
   try {
     await deleteBook(id);
     BOOKS = BOOKS.filter(x=>x.id!==id);
-    render(); showToast(t('toastDeleted'));
-  } catch(e) { showToast('❌ Lỗi: '+e.message); } finally { hideLoading(); }
+    render(); showToast(t('deleted'));
+  } catch(e) { showToast(t('error', { message: e.message })); } finally { hideLoading(); }
 }
 
 // ═══════════════════════════════════════════
 //  ADD/EDIT FORM
 // ═══════════════════════════════════════════
 function openAddForm() {
-  if (!canEdit()) { showToast(t('toastNeedLogin')); showAuthModal(); return; }
+  if (!canEdit()) { showToast(t('loginToAdd')); showAuthModal(); return; }
   editingId=null; formRating=0; formQuotes=[];
   document.getElementById('formTitle').textContent=t('addBookTitle');
   ['fId','fIsbn','fTitle','fAuthor','fYear','fCover','fNote'].forEach(id=>document.getElementById(id).value='');
@@ -2264,7 +2471,7 @@ function openAddForm() {
 }
 
 function openEditForm(id) {
-  if (!canEdit()) { showToast(t('toastNoPermEdit')); return; }
+  if (!canEdit()) { showToast(t('noEdit')); return; }
   const b = BOOKS.find(x=>x.id===id); if (!b) return;
   closeModal(); editingId=id; formRating=b.rating||0;
   formQuotes = Array.isArray(b.quotes)?JSON.parse(JSON.stringify(b.quotes)):[];
@@ -2301,14 +2508,14 @@ function updateCoverPreview() {
 
 async function fetchISBN() {
   const isbn = document.getElementById('fIsbn').value.trim().replace(/[-\s]/g,'');
-  if (!isbn) { showToast(t('toastNoIsbn')); return; }
+  if (!isbn) { showToast(t('needIsbn')); return; }
   const status = document.getElementById('isbnStatus');
-  status.className='isbn-status loading'; status.textContent=t('isbnSearching');
+  status.className='isbn-status loading'; status.textContent=t('isbnFinding');
   try {
     const res = await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
     const data = await res.json();
     const key = `ISBN:${isbn}`;
-    if (!data[key]) { status.className='isbn-status err'; status.textContent=t('errIsbnNotFound'); return; }
+    if (!data[key]) { status.className='isbn-status err'; status.textContent=t('isbnNotFound'); return; }
     const book = data[key];
     document.getElementById('fTitle').value=book.title||'';
     document.getElementById('fAuthor').value=(book.authors||[]).map(a=>a.name).join(', ')||'';
@@ -2316,11 +2523,11 @@ async function fetchISBN() {
     if (year) document.getElementById('fYear').value=year;
     const coverUrl = book.cover?.large||book.cover?.medium||`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
     document.getElementById('fCover').value=coverUrl; updateCoverPreview();
-    status.className='isbn-status ok'; status.textContent=t('isbnOk');
+    status.className='isbn-status ok'; status.textContent=t('isbnFilled');
   } catch {
     const coverUrl=`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
     document.getElementById('fCover').value=coverUrl; updateCoverPreview();
-    status.className='isbn-status err'; status.textContent=t('isbnOk');
+    status.className='isbn-status err'; status.textContent=t('isbnApiFail');
   }
 }
 document.getElementById('fIsbn').addEventListener('keydown',e=>{ if(e.key==='Enter') fetchISBN(); });
@@ -2329,28 +2536,28 @@ function addQuoteRow(q={}) { formQuotes.push({text:q.text||'',page:q.page||'',ch
 function removeQuoteRow(idx) { formQuotes.splice(idx,1); renderQuotesForm(); }
 function renderQuotesForm() {
   const list = document.getElementById('quotesFormList');
-  if (!formQuotes.length) { list.innerHTML='<div style="font-size:0.78rem;color:#4a3020;font-style:italic">Chưa có trích dẫn nào.</div>'; return; }
+  if (!formQuotes.length) { list.innerHTML=`<div style="font-size:0.78rem;color:#4a3020;font-style:italic">${t('noQuoteRows')}</div>`; return; }
   list.innerHTML = formQuotes.map((q,i)=>`
     <div class="quote-form-item">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <div class="form-label">Trích dẫn ${i+1}</div>
-        <button class="quote-remove" onclick="removeQuoteRow(${i})">✕ Xóa</button>
+        <div class="form-label">${t('quoteN', { n: i+1 })}</div>
+        <button class="quote-remove" onclick="removeQuoteRow(${i})">${t('remove')}</button>
       </div>
-      <textarea class="form-textarea" style="min-height:55px" placeholder="Nội dung trích dẫn..."
+      <textarea class="form-textarea" style="min-height:55px" placeholder="${t('quoteContent')}"
         oninput="formQuotes[${i}].text=this.value">${escapeHtml(q.text||'')}</textarea>
       <div class="quote-form-row">
-        <input class="form-input" placeholder="Trang" value="${escapeHtml(q.page||'')}" oninput="formQuotes[${i}].page=this.value">
-        <input class="form-input" placeholder="Chương" value="${escapeHtml(q.ch||'')}" oninput="formQuotes[${i}].ch=this.value">
+        <input class="form-input" placeholder="${t('pagePh')}" value="${escapeHtml(q.page||'')}" oninput="formQuotes[${i}].page=this.value">
+        <input class="form-input" placeholder="${t('chapterPh')}" value="${escapeHtml(q.ch||'')}" oninput="formQuotes[${i}].ch=this.value">
         <div></div>
       </div>
     </div>`).join('');
 }
 
 async function submitBook() {
-  if (!canEdit()) { showToast(t('toastNoPermDel')); return; }
+  if (!canEdit()) { showToast(t('noPermission')); return; }
   const title  = document.getElementById('fTitle').value.trim();
   const author = document.getElementById('fAuthor').value.trim();
-  if (!title||!author) { showToast(t('toastFillRequired')); return; }
+  if (!title||!author) { showToast(t('needTitleAuthor')); return; }
   const colors = ['#1a0d05','#0d1a05','#050d1a','#1a051a','#1a1005','#051a1a','#18100a','#0a1018','#180a10'];
   const randomColor = colors[Math.abs(title.split('').reduce((a,c)=>a+c.charCodeAt(0),0))%colors.length];
   const bookData = {
@@ -2365,23 +2572,23 @@ async function submitBook() {
     color: randomColor, text_color: '#e8d5a0'
   };
   const btn = document.getElementById('formSubmit');
-  btn.disabled=true; btn.textContent='⏳ Đang lưu...';
-  showLoading(editingId?t('updating'):t('adding'));
+  btn.disabled=true; btn.textContent=t('loadingSave');
+  showLoading(editingId?t('loadingUpdate'):t('loadingAdd'));
   try {
     if (editingId) {
       await updateBook(editingId, bookData);
       const idx = BOOKS.findIndex(x=>x.id===editingId);
       if (idx!==-1) BOOKS[idx]={...BOOKS[idx],...bookData};
-      showToast(t('toastUpdated'));
+      showToast(t('updated'));
     } else {
       const result = await addBook(bookData);
       const newBook = Array.isArray(result)?result[0]:result;
       if (newBook) BOOKS.push({...newBook, quotes: bookData.quotes});
-      showToast(t('toastAdded'));
+      showToast(t('added'));
     }
     closeForm(); render();
-  } catch(e) { showToast('❌ Lỗi: '+e.message); console.error(e); }
-  finally { btn.disabled=false; btn.textContent='💾 Lưu sách'; hideLoading(); }
+  } catch(e) { showToast(t('error', { message: e.message })); console.error(e); }
+  finally { btn.disabled=false; btn.textContent=t('saveBook'); hideLoading(); }
 }
 
 // ═══════════════════════════════════════════
@@ -2451,7 +2658,7 @@ function mergeBookResults(results) {
 }
 async function searchOpenLibrary(query) {
   const res=await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=10&fields=key,title,author_name,first_publish_year,isbn,cover_i,subject`);
-  if(!res.ok) throw new Error('Open Library không phản hồi');
+  if(!res.ok) throw new Error(currentLang === 'en' ? 'Open Library did not respond' : 'Open Library không phản hồi');
   const data=await res.json();
   return (data.docs||[]).map(d=>({
     title:d.title||'',author:(d.author_name||[]).slice(0,3).join(', '),
@@ -2461,7 +2668,7 @@ async function searchOpenLibrary(query) {
 }
 async function searchGoogleBooks(query) {
   const res=await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=10&printType=books`);
-  if(!res.ok) throw new Error('Google Books không phản hồi');
+  if(!res.ok) throw new Error(currentLang === 'en' ? 'Google Books did not respond' : 'Google Books không phản hồi');
   const data=await res.json();
   return (data.items||[]).map(item=>{
     const info=item.volumeInfo||{};
@@ -2479,19 +2686,19 @@ async function searchGoogleBooks(query) {
 }
 async function aiSearchBooks() {
   const query=document.getElementById('aiBookName').value.trim();
-  if(!query) { showToast('Nhập tên sách cần tìm'); return; }
+  if(!query) { showToast(t('aiNeedQuery')); return; }
   const resultsEl=document.getElementById('aiSearchResults');
   const btn=document.getElementById('aiSearchBtn');
   btn.disabled=true; document.getElementById('aiFilledBadge').style.display='none';
-  resultsEl.innerHTML=`<div class="ai-thinking"><span>✨ AI đang tìm kiếm</span><div class="ai-dots"><span></span><span></span><span></span></div></div>`;
+  resultsEl.innerHTML=`<div class="ai-thinking"><span>${t('aiSearching')}</span><div class="ai-dots"><span></span><span></span><span></span></div></div>`;
   try {
     const searches=await Promise.allSettled([searchOpenLibrary(query),searchGoogleBooks(query)]);
     const rawBooks=searches.flatMap(r=>r.status==='fulfilled'?r.value:[]);
-    resultsEl.innerHTML=`<div class="ai-thinking"><span>🧠 AI đang phân tích kết quả</span><div class="ai-dots"><span></span><span></span><span></span></div></div>`;
+    resultsEl.innerHTML=`<div class="ai-thinking"><span>${t('aiThinking')}</span><div class="ai-dots"><span></span><span></span><span></span></div></div>`;
     const books=mergeBookResults(rawBooks).map(book=>({...book,genre:inferGenre(book),score:scoreBookMatch(book,query)})).sort((a,b)=>b.score-a.score).slice(0,6);
-    if(!books.length) { resultsEl.innerHTML=`<div style="font-size:0.78rem;color:#f08060;padding:0.4rem 0">${t('noResults')}</div>`; return; }
+    if(!books.length) { resultsEl.innerHTML=`<div style="font-size:0.78rem;color:#f08060;padding:0.4rem 0">${t('aiNoResult')}</div>`; return; }
     resultsEl.innerHTML=`
-      <div style="font-size:0.72rem;color:#907050;margin-bottom:0.3rem">Chọn sách để tự động điền form:</div>
+      <div style="font-size:0.72rem;color:#907050;margin-bottom:0.3rem">${t('aiChoose')}</div>
       <div class="search-results-list">
         ${books.map((b,i)=>{
           const coverUrl=b.cover||(b.isbn?`https://covers.openlibrary.org/b/isbn/${b.isbn}-M.jpg`:b.cover_i?`https://covers.openlibrary.org/b/id/${b.cover_i}-M.jpg`:null);
@@ -2499,18 +2706,18 @@ async function aiSearchBooks() {
             <div class="search-result-thumb">${coverUrl?`<img src="${coverUrl}" onerror="this.parentElement.innerHTML='📖'">`:' 📖'}</div>
             <div class="search-result-info">
               <div class="search-result-title">${escapeHtml(b.title)}</div>
-              <div class="search-result-author">${escapeHtml(b.author||'Không rõ')}</div>
-              <div class="search-result-meta">${escapeHtml(String(b.year||'?'))} · ${escapeHtml(b.genre||'Khác')} · ${escapeHtml(b.source||'')}</div>
+              <div class="search-result-author">${escapeHtml(b.author||t('aiUnknown'))}</div>
+              <div class="search-result-meta">${escapeHtml(String(b.year||'?'))} · ${escapeHtml(genreLabel(b.genre||'Khác'))} · ${escapeHtml(b.source||'')}</div>
               ${b.description?`<div style="font-size:0.68rem;color:#7a6040;margin-top:2px;line-height:1.4">${escapeHtml(b.description)}</div>`:''}
             </div>
-            <div class="search-result-select">➕ Chọn</div>
+            <div class="search-result-select">${t('aiSelect')}</div>
           </div>`;
         }).join('')}
       </div>`;
     document.querySelectorAll('.search-result-item').forEach((el,i)=>{ el._bookData=books[i]; });
   } catch(e) {
     console.error(e);
-    resultsEl.innerHTML=`<div style="font-size:0.78rem;color:#f08060;padding:0.4rem 0">❌ Lỗi: ${escapeHtml(e.message)}</div>`;
+    resultsEl.innerHTML=`<div style="font-size:0.78rem;color:#f08060;padding:0.4rem 0">${t('error', { message: escapeHtml(e.message) })}</div>`;
   } finally { btn.disabled=false; }
 }
 
@@ -2531,7 +2738,7 @@ function selectAiBook(idx) {
   items[idx].style.background='rgba(212,168,85,0.15)'; items[idx].style.borderColor='rgba(212,168,85,0.5)';
   document.getElementById('aiFilledBadge').style.display='block';
   if(b.isbn) { document.getElementById('fIsbn').value=b.isbn; fetchISBN(); }
-  showToast(t('toastAiFilled'));
+  showToast(t('aiFilledToast'));
   setTimeout(()=>document.getElementById('coverPreview').scrollIntoView({behavior:'smooth',block:'nearest'}),200);
 }
 
@@ -2603,209 +2810,8 @@ function showToast(msg) {
 }
 
 // ═══════════════════════════════════════════
-//  I18N — TRANSLATIONS
+//  DEVICE DETECTION — tự động nhận diện mobile/touch
 // ═══════════════════════════════════════════
-const TRANSLATIONS = {
-  vi: {
-    appName: 'Tủ Sách Thơ Nụ',
-    authSubtitle: 'Đăng nhập để tạo tủ sách riêng của bạn',
-    login: 'Đăng nhập', logout: 'Đăng xuất', register: 'Đăng ký',
-    or: 'hoặc',
-    emailPlaceholder: 'Email của bạn',
-    passwordPlaceholder: 'Mật khẩu (tối thiểu 6 ký tự)',
-    nicknamePlaceholder: 'Tên tủ sách của bạn (VD: Minh Anh, Thư Viện Của Lan...)',
-    guestBtn: '👁 Xem tủ sách của Thơ Nụ (không cần đăng nhập)',
-    search: 'Tìm sách...',
-    mobileSearch: 'Tìm sách...',
-    all: 'Tất cả', reading: 'Đang đọc', read: 'Đã đọc', unread: 'Sắp đọc',
-    quotes: 'Trích dẫn', addBook: 'Thêm sách',
-    view: 'Xem:', myShelf: 'Của tôi',
-    readonlyBanner: '👁 Bạn đang xem <b>tủ sách của Thơ Nụ</b> — chỉ đọc. <a onclick="showAuthModal()" style="color:#d4a855;cursor:pointer;text-decoration:underline">Đăng nhập</a> để tạo tủ sách riêng.',
-    mNavLib: 'Tủ sách', mNavQuotes: 'Trích dẫn', mNavAuthLogin: 'Đăng nhập', mNavAuthLogout: 'Đăng xuất',
-    // Stats
-    statBooks: 'cuốn sách', statRead: 'đã đọc', statReading: 'đang đọc', statQuotes: 'trích dẫn',
-    // Status pills
-    pillRead: '✓ Đã đọc', pillReading: '▶ Đang đọc', pillUnread: '○ Chưa đọc', pillWant: '✨ Sắp đọc',
-    statusRead: 'Đã đọc', statusReading: 'Đang đọc', statusUnread: 'Sắp đọc', statusWant: 'Muốn đọc',
-    // Empty states
-    emptyMyShelf: '📚 Tủ sách của bạn trống — hãy thêm cuốn đầu tiên!',
-    emptySearch: 'Không tìm thấy sách nào...',
-    emptyQuotes: 'Chưa có trích dẫn. Thêm trích dẫn trong form sách.',
-    quotesCount: (v, t, b) => `${v}/${t} trích dẫn trong ${b} cuốn sách.`,
-    quotesSubtitle: 'Gom mọi trích dẫn bạn đã tự thêm trong từng cuốn sách.',
-    searchQuotes: 'Tìm trong trích dẫn, sách, tác giả...',
-    // Book detail
-    by: 'bởi', copyBtn: 'Copy', editBtn: '✏️ Sửa', deleteBtn: '🗑️ Xóa',
-    noQuotes: 'Chưa có trích dẫn.', unknownAuthor: 'Không rõ tác giả',
-    page: 'Trang', chapter: 'Chương',
-    // Form
-    addBookTitle: '➕ Thêm sách mới', editBookTitle: '✏️ Sửa sách',
-    fieldTitle: 'Tên sách *', fieldAuthor: 'Tác giả *', fieldYear: 'Năm xuất bản',
-    fieldGenre: 'Thể loại', fieldStatus: 'Trạng thái', fieldRating: 'Đánh giá',
-    fieldNote: 'Ghi chú cá nhân', fieldQuotes: '💬 Trích dẫn',
-    placeholderTitle: 'Tên sách...', placeholderAuthor: 'Tên tác giả...', placeholderYear: '2024',
-    placeholderNote: 'Cảm nhận, ghi chú...', placeholderQuote: 'Nội dung trích dẫn...',
-    placeholderPage: 'Trang', placeholderChapter: 'Chương',
-    saveBook: '💾 Lưu sách', addQuote: '+ Thêm', removeQuote: '✕ Xóa',
-    selectGenre: '-- Chọn thể loại --',
-    optUnread: 'Sắp đọc', optReading: 'Đang đọc', optRead: 'Đã đọc',
-    aiTitle: 'Tìm sách bằng tên — AI tự điền thông tin',
-    aiPlaceholder: 'Nhập tên sách hoặc tác giả... (VD: Nhà Giả Kim, Atomic Habits)',
-    aiSearch: '🔍 Tìm', aiSearching: '✨ AI đang tìm kiếm', aiAnalyzing: '🧠 AI đang phân tích kết quả',
-    aiSelect: 'Chọn sách để tự động điền form:', aiChoose: '➕ Chọn',
-    aiFilledBadge: '✨ AI đã điền thông tin — kiểm tra và chỉnh sửa nếu cần',
-    isbnLabel: '🔍 Nhập ISBN để tự động điền bìa (tùy chọn)',
-    isbnBtn: 'Tìm bìa', isbnSearching: '⏳ Đang tìm...', isbnOk: '✅ Đã điền tự động!',
-    coverLabel: 'URL bìa sách', coverHint: 'Tự động điền khi tìm theo tên sách hoặc ISBN',
-    // Toasts
-    toastLoaded: (n) => `✅ Đã tải ${n} cuốn sách`,
-    toastCopied: '✅ Đã copy trích dẫn', toastCopyFail: 'Không copy được',
-    toastDeleted: '🗑️ Đã xóa sách', toastUpdated: '✅ Đã cập nhật sách!', toastAdded: '✅ Đã thêm sách mới!',
-    toastAiFilled: '✅ Đã điền thông tin từ AI!',
-    toastNeedLogin: '⛔ Đăng nhập để thêm sách', toastNoPermEdit: '⛔ Bạn không có quyền sửa sách này',
-    toastNoPermDel: '⛔ Bạn không có quyền xóa sách này', toastNoIsbn: 'Nhập ISBN trước',
-    toastFillRequired: 'Vui lòng nhập tên sách và tác giả',
-    confirmDelete: (t) => `Xóa "${t}"? Hành động này không thể hoàn tác.`,
-    errIsbnNotFound: '❌ Không tìm thấy ISBN này.',
-    errWrongPass: '❌ Email hoặc mật khẩu không đúng',
-    errAlreadyReg: '❌ Email đã được đăng ký',
-    errPassShort: 'Mật khẩu tối thiểu 6 ký tự',
-    errFillAuth: 'Vui lòng nhập đủ email và mật khẩu',
-    saving: '⏳ Đang lưu...', updating: 'Đang cập nhật...', adding: 'Đang thêm sách...',
-    loading: 'Đang tải tủ sách...', starting: 'Đang khởi động...',
-    genreAll: 'Tất cả', genreLabel: 'Thể loại:',
-    noResults: 'Không tìm thấy kết quả. Thử từ khóa khác.',
-  },
-  en: {
-    appName: "Tho Nu's Bookshelf",
-    authSubtitle: 'Sign in to create your own bookshelf',
-    login: 'Sign in', logout: 'Sign out', register: 'Sign up',
-    or: 'or',
-    emailPlaceholder: 'Your email',
-    passwordPlaceholder: 'Password (min. 6 characters)',
-    nicknamePlaceholder: 'Your bookshelf name (e.g. Alex, Emma\'s Library...)',
-    guestBtn: "👁 Browse Tho Nu's books (no account needed)",
-    search: 'Search books...', mobileSearch: 'Search...',
-    all: 'All', reading: 'Reading', read: 'Read', unread: 'To read',
-    quotes: 'Quotes', addBook: 'Add book',
-    view: 'View:', myShelf: 'My shelf',
-    readonlyBanner: "👁 You're browsing <b>Tho Nu's bookshelf</b> — read only. <a onclick=\"showAuthModal()\" style=\"color:#d4a855;cursor:pointer;text-decoration:underline\">Sign in</a> to create your own.",
-    mNavLib: 'Library', mNavQuotes: 'Quotes', mNavAuthLogin: 'Sign in', mNavAuthLogout: 'Sign out',
-    statBooks: 'books', statRead: 'read', statReading: 'reading', statQuotes: 'quotes',
-    pillRead: '✓ Read', pillReading: '▶ Reading', pillUnread: '○ Unread', pillWant: '✨ Want to read',
-    statusRead: 'Read', statusReading: 'Reading', statusUnread: 'Want to read', statusWant: 'Want to read',
-    emptyMyShelf: '📚 Your shelf is empty — add your first book!',
-    emptySearch: 'No books found...', emptyQuotes: 'No quotes yet. Add quotes in the book form.',
-    quotesCount: (v, t, b) => `${v}/${t} quotes from ${b} books.`,
-    quotesSubtitle: 'All quotes you have saved across your books.',
-    searchQuotes: 'Search quotes, books, authors...',
-    by: 'by', copyBtn: 'Copy', editBtn: '✏️ Edit', deleteBtn: '🗑️ Delete',
-    noQuotes: 'No quotes yet.', unknownAuthor: 'Unknown author',
-    page: 'Page', chapter: 'Chapter',
-    addBookTitle: '➕ Add new book', editBookTitle: '✏️ Edit book',
-    fieldTitle: 'Title *', fieldAuthor: 'Author *', fieldYear: 'Year',
-    fieldGenre: 'Genre', fieldStatus: 'Status', fieldRating: 'Rating',
-    fieldNote: 'Personal notes', fieldQuotes: '💬 Quotes',
-    placeholderTitle: 'Book title...', placeholderAuthor: 'Author name...', placeholderYear: '2024',
-    placeholderNote: 'Thoughts, notes...', placeholderQuote: 'Quote text...',
-    placeholderPage: 'Page', placeholderChapter: 'Chapter',
-    saveBook: '💾 Save', addQuote: '+ Add', removeQuote: '✕ Remove',
-    selectGenre: '-- Select genre --',
-    optUnread: 'Want to read', optReading: 'Reading', optRead: 'Read',
-    aiTitle: 'Search by name — AI fills in details',
-    aiPlaceholder: 'Enter book title or author... (e.g. The Alchemist, Atomic Habits)',
-    aiSearch: '🔍 Search', aiSearching: '✨ AI is searching', aiAnalyzing: '🧠 AI is analyzing results',
-    aiSelect: 'Select a book to auto-fill the form:', aiChoose: '➕ Select',
-    aiFilledBadge: '✨ AI filled in the details — review and edit as needed',
-    isbnLabel: '🔍 Enter ISBN to auto-fill cover (optional)',
-    isbnBtn: 'Find cover', isbnSearching: '⏳ Searching...', isbnOk: '✅ Auto-filled!',
-    coverLabel: 'Cover URL', coverHint: 'Auto-filled when searching by name or ISBN',
-    toastLoaded: (n) => `✅ Loaded ${n} books`,
-    toastCopied: '✅ Quote copied', toastCopyFail: 'Could not copy',
-    toastDeleted: '🗑️ Book deleted', toastUpdated: '✅ Book updated!', toastAdded: '✅ Book added!',
-    toastAiFilled: '✅ AI filled in the details!',
-    toastNeedLogin: '⛔ Sign in to add books', toastNoPermEdit: '⛔ You cannot edit this book',
-    toastNoPermDel: '⛔ You cannot delete this book', toastNoIsbn: 'Enter ISBN first',
-    toastFillRequired: 'Please enter title and author',
-    confirmDelete: (t) => `Delete "${t}"? This cannot be undone.`,
-    errIsbnNotFound: '❌ ISBN not found.',
-    errWrongPass: '❌ Wrong email or password',
-    errAlreadyReg: '❌ Email already registered',
-    errPassShort: 'Password must be at least 6 characters',
-    errFillAuth: 'Please enter email and password',
-    saving: '⏳ Saving...', updating: 'Updating...', adding: 'Adding book...',
-    loading: 'Loading bookshelf...', starting: 'Starting up...',
-    genreAll: 'All', genreLabel: 'Genre:',
-    noResults: 'No results found. Try different keywords.',
-  }
-};
-
-let currentLang = localStorage.getItem('lang') || 'vi';
-function t(key, ...args) {
-  const val = TRANSLATIONS[currentLang]?.[key] ?? TRANSLATIONS['vi'][key] ?? key;
-  return typeof val === 'function' ? val(...args) : val;
-}
-function applyI18n() {
-  // text content
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    const val = t(key);
-    if (val) el.textContent = val;
-  });
-  // placeholders
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-    const key = el.getAttribute('data-i18n-placeholder');
-    const val = t(key);
-    if (val) el.placeholder = val;
-  });
-  // innerHTML (for banner with HTML)
-  const banner = document.getElementById('readonlyBanner');
-  if (banner) banner.innerHTML = t('readonlyBanner');
-  // mobile search placeholder
-  const mSearch = document.getElementById('mobileSearchInput');
-  if (mSearch) mSearch.placeholder = t('mobileSearch');
-  // Mobile nav labels
-  const mNavLib = document.getElementById('mNavLib');
-  if (mNavLib) mNavLib.innerHTML = `<span class="nav-icon">📚</span>${t('mNavLib')}`;
-  const mNavQuotes = document.getElementById('mNavQuotes');
-  if (mNavQuotes) mNavQuotes.innerHTML = `<span class="nav-icon">💬</span>${t('mNavQuotes')}`;
-  // Lang button shows opposite
-  const langBtn = document.getElementById('langBtn');
-  if (langBtn) langBtn.textContent = currentLang === 'vi' ? 'EN' : 'VI';
-  // document title
-  document.title = currentLang === 'vi' ? 'Tủ Sách Của Thơ Nụ' : "Tho Nu's Bookshelf";
-  // html lang
-  document.documentElement.lang = currentLang;
-  // Re-render CHỈ khi đã có sách (không gọi lúc init)
-  if (BOOKS.length > 0) render();
-}
-function toggleLang() {
-  currentLang = currentLang === 'vi' ? 'en' : 'vi';
-  localStorage.setItem('lang', currentLang);
-  applyI18n();
-}
-
-// ═══════════════════════════════════════════
-//  THEME — DARK / LIGHT
-// ═══════════════════════════════════════════
-let currentTheme = localStorage.getItem('theme') || 'dark';
-function applyTheme() {
-  if (currentTheme === 'light') {
-    document.documentElement.classList.add('light');
-    document.getElementById('themeBtn').textContent = '☀️';
-  } else {
-    document.documentElement.classList.remove('light');
-    document.getElementById('themeBtn').textContent = '🌙';
-  }
-}
-function toggleTheme() {
-  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-  localStorage.setItem('theme', currentTheme);
-  applyTheme();
-}
-
-// ═══════════════════════════════════════════
-//  DEVICE DETECTION
 // IS_TOUCH đã được khai báo ở đầu script cùng với BOOK_W/H
 if (IS_TOUCH) document.documentElement.classList.add('is-touch');
 
@@ -2850,17 +2856,17 @@ function updateMobileNav() {
   if (currentUser) {
     mNavAdd?.classList.remove('view-hidden');
     mNavSwitcher?.classList.remove('view-hidden');
-    if (mNavAuthLabel) mNavAuthLabel.textContent = t('mNavAuthLogout');
+    if (mNavAuthLabel) mNavAuthLabel.textContent = t('logout');
     document.getElementById('mNavAuth')?.querySelector('.nav-icon') && (document.getElementById('mNavAuth').querySelector('.nav-icon').textContent = '🚪');
   } else {
     mNavAdd?.classList.add('view-hidden');
     mNavSwitcher?.classList.add('view-hidden');
-    if (mNavAuthLabel) mNavAuthLabel.textContent = t('mNavAuthLogin');
+    if (mNavAuthLabel) mNavAuthLabel.textContent = t('authLogin');
     document.getElementById('mNavAuth')?.querySelector('.nav-icon') && (document.getElementById('mNavAuth').querySelector('.nav-icon').textContent = '👤');
   }
 
   if (mNavSwitcherLabel) {
-    mNavSwitcherLabel.textContent = shelfMode === 'my' ? 'Thơ Nụ' : t('myShelf');
+    mNavSwitcherLabel.textContent = shelfMode === 'my' ? t('thoNu') : t('mine');
   }
   if (mNavSwitcherIcon) {
     mNavSwitcherIcon.textContent = shelfMode === 'my' ? '📖' : '🏠';
@@ -2875,26 +2881,15 @@ const _origSetFilter = typeof setFilter === 'function' ? setFilter : null;
 // ═══════════════════════════════════════════
 async function init() {
   applyTheme();
-  applyI18n();
-
-  // Đặt UI ở trạng thái guest ngay lập tức (không đợi async)
-  hide('userChip'); show('loginBtn');
-  hide('addBookBtn'); hide('viewSwitcher');
-  show('readonlyBanner');
-  updateBrandName(null, 'guest');
-
-  // Load tủ admin ngay — khách thấy sách ngay lập tức
-  adminUserId = ADMIN_USER_ID || localStorage.getItem('admin_uid') || null;
-  updateMobileNav();
-  showLoading(t('loading'));
-  await loadBooks();
-
-  // Kiểm tra session cũ trong nền
-  try {
-    const hasSession = await restoreSession();
-    if (hasSession) await onLogin();
-  } catch(e) {
-    console.error('Session restore error:', e);
+  applyLanguage();
+  showLoading(t('loadingBoot'));
+  const hasSession = await restoreSession();
+  if (hasSession) {
+    await onLogin();
+  } else {
+    // Hiện auth modal ngay khi vào lần đầu
+    hideLoading();
+    showAuthModal();
   }
 }
 
