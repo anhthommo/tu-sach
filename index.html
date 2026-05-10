@@ -258,20 +258,16 @@ body {
   -ms-overflow-style: none;
   scroll-behavior: smooth;
   position: relative;
-  /* Trick: dùng padding-bottom thay vì overflow-y để tránh browser override */
-  padding-bottom: 1px;
 }
 .books-container-outer::-webkit-scrollbar { display: none; }
 
-/* Books container — height = book height + margin-top, không padding thêm */
+/* Books container */
 .books-container {
   display: flex; align-items: flex-end; gap: var(--book-gap);
   flex-wrap: nowrap;
   width: max-content;
   padding: 0 var(--shelf-pad) 0 6px;
   overflow: visible;
-  /* Đảm bảo height chỉ bằng nội dung, không dư */
-  height: fit-content;
 }
 
 /* ── DOT SCROLL INDICATOR ── */
@@ -958,22 +954,53 @@ body {
   .auth-modal { border-radius: 18px 18px 0 0; max-width: 100%; }
 }
 
-/* ── TOUCH DEVICE (tự nhận diện qua JS, không phụ thuộc screen width) ── */
-.is-touch .book-item {
-  margin-top: 10px !important; /* chỉ cần chừa bookmark */
-}
-.is-touch .book-item:hover {
-  transform: none !important; /* tắt hover trên touch */
-  filter: none !important;
-}
-.is-touch .book-cover img {
-  width: 82px !important;
-  height: 125px !important;
-}
-.is-touch .book-cover,
-.is-touch .book-cover-fallback {
-  width: 82px !important;
-  height: 125px !important;
+/* ── TOUCH / NO-HOVER DEVICE — chuẩn CSS, không cần JS ── */
+/* @media (hover: none) match chính xác mọi thiết bị cảm ứng: iOS, Android */
+@media (hover: none) {
+  /* Tắt hoàn toàn transform hover — nguyên nhân gây khoảng trống */
+  .book-item {
+    margin-top: 10px !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .book-item:hover,
+  .book-item:active {
+    transform: none !important;
+    filter: none !important;
+  }
+  /* Tắt hover trên cover */
+  .book-item:hover .book-cover,
+  .book-item:active .book-cover {
+    transform: rotateY(-4deg) !important;
+  }
+  .book-item.status-reading:hover .book-cover,
+  .book-item.status-reading:active .book-cover {
+    transform: rotateY(-22deg) !important;
+  }
+  /* Ẩn page reveal trên reading hover */
+  .book-item.status-reading:hover .book-cover-wrap::before {
+    opacity: 0 !important;
+  }
+  /* Tắt floor shadow hover */
+  .book-item:hover .book-floor-shadow {
+    width: 80% !important;
+    opacity: 0.5 !important;
+  }
+  /* Book size cho mobile */
+  .book-cover img {
+    width: 82px !important;
+    height: 125px !important;
+  }
+  .book-cover,
+  .book-cover-fallback {
+    width: 82px !important;
+    height: 125px !important;
+  }
+  /* books-container: height cố định = bìa + margin, không thừa */
+  .books-container {
+    align-items: flex-end;
+    height: calc(125px + 10px + 6px); /* bìa + margin-top + padding-bottom */
+  }
 }
 
 /* ── MOBILE BOTTOM NAV ── */
