@@ -1332,7 +1332,7 @@ CREATE POLICY "owner_delete" ON books
 CREATE OR REPLACE FUNCTION get_admin_uid()
 RETURNS UUID LANGUAGE sql SECURITY DEFINER AS $$
   SELECT id FROM auth.users
-  WHERE email = 'anhthommo@gmail.com'
+  WHERE email = 'your@email.com'
   LIMIT 1;
 $$;</pre>
         <div><b style="color:#d4a855">Bước 3:</b> Đăng nhập bằng ADMIN_EMAIL → hệ thống tự lưu admin_uid vào localStorage → các user khác vào trang sẽ xem được tủ sách của bạn.</div>
@@ -1346,11 +1346,12 @@ $$;</pre>
 
 <script>
 // ═══════════════════════════════════════════
-//  CONFIG — chỉ cần điền 3 dòng này
+//  CONFIG — điền 4 dòng này
 // ═══════════════════════════════════════════
-const SUPABASE_URL  = 'https://dsyhivqkrqzaqlzwfytf.supabase.co';   // ← thay bằng URL của bạn
-const SUPABASE_ANON = 'sb_publishable_aD0VZgUXNgn2-b993JKK0A_93wBqXwi';                       // ← thay bằng anon key
-const ADMIN_EMAIL   = 'anhthommo@gmail.com';                      // ← email admin (Thơ Nụ)
+const SUPABASE_URL    = 'https://dsyhivqkrqzaqlzwfytf.supabase.co';  // ← Supabase URL
+const SUPABASE_ANON   = 'sb_publishable_aD0VZgUXNgn2-b993JKK0A_93wBqXwi';                     // ← Anon key
+const ADMIN_EMAIL     = 'anhthommo@gmail.com';                    // ← Email admin
+const ADMIN_USER_ID   = '0a9656c7-dc28-446e-a770-28474eff5dd4';              // ← UUID admin (Supabase → Auth → Users → copy cột UID)
 
 // ═══════════════════════════════════════════
 //  GENRE ICONS
@@ -1537,32 +1538,13 @@ async function onGuest() {
 }
 
 async function resolveAdminId() {
-  if (adminUserId) return;
-  try {
-    if (isAdmin && currentUser) {
-      // Admin đang login — lưu ID của mình
-      adminUserId = currentUser.id;
-      localStorage.setItem('admin_uid', adminUserId);
-    } else {
-      // Thử lấy từ localStorage (đã lưu từ lần admin login trước)
-      adminUserId = localStorage.getItem('admin_uid') || null;
-
-      // Nếu chưa có, thử query RPC get_admin_uid (cần tạo function trong Supabase)
-      if (!adminUserId) {
-        try {
-          const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_admin_uid`, {
-            method: 'POST',
-            headers: { 'apikey': SUPABASE_ANON, 'Content-Type': 'application/json' },
-            body: '{}'
-          });
-          if (res.ok) {
-            const uid = await res.json();
-            if (uid) { adminUserId = uid; localStorage.setItem('admin_uid', uid); }
-          }
-        } catch {}
-      }
-    }
-  } catch {}
+  // Dùng UUID được hardcode trong CONFIG — luôn hoạt động cho mọi khách
+  adminUserId = ADMIN_USER_ID || localStorage.getItem('admin_uid') || null;
+  // Nếu là admin đang login thì cũng lưu lại để backup
+  if (isAdmin && currentUser) {
+    adminUserId = currentUser.id;
+    localStorage.setItem('admin_uid', adminUserId);
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -1597,7 +1579,7 @@ async function loadBooks() {
       // Guest hoặc xem tủ admin — dùng anon key
       if (!adminUserId) {
         hideLoading();
-        document.getElementById('bookcase').innerHTML = '<div style="padding:3rem;text-align:center;color:rgba(212,168,85,0.3);font-style:italic">📚 Thơ Nụ chưa thêm sách nào hoặc chưa cấu hình admin ID.</div>';
+        document.getElementById('bookcase').innerHTML = '<div style="padding:3rem;text-align:center;color:#f08060;font-style:italic">⚙️ Chưa cấu hình ADMIN_USER_ID trong file HTML.<br><span style="font-size:0.8rem;color:rgba(212,168,85,0.4)">Vào Supabase → Authentication → Users → copy UID và dán vào ADMIN_USER_ID trong code.</span></div>';
         return;
       }
       data = await sbFetch(`books?user_id=eq.${adminUserId}&select=*&order=created_at.asc`);
