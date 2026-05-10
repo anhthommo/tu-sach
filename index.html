@@ -141,14 +141,14 @@ body {
     linear-gradient(270deg, #1a0900 0px, #3d1c08 18px, #5a2e10 22px, #3a1a06 30px) right/30px 100% no-repeat,
     repeating-linear-gradient(90deg, rgba(60,25,5,0.4) 0px, rgba(60,25,5,0.4) 1px, transparent 1px, transparent 80px),
     linear-gradient(180deg, #2a1206 0%, #1e0d04 50%, #2a1206 100%);
-  border-radius: 4px; border: 2px solid #1a0900; overflow: hidden;
+  border-radius: 4px; border: 2px solid #1a0900; overflow: visible;
   box-shadow: 0 0 0 6px #0d0603, 0 0 0 8px #3d1c08, 0 24px 70px rgba(0,0,0,0.85), inset 0 0 40px rgba(0,0,0,0.5);
-  padding: 0 30px;
+  padding: 0 56px;
 }
 .bookcase::before {
   content: ''; display: block; height: 24px;
   background: linear-gradient(180deg, #1a0900 0%, #4a2510 20%, #7a4520 40%, #9a6030 55%, #7a4520 70%, #4a2510 85%, #2a1206 100%);
-  margin: 0 -30px;
+  margin: 0 -56px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,200,100,0.18);
 }
 
@@ -173,10 +173,42 @@ body {
 }
 .shelf-label .genre-icon { font-size: 0.8rem; line-height: 1; }
 
+/* ── MORE BOOKS INDICATOR (fade + arrow ở cạnh phải) ── */
+.more-books-indicator {
+  position: absolute;
+  top: 0;
+  /* right = shelf-scroll-wrap padding-right (30px) */
+  right: 30px;
+  bottom: 0;
+  width: 70px;
+  pointer-events: none;
+  z-index: 15;
+  display: flex; align-items: center; justify-content: flex-end;
+  padding-right: 10px;
+  background: linear-gradient(to right, transparent 0%, rgba(22,9,2,0.6) 45%, rgba(22,9,2,0.92) 100%);
+  transition: opacity 0.3s;
+  opacity: 0;
+}
+.more-books-indicator.visible { opacity: 1; }
+.more-books-indicator.hidden  { opacity: 0; }
+
+.more-books-chevron {
+  color: #d4a855;
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 1;
+  animation: chevron-pulse 1.3s ease-in-out infinite;
+  text-shadow: 0 0 14px rgba(212,168,85,0.8), 0 0 28px rgba(212,168,85,0.4);
+}
+@keyframes chevron-pulse {
+  0%, 100% { opacity: 0.45; transform: translateX(0); }
+  50%       { opacity: 1;    transform: translateX(5px); }
+}
+
 /* ── SHELF SCROLL WRAPPER ── */
 .shelf-scroll-wrap {
   position: relative;
-  /* KHÔNG có overflow ở đây — để sách hover lên tự do */
+  padding: 0 30px; /* chừa chỗ cho nút mũi tên 52px, đặt tại -26px */
 }
 
 /* Xoá fade cũ — thay bằng dot indicator */
@@ -186,53 +218,62 @@ body {
 /* Scroll arrow buttons */
 .shelf-arrow {
   position: absolute; top: 50%; transform: translateY(calc(-50% - 12px));
-  z-index: 20;
-  width: 34px; height: 34px;
+  z-index: 30;
+  width: 52px; height: 52px;
   display: flex; align-items: center; justify-content: center;
-  background: rgba(18,8,2,0.82);
-  border: 1px solid rgba(212,168,85,0.5);
+  background: linear-gradient(145deg, rgba(30,12,2,0.95), rgba(20,8,1,0.98));
+  border: 2px solid rgba(212,168,85,0.6);
   border-radius: 50%;
   cursor: pointer;
   color: #d4a855;
-  font-size: 18px; line-height: 1;
-  transition: background 0.18s, opacity 0.2s, transform 0.18s, box-shadow 0.18s;
-  opacity: 0;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,220,100,0.12);
+  font-size: 26px; line-height: 1;
+  transition: background 0.2s, opacity 0.2s, transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  opacity: 0.75;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.85), 0 2px 8px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,220,100,0.18);
 }
-.shelf-scroll-wrap:hover .shelf-arrow:not(.hidden) { opacity: 1; }
+.shelf-arrow:not(.hidden) { opacity: 0.75; }
 .shelf-arrow:hover {
-  background: rgba(212,168,85,0.22);
+  background: linear-gradient(145deg, rgba(212,168,85,0.22), rgba(180,130,50,0.18));
   border-color: #d4a855;
-  transform: translateY(calc(-50% - 12px)) scale(1.12);
-  box-shadow: 0 6px 24px rgba(0,0,0,0.8), 0 0 12px rgba(212,168,85,0.25);
+  transform: translateY(calc(-50% - 12px)) scale(1.1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.9), 0 0 20px rgba(212,168,85,0.35);
+  opacity: 1;
+  color: #f0c860;
 }
-.shelf-arrow.left  { left: 6px; }
-.shelf-arrow.right { right: 6px; }
+.shelf-arrow:active { transform: translateY(calc(-50% - 12px)) scale(0.96); }
+.shelf-arrow.left  { left: -26px; }
+.shelf-arrow.right { right: -26px; }
 .shelf-arrow.hidden { opacity: 0 !important; pointer-events: none; }
 
-/* ── BOOKS CONTAINER: tách overflow để fix clipping ── */
-/* Lớp ngoài chỉ scroll ngang, KHÔNG clip dọc */
+/* ── BOOKS CONTAINER: scroll ngang, hiển thị đúng 6 cuốn ── */
+/* Chiều rộng được set bằng JS dựa trên kích thước thực của book-item */
+:root {
+  --book-gap: 20px;
+  --shelf-pad: 16px;
+}
 .books-container-outer {
   overflow-x: auto;
-  overflow-y: visible; /* bị browser override nếu đặt cùng — xử lý bằng padding-top trên lớp trong */
+  overflow-y: visible;
   scrollbar-width: none;
   -ms-overflow-style: none;
   scroll-behavior: smooth;
+  position: relative;
+  /* width được set bởi JS */
 }
 .books-container-outer::-webkit-scrollbar { display: none; }
 
 /* Books container */
 .books-container {
-  display: flex; align-items: flex-end; gap: 10px;
+  display: flex; align-items: flex-end; gap: var(--book-gap);
   flex-wrap: nowrap;
   width: max-content;
-  padding: 0 14px 6px;
+  padding: 0 var(--shelf-pad) 6px 6px;
   overflow: visible;
 }
 
-/* Khoảng trống để sách hover lên không bị clip — đặt trên từng item thay vì padding container */
+/* Khoảng trống để sách hover lên không bị clip */
 .book-item {
-  margin-top: 32px;
+  margin-top: 18px;
 }
 
 /* ── DOT SCROLL INDICATOR ── */
@@ -282,7 +323,7 @@ body {
 
 /* Shelf plank */
 .shelf-plank {
-  position: relative; height: 36px; margin: 0 -14px; z-index: 5;
+  position: relative; height: 36px; margin: 0 -44px; z-index: 5;
   background: linear-gradient(180deg, #f5c860 0%, #dba050 3%, #c07830 8%, #d08c38 15%, #a86828 22%, #c07830 30%, #a06020 40%, #c07830 50%, #a86828 60%, #906018 70%, #804518 82%, #5a2e08 92%, #3a1c04 100%);
   box-shadow: 0 8px 24px rgba(0,0,0,0.75), 0 3px 8px rgba(0,0,0,0.6), 0 -1px 0 rgba(255,210,100,0.3), inset 0 2px 5px rgba(255,225,130,0.2), inset 0 -2px 5px rgba(0,0,0,0.35);
 }
@@ -1411,6 +1452,7 @@ function render() {
 
     html += `</div><!-- .books-container -->
         </div><!-- .books-container-outer -->
+        <div class="more-books-indicator"><span class="more-books-chevron">›</span></div>
       </div><!-- .shelf-scroll-wrap -->
       <div class="shelf-plank"></div>
       <div class="shelf-scrollbar-wrap">
@@ -2165,9 +2207,15 @@ function updateShelfScroll(outer) {
   const hasScroll = maxScroll > 2;
   const ratio = hasScroll ? outer.scrollLeft / maxScroll : 0;
 
-  // Arrow visibility
+  // Arrow + indicator visibility
   if (btnL) btnL.classList.toggle('hidden', outer.scrollLeft <= 2);
   if (btnR) btnR.classList.toggle('hidden', !hasScroll || outer.scrollLeft >= maxScroll - 2);
+  const indicator = wrap.querySelector('.more-books-indicator');
+  if (indicator) {
+    const showIndicator = hasScroll && outer.scrollLeft < maxScroll - 2;
+    indicator.classList.toggle('visible', showIndicator);
+    indicator.classList.toggle('hidden', !showIndicator);
+  }
 
   // Thumb
   if (thumb && track) {
@@ -2199,6 +2247,20 @@ function updateShelfScroll(outer) {
 
 function initShelfScrollbars() {
   document.querySelectorAll('.books-container-outer').forEach(outer => {
+    // Tính chiều rộng hiển thị đúng 6 cuốn dựa trên kích thước thực
+    const container = outer.querySelector('.books-container');
+    const items = container ? container.querySelectorAll('.book-item') : [];
+    if (items.length > 0) {
+      const cs = getComputedStyle(container);
+      const gap = parseFloat(cs.gap) || 20;
+      const pad = parseFloat(cs.paddingLeft) || 16;
+      const itemW = items[0].getBoundingClientRect().width;
+      const show = Math.min(6, items.length);
+      const visibleW = Math.ceil(itemW * show + gap * (show - 1) + pad * 2);
+      outer.style.width = visibleW + 'px';
+      outer.style.maxWidth = '100%';
+    }
+
     updateShelfScroll(outer);
 
     // Thumb drag
