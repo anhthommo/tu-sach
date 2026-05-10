@@ -1776,12 +1776,19 @@ async function restoreSession() {
   try {
     const { user, access_token } = JSON.parse(saved);
     if (!user || !access_token) return false;
-    // Verify token still valid
-    const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
-      headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${access_token}` }
-    });
+    // Verify token với timeout 5s
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+    let res;
+    try {
+      res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+        headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${access_token}` },
+        signal: controller.signal
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
     if (!res.ok) { localStorage.removeItem('sb_session'); return false; }
-    // Lấy user data mới nhất (có user_metadata cập nhật)
     const freshUser = await res.json();
     currentUser = { ...freshUser, access_token };
     return true;
@@ -2769,8 +2776,8 @@ function applyI18n() {
   document.title = currentLang === 'vi' ? 'Tủ Sách Của Thơ Nụ' : "Tho Nu's Bookshelf";
   // html lang
   document.documentElement.lang = currentLang;
-  // Re-render if books loaded
-  if (BOOKS.length > 0 || typeof render === 'function') render();
+  // Re-render CHỈ khi đã có sách (không gọi lúc init)
+  if (BOOKS.length > 0) render();
 }
 function toggleLang() {
   currentLang = currentLang === 'vi' ? 'en' : 'vi';
@@ -2870,11 +2877,16 @@ async function init() {
   applyTheme();
   applyI18n();
   showLoading(t('starting'));
-  const hasSession = await restoreSession();
-  if (hasSession) {
-    await onLogin();
-  } else {
-    // Hiện auth modal ngay khi vào lần đầu
+  try {
+    const hasSession = await restoreSession();
+    if (hasSession) {
+      await onLogin();
+    } else {
+      hideLoading();
+      showAuthModal();
+    }
+  } catch(e) {
+    console.error('Init error:', e);
     hideLoading();
     showAuthModal();
   }
