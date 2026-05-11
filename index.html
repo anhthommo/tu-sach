@@ -622,6 +622,44 @@ body {
 .btn-edit:hover { background: rgba(212,168,85,0.2); }
 .btn-delete { background: rgba(200,60,40,0.08); border-color: rgba(200,60,40,0.3); color: #c05040; }
 .btn-delete:hover { background: rgba(200,60,40,0.18); }
+.btn-reader { background: rgba(80,130,200,0.1); border-color: rgba(80,130,200,0.32); color: #346fa8; }
+.btn-reader:hover { background: rgba(80,130,200,0.18); }
+
+.reader-modal {
+  max-width: min(1120px, 96vw);
+  width: 100%;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.reader-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid rgba(139,90,43,0.14);
+}
+.reader-title {
+  font-family: 'Playfair Display', serif;
+  color: #2c1810;
+  font-size: 1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.reader-frame {
+  border: 0;
+  width: 100%;
+  flex: 1;
+  background: #f6f0e6;
+}
+.reader-empty {
+  padding: 2rem;
+  color: #8b5a2b;
+  text-align: center;
+}
 
 /* ── ADD/EDIT MODAL ── */
 .form-overlay {
@@ -946,6 +984,9 @@ body {
   .modal-cover-row { gap: 0.9rem; }
   .modal-book-cover { width: 88px !important; min-width: 88px !important; height: 130px !important; }
   .modal-title { font-size: 1.05rem; }
+  .reader-modal { height: 92vh; max-width: 100%; }
+  .reader-header { grid-template-columns: minmax(0, 1fr) auto; }
+  .reader-header .modal-btn { grid-column: 1 / -1; justify-self: start; }
   .form-overlay { padding: 0; align-items: flex-end; }
   .form-modal { border-radius: 18px 18px 0 0; max-height: 93vh; max-width: 100%; transform: translateY(40px); }
   .form-overlay.on .form-modal { transform: translateY(0); }
@@ -1447,6 +1488,19 @@ html[data-theme="light"] .toast {
   </div>
 </div>
 
+<!-- EBOOK READER MODAL -->
+<div class="overlay" id="readerOverlay" onclick="if(event.target===this)closeReader()">
+  <div class="modal reader-modal">
+    <div class="reader-header">
+      <div class="reader-title" id="readerTitle">Ebook</div>
+      <a class="modal-btn btn-reader" id="readerOriginalLink" href="#" target="_blank" rel="noopener">Mở link gốc</a>
+      <button class="modal-close" style="position:static" onclick="closeReader()">✕</button>
+    </div>
+    <iframe class="reader-frame" id="readerFrame" title="Ebook reader" allowfullscreen></iframe>
+    <div class="reader-empty view-hidden" id="readerEmpty">Không mở được ebook trong app. Hãy thử mở link gốc.</div>
+  </div>
+</div>
+
 <!-- ADD/EDIT FORM MODAL -->
 <div class="form-overlay" id="formOverlay" onclick="if(event.target===this)closeForm()">
   <div class="form-modal">
@@ -1564,6 +1618,13 @@ html[data-theme="light"] .toast {
         <textarea class="form-textarea" id="fNote" placeholder="Cảm nhận, ghi chú..."></textarea>
       </div>
 
+      <!-- Ebook link -->
+      <div class="form-group">
+        <label class="form-label">Thêm link ebook của bạn</label>
+        <input class="form-input" id="fEbookLink" placeholder="Google Drive, Dropbox hoặc link ebook public...">
+        <div id="ebookHelp" style="font-size:0.72rem;color:#6b5030;margin-top:0.3rem">Hỗ trợ link chia sẻ công khai từ Google Drive, Dropbox, PDF, EPUB, MOBI...</div>
+      </div>
+
       <!-- Quotes -->
       <div>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
@@ -1606,6 +1667,7 @@ CREATE TABLE books (
   status      TEXT DEFAULT 'unread',
   rating      INTEGER DEFAULT 0,
   cover       TEXT,
+  ebook_link  TEXT,
   color       TEXT DEFAULT '#1a1008',
   text_color  TEXT DEFAULT '#e8d5a0',
   note        TEXT,
@@ -1615,6 +1677,9 @@ CREATE TABLE books (
 
 -- 2. Bật Row Level Security
 ALTER TABLE books ENABLE ROW LEVEL SECURITY;
+
+-- Nếu bảng books đã có sẵn, chạy thêm dòng này một lần để bật link ebook:
+ALTER TABLE books ADD COLUMN IF NOT EXISTS ebook_link TEXT;
 
 -- 3. Mọi người đều đọc được (để hiển thị tủ admin công khai)
 CREATE POLICY "public_read" ON books
@@ -2430,6 +2495,9 @@ function openBook(id) {
           <button class="modal-btn btn-edit" onclick="openEditForm(${b.id})">${t('edit')}</button>
           <button class="modal-btn btn-delete" onclick="confirmDelete(${b.id})">${t('delete')}</button>
         </div>` : ''}
+        ${b.ebook_link ? `<div class="modal-actions" style="margin-top:${editable?'0':'1rem'}">
+          <button class="modal-btn btn-reader" onclick="openReader(${b.id})" style="display:flex;align-items:center;gap:0.4rem">📖 Đọc ebook</button>
+        </div>` : ''}
       </div>
     </div>
     <div class="section-hd">${t('goodQuotes')}</div>
@@ -2438,6 +2506,93 @@ function openBook(id) {
 }
 
 function closeModal() { document.getElementById('overlay').classList.remove('on'); }
+
+// ═══════════════════════════════════════════
+//  EBOOK READER
+// ═══════════════════════════════════════════
+function convertEbookUrl(url) {
+  if (!url) return null;
+  url = url.trim();
+
+  // Google Drive: /file/d/FILE_ID/view hoặc /open?id=FILE_ID hoặc /uc?id=FILE_ID
+  const gdriveFileMatch = url.match(/drive\.google\.com\/file\/d\/([^\/\?&]+)/);
+  const gdriveOpenMatch = url.match(/drive\.google\.com\/open\?id=([^&]+)/);
+  const gdriveUcMatch   = url.match(/drive\.google\.com\/uc\?.*[?&]id=([^&]+)/);
+  const gdriveFolderMatch = url.match(/drive\.google\.com\/drive.*\/folders\/([^\/\?&]+)/);
+
+  if (gdriveFileMatch) {
+    return `https://drive.google.com/file/d/${gdriveFileMatch[1]}/preview`;
+  }
+  if (gdriveOpenMatch) {
+    return `https://drive.google.com/file/d/${gdriveOpenMatch[1]}/preview`;
+  }
+  if (gdriveUcMatch) {
+    return `https://drive.google.com/file/d/${gdriveUcMatch[1]}/preview`;
+  }
+  if (gdriveFolderMatch) {
+    return null; // folder link, không preview được
+  }
+
+  // Dropbox: ?dl=0 → raw=1 (direct)
+  if (url.includes('dropbox.com')) {
+    return url.replace(/[?&]dl=\d/, '').replace(/[?&]raw=\d/, '') + (url.includes('?') ? '&raw=1' : '?raw=1');
+  }
+
+  // Google Docs / Sheets / Slides: /edit → /preview
+  if (url.match(/docs\.google\.com\/(document|spreadsheets|presentation)\/d\/[^\/]+\/edit/)) {
+    return url.replace('/edit', '/preview');
+  }
+
+  // PDF trực tiếp: dùng Google Docs Viewer
+  if (url.match(/\.pdf(\?|$)/i)) {
+    return `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
+  }
+
+  // EPUB / MOBI — thử Google Docs Viewer
+  if (url.match(/\.(epub|mobi)(\?|$)/i)) {
+    return `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
+  }
+
+  // Archive.org embed
+  if (url.includes('archive.org/details/')) {
+    const id = url.split('archive.org/details/')[1]?.split('?')[0];
+    if (id) return `https://archive.org/embed/${id}`;
+  }
+
+  // Mặc định: cố nhúng thẳng
+  return url;
+}
+
+function openReader(id) {
+  const b = BOOKS.find(x => x.id === id);
+  if (!b || !b.ebook_link) return;
+
+  const embedUrl = convertEbookUrl(b.ebook_link);
+  document.getElementById('readerTitle').textContent = b.title || 'Ebook';
+  document.getElementById('readerOriginalLink').href = b.ebook_link;
+
+  const frame = document.getElementById('readerFrame');
+  const empty = document.getElementById('readerEmpty');
+
+  if (embedUrl) {
+    frame.src = embedUrl;
+    frame.classList.remove('view-hidden');
+    empty.classList.add('view-hidden');
+  } else {
+    frame.src = 'about:blank';
+    frame.classList.add('view-hidden');
+    empty.classList.remove('view-hidden');
+  }
+
+  closeModal();
+  document.getElementById('readerOverlay').classList.add('on');
+}
+
+function closeReader() {
+  document.getElementById('readerOverlay').classList.remove('on');
+  // Xóa src để dừng tải file
+  setTimeout(() => { document.getElementById('readerFrame').src = 'about:blank'; }, 300);
+}
 
 async function confirmDelete(id) {
   if (!canEdit()) { showToast(t('noDelete')); return; }
@@ -2458,7 +2613,7 @@ function openAddForm() {
   if (!canEdit()) { showToast(t('loginToAdd')); showAuthModal(); return; }
   editingId=null; formRating=0; formQuotes=[];
   document.getElementById('formTitle').textContent=t('addBookTitle');
-  ['fId','fIsbn','fTitle','fAuthor','fYear','fCover','fNote'].forEach(id=>document.getElementById(id).value='');
+  ['fId','fIsbn','fTitle','fAuthor','fYear','fCover','fNote','fEbookLink'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('fGenre').value='';
   document.getElementById('fStatus').value='unread';
   document.getElementById('fRating').value='0';
@@ -2485,6 +2640,7 @@ function openEditForm(id) {
   document.getElementById('fStatus').value=b.status||'unread';
   document.getElementById('fCover').value=b.cover||'';
   document.getElementById('fNote').value=b.note||'';
+  document.getElementById('fEbookLink').value=b.ebook_link||'';
   document.getElementById('fRating').value=formRating;
   document.getElementById('isbnStatus').textContent='';
   document.getElementById('aiBookName').value='';
@@ -2568,6 +2724,7 @@ async function submitBook() {
     rating: formRating,
     cover: document.getElementById('fCover').value.trim()||null,
     note: document.getElementById('fNote').value.trim(),
+    ebook_link: document.getElementById('fEbookLink').value.trim()||null,
     quotes: formQuotes.filter(q=>q.text.trim()),
     color: randomColor, text_color: '#e8d5a0'
   };
