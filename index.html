@@ -1494,7 +1494,7 @@ html[data-theme="light"] .toast {
     <div class="reader-header">
       <div class="reader-title" id="readerTitle">Ebook</div>
       <a class="modal-btn btn-reader" id="readerOriginalLink" href="#" target="_blank" rel="noopener">Mở link gốc</a>
-      <button class="modal-close" style="position:static" onclick="closeReader()">✕</button>
+      <button class="modal-close" style="position:static" onclick="closeReader()">âœ•</button>
     </div>
     <iframe class="reader-frame" id="readerFrame" title="Ebook reader" allowfullscreen></iframe>
     <div class="reader-empty view-hidden" id="readerEmpty">Không mở được ebook trong app. Hãy thử mở link gốc.</div>
@@ -1738,12 +1738,12 @@ const I18N = {
     addBookTitle: '➕ Thêm sách mới', editBookTitle: '✏️ Sửa sách', aiSearchTitle: 'Tìm sách bằng tên — AI tự điền thông tin',
     aiBookName: 'Nhập tên sách hoặc tác giả... (VD: Nhà Giả Kim, Atomic Habits)', search: '🔍 Tìm', aiFilled: '✨ AI đã điền thông tin — kiểm tra và chỉnh sửa bên dưới nếu cần',
     isbnLabel: '🔍 Nhập ISBN để tự động điền bìa (tùy chọn)', isbnExample: 'VD: 9780062315007', findCover: 'Tìm bìa',
-    coverUrl: 'URL bìa sách', coverHelp: 'Tự động điền khi tìm theo tên sách hoặc ISBN', title: 'Tên sách *', titlePh: 'Tên sách...', author: 'Tác giả *', authorPh: 'Tên tác giả...',
+    coverUrl: 'URL bìa sách', coverHelp: 'Tự động điền khi tìm theo tên sách hoặc ISBN', ebookLink: 'Thêm link ebook của bạn', ebookLinkPh: 'Google Drive, Dropbox hoặc link ebook public...', ebookHelp: 'Hỗ trợ link chia sẻ công khai từ Google Drive, Dropbox, PDF, EPUB, MOBI...', title: 'Tên sách *', titlePh: 'Tên sách...', author: 'Tác giả *', authorPh: 'Tên tác giả...',
     year: 'Năm xuất bản', genre: 'Thể loại', chooseGenre: '-- Chọn thể loại --', status: 'Trạng thái', rating: 'Đánh giá', note: 'Ghi chú cá nhân', notePh: 'Cảm nhận, ghi chú...',
     add: '+ Thêm', saveBook: '💾 Lưu sách', bookCount: 'cuốn sách', readCount: 'đã đọc', readingCount: 'đang đọc', quoteCount: 'trích dẫn',
     filterGenre: 'Thể loại:', emptyMine: '📚 Tủ sách của bạn trống — hãy thêm cuốn đầu tiên!', emptySearch: 'Không tìm thấy sách nào...', emptyQuotes: 'Chưa có trích dẫn. Thêm trích dẫn trong form sách.',
     quotesCount: '{visible}/{total} trích dẫn trong {books} cuốn sách.', page: 'Trang', chapter: 'Chương', pageLower: 'trang', chapterLower: 'chương', unknownAuthor: 'Không rõ tác giả',
-    copy: 'Copy', copyOk: '✅ Đã copy trích dẫn', copyFail: 'Không copy được', noQuotes: 'Chưa có trích dẫn.', by: 'bởi', noRating: 'Chưa đánh giá', goodQuotes: '💬 Trích dẫn hay',
+    copy: 'Copy', copyOk: '✅ Đã copy trích dẫn', copyFail: 'Không copy được', noQuotes: 'Chưa có trích dẫn.', by: 'bởi', noRating: 'Chưa đánh giá', goodQuotes: '💬 Trích dẫn hay', readEbook: 'Đọc ebook', readerTitle: 'Đọc ebook', openOriginal: 'Mở link gốc', ebookUnavailable: 'Không mở được ebook trong app. Hãy thử mở link gốc.',
     edit: '✏️ Sửa', delete: '🗑️ Xóa', noDelete: '⛔ Bạn không có quyền xóa sách này', noEdit: '⛔ Bạn không có quyền sửa sách này', loginToAdd: '⛔ Đăng nhập để thêm sách', noPermission: '⛔ Không có quyền',
     deleteConfirm: 'Xóa "{title}"? Hành động này không thể hoàn tác.', deleted: '🗑️ Đã xóa sách', loaded: '✅ Đã tải {count} cuốn sách', added: '✅ Đã thêm sách mới!', updated: '✅ Đã cập nhật sách!',
     needEmailPass: 'Vui lòng nhập đủ email và mật khẩu', passMin: 'Mật khẩu tối thiểu 6 ký tự', processing: '⏳ Đang xử lý...', invalidLogin: '❌ Email hoặc mật khẩu không đúng', registered: '❌ Email đã được đăng ký', unknownError: 'Lỗi không xác định', confirmEmail: '✅ Đã gửi email xác nhận! Kiểm tra hộp thư và nhấn link để kích hoạt.',
@@ -1765,12 +1765,12 @@ const I18N = {
     addBookTitle: '➕ Add new book', editBookTitle: '✏️ Edit book', aiSearchTitle: 'Find a book by name — AI fills details',
     aiBookName: 'Enter book title or author... (e.g. The Alchemist, Atomic Habits)', search: '🔍 Search', aiFilled: '✨ AI filled the details — review and edit below if needed',
     isbnLabel: '🔍 Enter ISBN to auto-fill cover (optional)', isbnExample: 'e.g. 9780062315007', findCover: 'Find cover',
-    coverUrl: 'Book cover URL', coverHelp: 'Auto-filled when searching by title or ISBN', title: 'Book title *', titlePh: 'Book title...', author: 'Author *', authorPh: 'Author name...',
+    coverUrl: 'Book cover URL', coverHelp: 'Auto-filled when searching by title or ISBN', ebookLink: 'Add your ebook link', ebookLinkPh: 'Google Drive, Dropbox, or a public ebook link...', ebookHelp: 'Supports public share links from Google Drive, Dropbox, PDF, EPUB, MOBI...', title: 'Book title *', titlePh: 'Book title...', author: 'Author *', authorPh: 'Author name...',
     year: 'Publication year', genre: 'Genre', chooseGenre: '-- Choose genre --', status: 'Status', rating: 'Rating', note: 'Personal note', notePh: 'Thoughts, notes...',
     add: '+ Add', saveBook: '💾 Save book', bookCount: 'books', readCount: 'read', readingCount: 'reading', quoteCount: 'quotes',
     filterGenre: 'Genre:', emptyMine: '📚 Your bookshelf is empty — add the first book!', emptySearch: 'No books found...', emptyQuotes: 'No quotes yet. Add quotes in the book form.',
     quotesCount: '{visible}/{total} quotes across {books} books.', page: 'Page', chapter: 'Chapter', pageLower: 'page', chapterLower: 'chapter', unknownAuthor: 'Unknown author',
-    copy: 'Copy', copyOk: '✅ Quote copied', copyFail: 'Could not copy', noQuotes: 'No quotes yet.', by: 'by', noRating: 'No rating yet', goodQuotes: '💬 Favorite quotes',
+    copy: 'Copy', copyOk: '✅ Quote copied', copyFail: 'Could not copy', noQuotes: 'No quotes yet.', by: 'by', noRating: 'No rating yet', goodQuotes: '💬 Favorite quotes', readEbook: 'Read ebook', readerTitle: 'Read ebook', openOriginal: 'Open original link', ebookUnavailable: 'Could not open this ebook inside the app. Try the original link.',
     edit: '✏️ Edit', delete: '🗑️ Delete', noDelete: '⛔ You do not have permission to delete this book', noEdit: '⛔ You do not have permission to edit this book', loginToAdd: '⛔ Sign in to add books', noPermission: '⛔ No permission',
     deleteConfirm: 'Delete "{title}"? This action cannot be undone.', deleted: '🗑️ Book deleted', loaded: '✅ Loaded {count} books', added: '✅ New book added!', updated: '✅ Book updated!',
     needEmailPass: 'Please enter both email and password', passMin: 'Password must be at least 6 characters', processing: '⏳ Processing...', invalidLogin: '❌ Email or password is incorrect', registered: '❌ Email is already registered', unknownError: 'Unknown error', confirmEmail: '✅ Confirmation email sent! Check your inbox and open the activation link.',
@@ -1900,13 +1900,17 @@ function applyLanguage() {
   const labels = document.querySelectorAll('.form-label');
   const labelMap = [
     null, t('coverUrl'), t('title'), t('author'), t('year'), t('genre'),
-    t('status'), t('rating'), t('note'), t('quotes')
+    t('status'), t('rating'), t('note'), t('ebookLink'), t('quotes')
   ];
   labels.forEach((label, idx) => { if (labelMap[idx]) label.textContent = labelMap[idx]; });
   setPlaceholder('fCover', 'https://...');
+  setPlaceholder('fEbookLink', t('ebookLinkPh'));
   setPlaceholder('fTitle', t('titlePh'));
   setPlaceholder('fAuthor', t('authorPh'));
   setPlaceholder('fNote', t('notePh'));
+  setText('ebookHelp', t('ebookHelp'));
+  setText('readerOriginalLink', t('openOriginal'));
+  setText('readerEmpty', t('ebookUnavailable'));
   setText('formSubmit', t('saveBook'));
   setText('addQuoteBtn', t('add'));
   if (document.getElementById('formOverlay')?.classList.contains('on')) renderQuotesForm();
@@ -2462,6 +2466,7 @@ function openBook(id) {
   const stars = b.rating ? '★'.repeat(b.rating)+'☆'.repeat(5-b.rating) : t('noRating');
   const quotes = Array.isArray(b.quotes)?b.quotes:[];
   const editable = canEdit();
+  const ebookLink = String(b.ebook_link || '').trim();
 
   const quotesHTML = quotes.length
     ? quotes.map((q,idx)=>{
@@ -2491,12 +2496,10 @@ function openBook(id) {
         </div>
         <div class="stars">${stars}</div>
         ${b.note?`<div class="modal-note" style="margin-top:0.6rem">${escapeHtml(b.note)}</div>`:''}
-        ${editable ? `<div class="modal-actions">
-          <button class="modal-btn btn-edit" onclick="openEditForm(${b.id})">${t('edit')}</button>
-          <button class="modal-btn btn-delete" onclick="confirmDelete(${b.id})">${t('delete')}</button>
-        </div>` : ''}
-        ${b.ebook_link ? `<div class="modal-actions" style="margin-top:${editable?'0':'1rem'}">
-          <button class="modal-btn btn-reader" onclick="openReader(${b.id})" style="display:flex;align-items:center;gap:0.4rem">📖 Đọc ebook</button>
+        ${(ebookLink || editable) ? `<div class="modal-actions">
+          ${ebookLink ? `<button class="modal-btn btn-reader" onclick="openReader(${b.id})">${t('readEbook')}</button>` : ''}
+          ${editable ? `<button class="modal-btn btn-edit" onclick="openEditForm(${b.id})">${t('edit')}</button>
+          <button class="modal-btn btn-delete" onclick="confirmDelete(${b.id})">${t('delete')}</button>` : ''}
         </div>` : ''}
       </div>
     </div>
@@ -2507,91 +2510,56 @@ function openBook(id) {
 
 function closeModal() { document.getElementById('overlay').classList.remove('on'); }
 
-// ═══════════════════════════════════════════
-//  EBOOK READER
-// ═══════════════════════════════════════════
-function convertEbookUrl(url) {
-  if (!url) return null;
-  url = url.trim();
+function convertDropboxLink(url) {
+  try {
+    const u = new URL(url);
+    if (!u.hostname.includes('dropbox.com')) return url;
+    u.hostname = 'dl.dropboxusercontent.com';
+    u.searchParams.delete('dl');
+    u.searchParams.delete('raw');
+    return u.toString();
+  } catch {
+    return url;
+  }
+}
 
-  // Google Drive: /file/d/FILE_ID/view hoặc /open?id=FILE_ID hoặc /uc?id=FILE_ID
-  const gdriveFileMatch = url.match(/drive\.google\.com\/file\/d\/([^\/\?&]+)/);
-  const gdriveOpenMatch = url.match(/drive\.google\.com\/open\?id=([^&]+)/);
-  const gdriveUcMatch   = url.match(/drive\.google\.com\/uc\?.*[?&]id=([^&]+)/);
-  const gdriveFolderMatch = url.match(/drive\.google\.com\/drive.*\/folders\/([^\/\?&]+)/);
+function getGoogleDrivePreview(url) {
+  const patterns = [
+    /drive\.google\.com\/file\/d\/([^/]+)/i,
+    /drive\.google\.com\/open\?id=([^&]+)/i,
+    /drive\.google\.com\/uc\?[^#]*id=([^&]+)/i
+  ];
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match?.[1]) return `https://drive.google.com/file/d/${encodeURIComponent(match[1])}/preview`;
+  }
+  return '';
+}
 
-  if (gdriveFileMatch) {
-    return `https://drive.google.com/file/d/${gdriveFileMatch[1]}/preview`;
-  }
-  if (gdriveOpenMatch) {
-    return `https://drive.google.com/file/d/${gdriveOpenMatch[1]}/preview`;
-  }
-  if (gdriveUcMatch) {
-    return `https://drive.google.com/file/d/${gdriveUcMatch[1]}/preview`;
-  }
-  if (gdriveFolderMatch) {
-    return null; // folder link, không preview được
-  }
-
-  // Dropbox: ?dl=0 → raw=1 (direct)
-  if (url.includes('dropbox.com')) {
-    return url.replace(/[?&]dl=\d/, '').replace(/[?&]raw=\d/, '') + (url.includes('?') ? '&raw=1' : '?raw=1');
-  }
-
-  // Google Docs / Sheets / Slides: /edit → /preview
-  if (url.match(/docs\.google\.com\/(document|spreadsheets|presentation)\/d\/[^\/]+\/edit/)) {
-    return url.replace('/edit', '/preview');
-  }
-
-  // PDF trực tiếp: dùng Google Docs Viewer
-  if (url.match(/\.pdf(\?|$)/i)) {
-    return `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
-  }
-
-  // EPUB / MOBI — thử Google Docs Viewer
-  if (url.match(/\.(epub|mobi)(\?|$)/i)) {
-    return `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
-  }
-
-  // Archive.org embed
-  if (url.includes('archive.org/details/')) {
-    const id = url.split('archive.org/details/')[1]?.split('?')[0];
-    if (id) return `https://archive.org/embed/${id}`;
-  }
-
-  // Mặc định: cố nhúng thẳng
-  return url;
+function getEbookReaderUrl(rawUrl) {
+  const url = String(rawUrl || '').trim();
+  if (!url) return '';
+  const drivePreview = getGoogleDrivePreview(url);
+  if (drivePreview) return drivePreview;
+  const directUrl = convertDropboxLink(url);
+  return `https://docs.google.com/gview?embedded=1&url=${encodeURIComponent(directUrl)}`;
 }
 
 function openReader(id) {
-  const b = BOOKS.find(x => x.id === id);
-  if (!b || !b.ebook_link) return;
-
-  const embedUrl = convertEbookUrl(b.ebook_link);
-  document.getElementById('readerTitle').textContent = b.title || 'Ebook';
-  document.getElementById('readerOriginalLink').href = b.ebook_link;
-
-  const frame = document.getElementById('readerFrame');
-  const empty = document.getElementById('readerEmpty');
-
-  if (embedUrl) {
-    frame.src = embedUrl;
-    frame.classList.remove('view-hidden');
-    empty.classList.add('view-hidden');
-  } else {
-    frame.src = 'about:blank';
-    frame.classList.add('view-hidden');
-    empty.classList.remove('view-hidden');
-  }
-
-  closeModal();
+  const b = BOOKS.find(x=>x.id===id);
+  const ebookLink = String(b?.ebook_link || '').trim();
+  if (!b || !ebookLink) return;
+  const readerUrl = getEbookReaderUrl(ebookLink);
+  document.getElementById('readerTitle').textContent = `${t('readerTitle')}: ${b.title || 'Ebook'}`;
+  document.getElementById('readerOriginalLink').href = ebookLink;
+  document.getElementById('readerFrame').src = readerUrl;
+  hide('readerEmpty');
   document.getElementById('readerOverlay').classList.add('on');
 }
 
 function closeReader() {
   document.getElementById('readerOverlay').classList.remove('on');
-  // Xóa src để dừng tải file
-  setTimeout(() => { document.getElementById('readerFrame').src = 'about:blank'; }, 300);
+  document.getElementById('readerFrame').src = 'about:blank';
 }
 
 async function confirmDelete(id) {
@@ -2613,7 +2581,7 @@ function openAddForm() {
   if (!canEdit()) { showToast(t('loginToAdd')); showAuthModal(); return; }
   editingId=null; formRating=0; formQuotes=[];
   document.getElementById('formTitle').textContent=t('addBookTitle');
-  ['fId','fIsbn','fTitle','fAuthor','fYear','fCover','fNote','fEbookLink'].forEach(id=>document.getElementById(id).value='');
+  ['fId','fIsbn','fTitle','fAuthor','fYear','fCover','fEbookLink','fNote'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('fGenre').value='';
   document.getElementById('fStatus').value='unread';
   document.getElementById('fRating').value='0';
@@ -2639,8 +2607,8 @@ function openEditForm(id) {
   document.getElementById('fGenre').value=b.genre||'';
   document.getElementById('fStatus').value=b.status||'unread';
   document.getElementById('fCover').value=b.cover||'';
-  document.getElementById('fNote').value=b.note||'';
   document.getElementById('fEbookLink').value=b.ebook_link||'';
+  document.getElementById('fNote').value=b.note||'';
   document.getElementById('fRating').value=formRating;
   document.getElementById('isbnStatus').textContent='';
   document.getElementById('aiBookName').value='';
@@ -2723,8 +2691,8 @@ async function submitBook() {
     status: document.getElementById('fStatus').value,
     rating: formRating,
     cover: document.getElementById('fCover').value.trim()||null,
-    note: document.getElementById('fNote').value.trim(),
     ebook_link: document.getElementById('fEbookLink').value.trim()||null,
+    note: document.getElementById('fNote').value.trim(),
     quotes: formQuotes.filter(q=>q.text.trim()),
     color: randomColor, text_color: '#e8d5a0'
   };
